@@ -6,9 +6,8 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = "file:./db.sqlite"
-    // url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model Example {
@@ -21,7 +20,6 @@ model Events {
     title       String
     time        String
     place       String?
-
 }
 
 // Neccessary for Next auth
