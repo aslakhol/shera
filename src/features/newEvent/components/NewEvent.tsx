@@ -1,3 +1,5 @@
+import Textarea from "../../../components/TextArea";
+import TextInput from "../../../components/TextInput";
 import { trpc } from "../../../utils/trpc";
 import { useZodForm } from "../../../utils/zodForm";
 import { createEventSchema } from "../formValidation";
@@ -21,72 +23,55 @@ const NewEvent = () => {
     },
   });
 
-  console.log(methods.watch());
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen mx-auto w-10/12 md:w-1/2">
-      <h1>New event</h1>
-      <form
-        onSubmit={methods.handleSubmit(async (values) => {
-          await mutation.mutate(values);
-          methods.reset();
-        })}
-        className={`flex flex-col gap-2`}
-      >
-        <label className="flex flex-col">
-          Title
-          <input
-            type="text"
-            {...methods.register("title")}
-            className="border"
+    <>
+      <div className="flex flex-col items-center min-h-screen mx-auto py-8 w-10/12 md:w-1/2">
+        <div className="prose">
+          <h1 className="py-2 text-center">Create an event</h1>
+        </div>
+        <form
+          onSubmit={methods.handleSubmit(async (values) => {
+            await mutation.mutate(values);
+            methods.reset();
+          })}
+          className={`form-control w-full max-w-xs gap-2`}
+        >
+          <TextInput
+            name="title"
+            label="Title"
+            registerReturn={methods.register("title")}
+            fieldError={methods.formState.errors.title}
           />
-        </label>
-        {methods.formState.errors.title?.message && (
-          <p className="text-red-700">
-            {methods.formState.errors.title?.message}
-          </p>
-        )}
 
-        <label className="flex flex-col">
-          Description
-          <textarea {...methods.register("description")} className="border" />
-        </label>
-        {methods.formState.errors.description?.message && (
-          <p className="text-red-700">
-            {methods.formState.errors.description?.message}
-          </p>
-        )}
-
-        <label className="flex flex-col">
-          Time
-          <input type="text" {...methods.register("time")} className="border" />
-        </label>
-
-        {methods.formState.errors.time?.message && (
-          <p className="text-red-700">
-            {methods.formState.errors.description?.message}
-          </p>
-        )}
-        <label className="flex flex-col">
-          Place
-          <input
-            type="text"
-            {...methods.register("place")}
-            className="border"
+          <TextInput
+            name="time"
+            label="Time"
+            registerReturn={methods.register("time")}
+            fieldError={methods.formState.errors.time}
           />
-        </label>
 
-        {methods.formState.errors.place?.message && (
-          <p className="text-red-700">
-            {methods.formState.errors.description?.message}
-          </p>
-        )}
+          <TextInput
+            name="place"
+            label="Place"
+            registerReturn={methods.register("place")}
+            fieldError={methods.formState.errors.place}
+          />
 
-        <button className="btn" type="submit">
-          Create
-        </button>
-      </form>
-    </div>
+          <Textarea
+            name="description"
+            label="Description"
+            registerReturn={methods.register("description")}
+            fieldError={methods.formState.errors.description}
+          />
+
+          <div className="py-2" />
+
+          <button className="btn" type="submit">
+            Create
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 
