@@ -15,6 +15,15 @@ model Example {
     id String @id @default(cuid())
 }
 
+model Events {
+    id          Int     @id @default(autoincrement())
+    description String
+    title       String
+    time        String
+    place       String?
+
+}
+
 // Neccessary for Next auth
 model Account {
     id                String  @id @default(cuid())

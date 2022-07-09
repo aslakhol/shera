@@ -1,7 +1,21 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { trpc } from "../../utils/trpc";
 
 const Home: NextPage = () => {
+  const eventMutation = trpc.useMutation(["events.create-event"]);
+
+  const handle = async () => {
+    const foo = await eventMutation.mutate({
+      title: "Some title",
+      time: "Now",
+      description: "A description",
+      place: "The place",
+    });
+
+    console.log(foo);
+  };
+
   return (
     <>
       <Head>
@@ -13,6 +27,9 @@ const Home: NextPage = () => {
         <div className="prose">
           <h1 className="py-2 text-center">The Merging of the Streams</h1>
         </div>
+        <button className="btn" onClick={handle}>
+          Foo
+        </button>
 
         <div className="py-2" />
 
