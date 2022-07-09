@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+import Spinner from "../../../components/Spinner";
 import Textarea from "../../../components/Textarea";
 import TextInput from "../../../components/TextInput";
 import { trpc } from "../../../utils/trpc";
@@ -6,6 +8,7 @@ import { createEventSchema } from "../formValidation";
 
 const NewEvent = () => {
   const ctx = trpc.useContext();
+  const router = useRouter();
 
   const mutation = trpc.useMutation(["events.create-event"], {
     onSuccess: async () => {
@@ -31,8 +34,10 @@ const NewEvent = () => {
         </div>
         <form
           onSubmit={methods.handleSubmit(async (values) => {
-            await mutation.mutate(values);
+            const result = await mutation.mutateAsync(values);
             methods.reset();
+
+            router.push(`/events/${result.event.eventId}`);
           })}
           className={`form-control w-full max-w-xs gap-2`}
         >
@@ -67,7 +72,7 @@ const NewEvent = () => {
           <div className="py-2" />
 
           <button className="btn" type="submit">
-            Create
+            {!mutation.isLoading ? "Create" : <Spinner />}
           </button>
         </form>
       </div>
