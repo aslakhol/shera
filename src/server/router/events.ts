@@ -23,4 +23,16 @@ export const eventsRouter = createRouter()
     async resolve({ ctx }) {
       return await ctx.prisma.events.findMany();
     },
+  })
+  .query("event", {
+    input: z.object({
+      eventId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.events.findFirst({
+        where: {
+          eventId: Number.parseInt(input.eventId),
+        },
+      });
+    },
   });

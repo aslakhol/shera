@@ -1,4 +1,4 @@
-import Textarea from "../../../components/TextArea";
+import Textarea from "../../../components/Textarea";
 import TextInput from "../../../components/TextInput";
 import { trpc } from "../../../utils/trpc";
 import { useZodForm } from "../../../utils/zodForm";

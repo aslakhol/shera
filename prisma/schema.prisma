@@ -16,7 +16,7 @@ model Example {
 }
 
 model Events {
-    id          Int     @id @default(autoincrement())
+    eventId     Int     @id @default(autoincrement())
     description String
     title       String
     time        String
