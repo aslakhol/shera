@@ -1,9 +1,9 @@
+import Spinner from "@/components/Spinner";
+import Textarea from "@/components/Textarea";
+import TextInput from "@/components/TextInput";
+import { trpc } from "@/utils/trpc";
+import { useZodForm } from "@/utils/zodForm";
 import { useRouter } from "next/router";
-import Spinner from "../../../components/Spinner";
-import Textarea from "../../../components/Textarea";
-import TextInput from "../../../components/TextInput";
-import { trpc } from "../../../utils/trpc";
-import { useZodForm } from "../../../utils/zodForm";
 import { createEventSchema } from "../formValidation";
 
 const NewEvent = () => {

@@ -1,4 +1,4 @@
-import { trpc } from "../../../utils/trpc";
+import { trpc } from "@/utils/trpc";
 
 type EventProps = { eventId: string };
 

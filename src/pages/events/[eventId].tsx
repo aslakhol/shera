@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Event from "../../features/event/components/Event";
+import Event from "@/features/event/components/Event";
 
 const EventPage: NextPage = () => {
   const { eventId } = useRouter().query;
