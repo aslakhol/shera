@@ -11,7 +11,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col items-center justify-center min-h-screen mx-auto pt-2 w-8/12 md:w-1/2 prose">
-        <h1 className="font-extrabold text-7xl">Shera</h1>
+        <h1 className="font-extrabold text-7xl mb-0">Shera</h1>
 
         <p>
           Shera is a tool for managing events without being tied to one social
@@ -27,6 +27,8 @@ const Home: NextPage = () => {
           accounts or download an app.
         </p>
         <p>Log in to create an event, and invite your friends to join.</p>
+
+        <div className="py-2" />
 
         <Link href={"/events/new"}>
           <button className="btn">Create event</button>
