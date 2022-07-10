@@ -10,6 +10,14 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// Datasource for local development without connecting to supabase.
+// comment out the datasource section above and uncomment this one to use it.
+//
+// datasource db {
+//     provider = "sqlite"
+//     url      = "file:./db.sqlite"
+// }
+
 model Example {
     id String @id @default(cuid())
 }
