@@ -8,8 +8,6 @@ const NewEventPage: NextPage = () => {
       <Head>
         <title>New event</title>
         <meta name="description" content="Page for creating new events" />
-        <link rel="icon" href="/favicon.ico" />
-        <script async src="https://cdn.splitbee.io/sb.js"></script>
       </Head>
 
       <NewEvent />

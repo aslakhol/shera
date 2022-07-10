@@ -8,8 +8,6 @@ const Home: NextPage = () => {
       <Head>
         <title>Shera</title>
         <meta name="description" content="Welcome page for Shera" />
-        <link rel="icon" href="/favicon.ico" />
-        <script async src="https://cdn.splitbee.io/sb.js"></script>
       </Head>
       <div className="flex flex-col items-center justify-center min-h-screen mx-auto pt-2 w-8/12 md:w-1/2 gap-3">
         <h1 className="font-extrabold text-7xl ">Shera</h1>
