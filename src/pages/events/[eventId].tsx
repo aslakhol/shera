@@ -16,6 +16,7 @@ const EventPage: NextPage = () => {
         <title>Event</title>
         <meta name="description" content="Page for an event" />
         <link rel="icon" href="/favicon.ico" />
+        <script async src="https://cdn.splitbee.io/sb.js"></script>
       </Head>
 
       <Event eventId={eventId} />
