@@ -5,7 +5,7 @@ export default function Document() {
     <Html>
       <Head>
         <link rel="icon" href="/favicon.ico" />
-        <script async src="https://cdn.splitbee.io/sb.js"></script>
+        <script async data-api="/_hive" src="/bee.js"></script>
       </Head>
       <body>
         <Main />
