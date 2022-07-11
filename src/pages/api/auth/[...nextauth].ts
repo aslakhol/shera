@@ -15,4 +15,7 @@ export default NextAuth({
     }),
     // ...add more providers here
   ],
+  theme: {
+    colorScheme: "light",
+  },
 });
