@@ -29,7 +29,7 @@ const Event = (props: EventProps) => {
       <div className="info flex flex-col gap-2">
         <span>Time: {event.time}</span>
         <span>Place: {event.place}</span>
-        <span>Host: {event.host.name}</span>
+        <span>Host: {event.host.name || event.host.email}</span>
       </div>
 
       <div className="py-2" />

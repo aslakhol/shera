@@ -1,8 +1,6 @@
 import WelcomeActionButton from "./WelcomeActionButton";
 
 const Welcome = () => {
-  console.log("in welcome");
-
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen mx-auto pt-2 w-8/12 md:w-1/2 gap-3">
