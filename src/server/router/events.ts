@@ -8,10 +8,13 @@ export const eventsRouter = createRouter()
       time: z.string(),
       place: z.string().optional(),
       description: z.string(),
+      userEmail: z.string(),
     }),
     async resolve({ ctx, input }) {
+      const { userEmail, ...event } = input;
+
       const eventInDb = await ctx.prisma.events.create({
-        data: { ...input },
+        data: { ...event, host: { connect: { email: userEmail } } },
       });
 
       return {
@@ -33,6 +36,7 @@ export const eventsRouter = createRouter()
         where: {
           eventId: Number.parseInt(input.eventId),
         },
+        include: { host: true },
       });
     },
   });

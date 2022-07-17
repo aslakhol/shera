@@ -3,6 +3,7 @@ import Textarea from "@/components/Textarea";
 import TextInput from "@/components/TextInput";
 import { trpc } from "@/utils/trpc";
 import { useZodForm } from "@/utils/zodForm";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { createEventSchema } from "../formValidation";
 
@@ -26,6 +27,18 @@ const NewEvent = () => {
     },
   });
 
+  const { data: session } = useSession();
+
+  if (session === undefined) {
+    return <></>;
+  }
+
+  if (session === null || !session.user?.email) {
+    return <>Not logged in</>;
+  }
+
+  const userEmail = session.user.email;
+
   return (
     <>
       <div className="flex flex-col items-center min-h-screen mx-auto py-8 w-10/12 md:w-1/2">
@@ -34,7 +47,10 @@ const NewEvent = () => {
         </div>
         <form
           onSubmit={methods.handleSubmit(async (values) => {
-            const result = await mutation.mutateAsync(values);
+            const result = await mutation.mutateAsync({
+              ...values,
+              userEmail,
+            });
             methods.reset();
 
             router.push(`/events/${result.event.eventId}`);
