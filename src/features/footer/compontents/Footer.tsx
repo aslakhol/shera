@@ -19,6 +19,17 @@ const Footer = () => {
 
         <div>
           <span className="footer-title">Contact</span>
+          <p>Do you have any feedback or do you want to get in touch?</p>
+          <a
+            className="link link-hover"
+            href="mailto:aslakhol@gmail.com?subject=Contact from Shera.no"
+          >
+            Please get in touch!
+          </a>
+        </div>
+
+        <div>
+          <span className="footer-title">Contact</span>
           <div className="grid grid-flow-col gap-4">
             <a href="https://twitter.com/EchoEsq">
               <svg
