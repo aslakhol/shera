@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Event from "@/features/event/components/Event";
+import Footer from "@/features/footer/compontents/Footer";
 
 const EventPage: NextPage = () => {
   const { eventId } = useRouter().query;
@@ -18,6 +19,7 @@ const EventPage: NextPage = () => {
       </Head>
 
       <Event eventId={eventId} />
+      <Footer />
     </>
   );
 };
