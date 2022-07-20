@@ -7,8 +7,8 @@ const EventBody = (props: EventBodyProps) => {
 
   return (
     <div className="description prose">
-      {paragraphs.map((paragraph) => (
-        <p>{paragraph}</p>
+      {paragraphs.map((paragraph, index) => (
+        <p key={`event-body-paragraph-${index}`}>{paragraph}</p>
       ))}
     </div>
   );
