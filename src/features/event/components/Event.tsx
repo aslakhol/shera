@@ -1,6 +1,7 @@
 import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import EventBody from "./EventBody";
 
 type EventProps = { eventId: string };
 
@@ -37,9 +38,7 @@ const Event = (props: EventProps) => {
 
       <div className="py-2" />
 
-      <div className="description prose">
-        <p>{event.description}</p>
-      </div>
+      <EventBody description={event.description} />
 
       <div className="py-2" />
       {session?.user?.email === event.host.email && (
