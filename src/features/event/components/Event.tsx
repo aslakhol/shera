@@ -1,6 +1,7 @@
 import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import Attend from "./Attend";
 import Attending from "./Attending";
 import EventBody from "./EventBody";
 
@@ -37,7 +38,7 @@ const Event = (props: EventProps) => {
 
       <div className="flex gap-2">
         <Attending eventId={event.eventId} />
-        <button className="btn btn-outline">Attend?</button>
+        <Attend eventId={event.eventId} />
       </div>
 
       <EventBody description={event.description} />

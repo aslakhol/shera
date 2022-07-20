@@ -4,17 +4,22 @@ type TextInputProps = {
   name: string;
   label: string;
   placeholder?: string;
+  required?: boolean;
   registerReturn: UseFormRegisterReturn;
   fieldError?: FieldError;
 };
 
 const TextInput = (props: TextInputProps) => {
-  const { name, label, placeholder, registerReturn, fieldError } = props;
+  const { name, label, placeholder, required, registerReturn, fieldError } =
+    props;
 
   return (
     <div className="form-control">
       <label className="label" htmlFor={name}>
-        <span className="label-text">{label}</span>
+        <span className="label-text">
+          {label}
+          {required && <span>*</span>}
+        </span>
       </label>
       <input
         id={name}

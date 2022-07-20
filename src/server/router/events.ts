@@ -1,5 +1,6 @@
 import { createRouter } from "./context";
 import { z } from "zod";
+import { attendEventSchema } from "@/features/event/formValidation";
 
 export const eventsRouter = createRouter()
   .mutation("create-event", {
@@ -41,11 +42,7 @@ export const eventsRouter = createRouter()
     },
   })
   .mutation("attend", {
-    input: z.object({
-      eventId: z.number(),
-      name: z.string(),
-      email: z.string().optional(),
-    }),
+    input: attendEventSchema.extend({ eventId: z.number() }),
     async resolve({ ctx, input }) {
       return await ctx.prisma.events.update({
         where: {
@@ -67,15 +64,10 @@ export const eventsRouter = createRouter()
       eventId: z.number(),
     }),
     async resolve({ ctx, input }) {
-      console.log("laskjdlksajlkj");
-
-      const attendees = await ctx.prisma.attendees.findMany({
+      return await ctx.prisma.attendees.findMany({
         where: {
           eventId: input.eventId,
         },
       });
-
-      console.log(attendees);
-      return attendees;
     },
   });

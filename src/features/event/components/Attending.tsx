@@ -17,7 +17,7 @@ const Attending = (props: AttendingProps) => {
       </label>
 
       <input type="checkbox" id="attending-modal" className="modal-toggle" />
-      <div className="modal">
+      <div className="modal modal-bottom sm:modal-middle">
         <div className="modal-box relative">
           <label
             htmlFor="attending-modal"
@@ -26,12 +26,12 @@ const Attending = (props: AttendingProps) => {
             ✕
           </label>
           <h3 className="text-lg font-bold">Attendees:</h3>
-          <li className="py-4">
+          <ul className="py-4">
             {isSuccess &&
               attendees.map((attendee, index) => (
-                <ul key={`${attendee.name}-${index}`}>{attendee.name}</ul>
+                <li key={`${attendee.name}-${index}`}>{attendee.name}</li>
               ))}
-          </li>
+          </ul>
         </div>
       </div>
     </>

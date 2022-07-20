@@ -18,3 +18,9 @@ export const useZodForm = <TSchema extends z.ZodType>(
 
   return form;
 };
+
+const emptyStringToUndefined = z.literal("").transform(() => undefined);
+
+export function asOptionalField<T extends z.ZodTypeAny>(schema: T) {
+  return schema.optional().or(emptyStringToUndefined);
+}
