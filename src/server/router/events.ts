@@ -39,4 +39,43 @@ export const eventsRouter = createRouter()
         include: { host: true },
       });
     },
+  })
+  .mutation("attend", {
+    input: z.object({
+      eventId: z.number(),
+      name: z.string(),
+      email: z.string().optional(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.events.update({
+        where: {
+          eventId: input.eventId,
+        },
+        data: {
+          attendees: {
+            create: {
+              name: input.name,
+              email: input.email,
+            },
+          },
+        },
+      });
+    },
+  })
+  .query("attendees", {
+    input: z.object({
+      eventId: z.number(),
+    }),
+    async resolve({ ctx, input }) {
+      console.log("laskjdlksajlkj");
+
+      const attendees = await ctx.prisma.attendees.findMany({
+        where: {
+          eventId: input.eventId,
+        },
+      });
+
+      console.log(attendees);
+      return attendees;
+    },
   });

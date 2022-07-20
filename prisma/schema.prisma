@@ -23,13 +23,24 @@ model Example {
 }
 
 model Events {
-    eventId     Int     @id @default(autoincrement())
+    eventId     Int         @id @default(autoincrement())
     description String
     title       String
     time        String
     place       String?
-    host        User    @relation(fields: [hostId], references: [id])
+    host        User        @relation(fields: [hostId], references: [id])
     hostId      String
+    attendees   Attendees[]
+}
+
+model Attendees {
+    attendeeId String  @id @default(cuid())
+    name       String
+    email      String?
+    Events     Events  @relation(fields: [eventId], references: [eventId])
+    eventId    Int
+
+    @@unique([name, eventId])
 }
 
 // Neccessary for Next auth

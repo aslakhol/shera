@@ -1,6 +1,7 @@
 import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import Attending from "./Attending";
 import EventBody from "./EventBody";
 
 type EventProps = { eventId: string };
@@ -23,12 +24,10 @@ const Event = (props: EventProps) => {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen mx-auto py-8 w-10/12 md:w-1/2">
+    <div className="flex flex-col gap-4 items-center min-h-screen mx-auto py-8 w-10/12 md:w-1/2">
       <div className="prose">
         <h1 className="py-2 text-center">{event.title}</h1>
       </div>
-
-      <div className="py-2" />
 
       <div className="info flex flex-col gap-2">
         <span>Time: {event.time}</span>
@@ -36,7 +35,10 @@ const Event = (props: EventProps) => {
         <span>Host: {event.host.name || event.host.email}</span>
       </div>
 
-      <div className="py-2" />
+      <div className="flex gap-2">
+        <Attending eventId={event.eventId} />
+        <button className="btn btn-outline">Attend?</button>
+      </div>
 
       <EventBody description={event.description} />
 
