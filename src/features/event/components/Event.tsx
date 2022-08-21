@@ -17,7 +17,7 @@ const Event = (props: EventProps) => {
   ]);
 
   if (!isSuccess) {
-    return <></>;
+    return <div className="h-screen"></div>;
   }
 
   if (event === null) {
