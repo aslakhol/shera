@@ -22,14 +22,14 @@ const Footer = () => {
           <p>Do you have any feedback or do you want to get in touch?</p>
           <a
             className="link link-hover"
-            href="mailto:aslakhol@gmail.com?subject=Contact from Shera.no"
+            href="mailto:aslak@shera.no?subject=Contact from Shera.no"
           >
             Please get in touch!
           </a>
         </div>
 
         <div>
-          <span className="footer-title">Contact</span>
+          <span className="footer-title">Social</span>
           <div className="grid grid-flow-col gap-4">
             <a href="https://twitter.com/EchoEsq">
               <svg
