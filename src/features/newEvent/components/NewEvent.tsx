@@ -33,11 +33,11 @@ const NewEvent = () => {
     return <></>;
   }
 
-  if (session === null || !session.user?.email) {
+  if (session === null || !session.user?.id) {
     return <>Not logged in</>;
   }
 
-  const userEmail = session.user.email;
+  const userId = session.user.id;
 
   return (
     <>
@@ -49,7 +49,7 @@ const NewEvent = () => {
           onSubmit={methods.handleSubmit(async (values) => {
             const result = await mutation.mutateAsync({
               ...values,
-              userEmail,
+              userId,
             });
             methods.reset();
 

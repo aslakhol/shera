@@ -9,13 +9,13 @@ export const eventsRouter = createRouter()
       time: z.string(),
       place: z.string().optional(),
       description: z.string(),
-      userEmail: z.string(),
+      userId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      const { userEmail, ...event } = input;
+      const { userId, ...event } = input;
 
       const eventInDb = await ctx.prisma.events.create({
-        data: { ...event, host: { connect: { email: userEmail } } },
+        data: { ...event, host: { connect: { id: userId } } },
       });
 
       return {
@@ -36,6 +36,23 @@ export const eventsRouter = createRouter()
       return await ctx.prisma.events.findFirst({
         where: {
           eventId: Number.parseInt(input.eventId),
+        },
+        include: { host: true },
+      });
+    },
+  })
+  .query("events-attended-by-user", {
+    input: z.object({
+      userEmail: z.string().email(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.events.findMany({
+        where: {
+          attendees: {
+            some: {
+              email: input.userEmail,
+            },
+          },
         },
         include: { host: true },
       });
