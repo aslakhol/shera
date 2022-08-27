@@ -58,6 +58,21 @@ export const eventsRouter = createRouter()
       });
     },
   })
+  .query("events-hosted-by-user", {
+    input: z.object({
+      userEmail: z.string().email(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.events.findMany({
+        where: {
+          host: {
+            email: input.userEmail,
+          },
+        },
+        include: { host: true },
+      });
+    },
+  })
   .mutation("attend", {
     input: attendEventSchema.extend({ eventId: z.number() }),
     async resolve({ ctx, input }) {

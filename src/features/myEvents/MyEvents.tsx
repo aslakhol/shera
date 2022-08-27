@@ -12,15 +12,26 @@ const MyEvents = (props: MyEventsProps) => {
     { userEmail: email },
   ]);
 
+  const { data: hostingEvents } = trpc.useQuery([
+    "events.events-hosted-by-user",
+    { userEmail: email },
+  ]);
+
   return (
     <div className="p-4">
       <h1 className="font-extrabold text-3xl text-center">My Events</h1>
 
       <h2 className="font-extrabold text-xl p-4">Attending</h2>
-
       <div className="flex gap-3 flex-wrap justify-center">
         {attendingEvents?.map((e) => (
-          <Event event={e} />
+          <Event event={e} key={`attendingEvent-${e.eventId}`} />
+        ))}
+      </div>
+
+      <h2 className="font-extrabold text-xl p-4">Hosting</h2>
+      <div className="flex gap-3 flex-wrap justify-center">
+        {hostingEvents?.map((e) => (
+          <Event event={e} key={`hostingEvents-${e.eventId}`} />
         ))}
       </div>
     </div>

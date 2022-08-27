@@ -13,7 +13,7 @@ const MyEventsPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>MyEvents</title>
+        <title>My Events</title>
         <meta name="description" content="My Events" />
       </Head>
 
