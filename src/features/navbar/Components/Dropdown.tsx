@@ -6,6 +6,10 @@ import Link from "next/link";
 const Dropdown = () => {
   const session = useSession();
 
+  if (session.status === "loading") {
+    return <></>;
+  }
+
   return (
     <>
       <div className="dropdown dropdown-end">
