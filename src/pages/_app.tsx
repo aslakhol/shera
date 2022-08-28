@@ -15,7 +15,9 @@ const MyApp: AppType = ({
   return (
     <SessionProvider session={session}>
       <NavBar />
-      <Component {...pageProps} />
+      <div className="min-h-screen-content">
+        <Component {...pageProps} />
+      </div>
       <Footer />
     </SessionProvider>
   );
