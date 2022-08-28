@@ -3,7 +3,7 @@ import WelcomeActionButton from "./WelcomeActionButton";
 const Welcome = () => {
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-screen mx-auto pt-2 w-8/12 md:w-1/2 gap-3">
+      <div className="flex flex-col items-center justify-center min-h-screen-content mx-auto pt-2 w-8/12 md:w-1/2 gap-3">
         <h1 className="font-extrabold text-7xl ">Shera</h1>
         <div className="py-2" />
         <p className="leading-7">

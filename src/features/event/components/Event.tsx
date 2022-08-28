@@ -25,7 +25,7 @@ const Event = (props: EventProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-4 items-center min-h-screen mx-auto py-8 w-10/12 md:w-1/2">
+    <div className="flex flex-col gap-4 items-center min-h-screen-content mx-auto py-8 w-10/12 md:w-1/2">
       <div className="prose">
         <h1 className="py-2 text-center">{event.title}</h1>
       </div>
