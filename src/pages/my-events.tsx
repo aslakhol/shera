@@ -2,7 +2,6 @@ import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import MyEvents from "../features/myEvents/MyEvents";
-import NavBar from "../features/navbar/Components/NavBar";
 
 const MyEventsPage: NextPage = () => {
   const { data: session } = useSession();
@@ -17,7 +16,6 @@ const MyEventsPage: NextPage = () => {
         <title>My Events</title>
         <meta name="description" content="My Events" />
       </Head>
-      <NavBar />
 
       <MyEvents email={session.user.email} />
     </>

@@ -1,11 +1,7 @@
 import Dropdown from "./Dropdown";
 import HomeLink from "./HomeLink";
 
-type NavBarProps = {};
-
-const NavBar = (props: NavBarProps) => {
-  const {} = props;
-
+const NavBar = () => {
   return (
     <>
       <div className="navbar bg-base-100">
