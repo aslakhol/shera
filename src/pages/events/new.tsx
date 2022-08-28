@@ -1,4 +1,3 @@
-import Footer from "@/features/footer/compontents/Footer";
 import NewEvent from "@/features/newEvent/components/NewEvent";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -12,7 +11,6 @@ const NewEventPage: NextPage = () => {
       </Head>
 
       <NewEvent />
-      <Footer />
     </>
   );
 };
