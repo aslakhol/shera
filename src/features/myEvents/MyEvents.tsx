@@ -18,8 +18,8 @@ const MyEvents = (props: MyEventsProps) => {
   ]);
 
   return (
-    <div className="p-4">
-      <h1 className="font-extrabold text-3xl text-center">My Events</h1>
+    <div className="py-8 px-4">
+      <h1 className="font-extrabold text-4xl text-center py-2">My Events</h1>
 
       <h2 className="font-extrabold text-xl p-4">Attending</h2>
       <div className="flex gap-3 flex-wrap justify-center">
