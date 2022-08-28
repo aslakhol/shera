@@ -46,10 +46,7 @@ const SignedIn = (props: SignedInProps) => {
         </li>
         <li>
           <Link href={"/events/new"}>
-            <a className="justify-between">
-              Create New Event
-              <span className="badge">New</span>
-            </a>
+            <a>Create Event</a>
           </Link>
         </li>
         <li>
