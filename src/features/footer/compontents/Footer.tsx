@@ -1,21 +1,19 @@
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 const Footer = () => {
-  const { data: session } = useSession();
-
   return (
     <>
       <footer className="footer p-10 bg-base-300 text-base-content">
-        {session && (
-          <div>
-            <span className="footer-title">Account</span>
-            <p>Currently logged in as: {session?.user?.name}</p>
-            <Link href={"/api/auth/signout"}>
-              <a className="link link-hover">Sign out?</a>
-            </Link>
-          </div>
-        )}
+        <div>
+          <span className="footer-title">Privacy Policy</span>
+          <p>
+            The most recent version of our Privacy Policy can always be found
+            here:
+          </p>
+          <Link href={"/privacy-policy"}>
+            <a className="link link-hover">Privacy Policy</a>
+          </Link>
+        </div>
 
         <div>
           <span className="footer-title">Contact</span>
