@@ -106,7 +106,7 @@ const PrivacyPolicy = (props: PrivacyPolicyProps) => {
             </tr>
             <tr>
               <td>Technical data</td>
-              <td>This data is anonymized immediatly.</td>
+              <td>This data is anonymized immediately.</td>
             </tr>
           </tbody>
         </table>
