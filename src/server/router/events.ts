@@ -23,6 +23,27 @@ export const eventsRouter = createRouter()
       };
     },
   })
+  .mutation("post", {
+    input: z.object({
+      title: z.string(),
+      content: z.string(),
+      authorEmail: z.string(),
+      authorName: z.string(),
+      eventId: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      const { eventId, ...post } = input;
+
+      console.log("input", input);
+      const postInDb = await ctx.prisma.posts.create({
+        data: post,
+      });
+
+      return {
+        postInDb,
+      };
+    },
+  })
   .query("events", {
     async resolve({ ctx }) {
       return await ctx.prisma.events.findMany();

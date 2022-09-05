@@ -1,21 +1,16 @@
 import Spinner from "@/components/Spinner";
 import Textarea from "@/components/Textarea";
 import TextInput from "@/components/TextInput";
-import { trpc } from "@/utils/trpc";
 import { useZodForm } from "@/utils/zodForm";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { createEventSchema } from "../formValidation";
+import { useCreateEvent } from "../hooks/useCreateEvent";
+import Title from "./Title";
 
 const NewEvent = () => {
-  const ctx = trpc.useContext();
   const router = useRouter();
-
-  const mutation = trpc.useMutation(["events.create-event"], {
-    onSuccess: async () => {
-      ctx.invalidateQueries("events.events");
-    },
-  });
+  const createEventMutation = useCreateEvent();
 
   const methods = useZodForm({
     schema: createEventSchema,
@@ -46,7 +41,7 @@ const NewEvent = () => {
       </div>
       <form
         onSubmit={methods.handleSubmit(async (values) => {
-          const result = await mutation.mutateAsync({
+          const result = await createEventMutation.mutateAsync({
             ...values,
             userId,
           });
@@ -56,12 +51,7 @@ const NewEvent = () => {
         })}
         className={`form-control w-full max-w-xs gap-2`}
       >
-        <TextInput
-          name="title"
-          label="Title"
-          registerReturn={methods.register("title")}
-          fieldError={methods.formState.errors.title}
-        />
+        <Title methods={methods} />
 
         <TextInput
           name="time"
@@ -87,7 +77,7 @@ const NewEvent = () => {
         <div className="py-2" />
 
         <button className="btn" type="submit">
-          {!mutation.isLoading ? "Create" : <Spinner />}
+          {!createEventMutation.isLoading ? "Create" : <Spinner />}
         </button>
       </form>
     </div>
