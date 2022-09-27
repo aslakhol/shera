@@ -35,13 +35,13 @@ model Events {
 }
 
 model Posts {
-    postId        Int     @id @default(autoincrement())
-    title         String
-    content       String
-    authorEmail   String
-    authorName    String
-    Events        Events? @relation(fields: [eventsEventId], references: [eventId])
-    eventsEventId Int?
+    postId      Int     @id @default(autoincrement())
+    title       String
+    content     String
+    authorEmail String
+    authorName  String
+    events      Events? @relation(fields: [eventsId], references: [eventId])
+    eventsId    Int?
 }
 
 model Attendees {

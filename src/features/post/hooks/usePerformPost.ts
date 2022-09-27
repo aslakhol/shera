@@ -3,9 +3,9 @@ import { trpc } from "../../../utils/trpc";
 export const usePerformPost = () => {
   const ctx = trpc.useContext();
 
-  const mutation = trpc.useMutation(["events.post"], {
+  const mutation = trpc.useMutation(["posts.post"], {
     onSuccess: async () => {
-      // ctx.invalidateQueries("events.posts");
+      ctx.invalidateQueries("posts.posts");
     },
   });
 

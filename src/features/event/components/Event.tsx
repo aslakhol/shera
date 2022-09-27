@@ -1,7 +1,7 @@
 import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { usePerformPost } from "../hooks/usePerformPost";
+import Posts from "../../post/components/Posts";
 import Attend from "./Attend";
 import Attending from "./Attending";
 import EventBody from "./EventBody";
@@ -11,22 +11,11 @@ type EventProps = { eventId: string };
 const Event = (props: EventProps) => {
   const { eventId } = props;
   const { data: session } = useSession();
-  const postMutation = usePerformPost();
 
   const { data: event, isSuccess } = trpc.useQuery([
     "events.event",
     { eventId },
   ]);
-
-  const handlePost = () => {
-    postMutation.mutate({
-      title: "test",
-      content: "test",
-      authorEmail: "aslakhol@gmail.com",
-      authorName: "Aslak Hollund",
-      eventId: eventId,
-    });
-  };
 
   if (!isSuccess) {
     return <div className="h-screen"></div>;
@@ -62,10 +51,7 @@ const Event = (props: EventProps) => {
         </Link>
       )}
       <div className="py-2" />
-
-      <button className="btn" onClick={handlePost}>
-        Post
-      </button>
+      <Posts eventId={eventId} />
     </div>
   );
 };

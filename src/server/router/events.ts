@@ -2,6 +2,8 @@ import { createRouter } from "./context";
 import { z } from "zod";
 import { attendEventSchema } from "@/features/event/formValidation";
 
+const idStringToNumber = z.string().transform(Number);
+
 export const eventsRouter = createRouter()
   .mutation("create-event", {
     input: z.object({
@@ -23,27 +25,6 @@ export const eventsRouter = createRouter()
       };
     },
   })
-  .mutation("post", {
-    input: z.object({
-      title: z.string(),
-      content: z.string(),
-      authorEmail: z.string(),
-      authorName: z.string(),
-      eventId: z.string(),
-    }),
-    async resolve({ ctx, input }) {
-      const { eventId, ...post } = input;
-
-      console.log("input", input);
-      const postInDb = await ctx.prisma.posts.create({
-        data: post,
-      });
-
-      return {
-        postInDb,
-      };
-    },
-  })
   .query("events", {
     async resolve({ ctx }) {
       return await ctx.prisma.events.findMany();
@@ -56,7 +37,7 @@ export const eventsRouter = createRouter()
     async resolve({ ctx, input }) {
       return await ctx.prisma.events.findFirst({
         where: {
-          eventId: Number.parseInt(input.eventId),
+          eventId: idStringToNumber.parse(input.eventId),
         },
         include: { host: true },
       });
