@@ -2,6 +2,8 @@ import { createRouter } from "./context";
 import { z } from "zod";
 import { attendEventSchema } from "@/features/event/formValidation";
 
+const idStringToNumber = z.string().transform(Number);
+
 export const eventsRouter = createRouter()
   .mutation("create-event", {
     input: z.object({
@@ -35,7 +37,7 @@ export const eventsRouter = createRouter()
     async resolve({ ctx, input }) {
       return await ctx.prisma.events.findFirst({
         where: {
-          eventId: Number.parseInt(input.eventId),
+          eventId: idStringToNumber.parse(input.eventId),
         },
         include: { host: true },
       });

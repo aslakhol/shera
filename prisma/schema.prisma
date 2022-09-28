@@ -31,6 +31,17 @@ model Events {
     host        User        @relation(fields: [hostId], references: [id])
     hostId      String
     attendees   Attendees[]
+    posts       Posts[]
+}
+
+model Posts {
+    postId      Int     @id @default(autoincrement())
+    title       String
+    content     String
+    authorEmail String
+    authorName  String
+    events      Events? @relation(fields: [eventsId], references: [eventId])
+    eventsId    Int?
 }
 
 model Attendees {

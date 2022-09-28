@@ -1,6 +1,8 @@
 import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useIsDev } from "../../../utils/useIsDev";
+import Posts from "../../post/components/Posts";
 import Attend from "./Attend";
 import Attending from "./Attending";
 import EventBody from "./EventBody";
@@ -10,6 +12,7 @@ type EventProps = { eventId: string };
 const Event = (props: EventProps) => {
   const { eventId } = props;
   const { data: session } = useSession();
+  const isDev = useIsDev();
 
   const { data: event, isSuccess } = trpc.useQuery([
     "events.event",
@@ -49,6 +52,9 @@ const Event = (props: EventProps) => {
           <button className="btn">Edit event</button>
         </Link>
       )}
+      <div className="py-2" />
+
+      {isDev && <Posts eventId={eventId} />}
     </div>
   );
 };
