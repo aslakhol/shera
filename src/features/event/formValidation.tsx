@@ -1,6 +1,8 @@
 import { asOptionalField } from "@/utils/zodForm";
 import { z } from "zod";
 
+export type AttendEventSchemaType = z.infer<typeof attendEventSchema>;
+
 export const attendEventSchema = z.object({
   name: z
     .string()
