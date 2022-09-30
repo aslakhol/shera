@@ -1,4 +1,4 @@
-import XButton from "@/components/XButton";
+import ConfirmDelete from "@/components/ConfirmDelete";
 import { trpc } from "@/utils/trpc";
 import type { Posts, User } from "@prisma/client";
 
@@ -39,19 +39,16 @@ const Post = (props: PostProps) => {
             })}
           </span>
         </div>
-        <XButton onClick={deletePost} />
+        <ConfirmDelete
+          whatToDelete="post"
+          modalId={"post"}
+          deleteAction={deletePost}
+        />
       </div>
-      <PostMessage message={post.message} />
+
+      <p className="py-2">{post.message}</p>
     </div>
   );
 };
 
 export default Post;
-
-type PostMessageProps = { message: string };
-
-const PostMessage = (props: PostMessageProps) => {
-  const { message } = props;
-
-  return <p className="py-2">{message}</p>;
-};
