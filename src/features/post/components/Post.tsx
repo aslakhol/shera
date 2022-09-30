@@ -1,9 +1,9 @@
 import ConfirmDelete from "@/components/ConfirmDelete";
 import { trpc } from "@/utils/trpc";
-import type { Posts, User } from "@prisma/client";
+import type { Events, Posts, User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 
-type PostProps = { post: Posts & { author: User; eventsId: number } };
+type PostProps = { post: Posts & { author: User; events: Events } };
 
 const Post = (props: PostProps) => {
   const { post } = props;
@@ -25,6 +25,10 @@ const Post = (props: PostProps) => {
     );
   };
 
+  const canDeletePost =
+    session?.user.id === post.authorId ||
+    session?.user.id === post.events.hostId;
+
   return (
     <div key={post.postId} className="border p-4 rounded w-full">
       <div className="flex flex-row justify-between">
@@ -41,7 +45,7 @@ const Post = (props: PostProps) => {
             })}
           </span>
         </div>
-        {session?.user?.id && post.authorId === session.user.id && (
+        {canDeletePost && (
           <ConfirmDelete
             whatToDelete="post"
             modalId={"post"}

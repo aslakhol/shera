@@ -33,7 +33,7 @@ export const postsRouter = createRouter()
         where: {
           eventsId: idStringToNumber.parse(input.eventId),
         },
-        include: { author: true },
+        include: { author: true, events: true },
       });
 
       return posts.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
