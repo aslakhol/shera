@@ -42,17 +42,14 @@ const Event = (props: EventProps) => {
       <div className="flex gap-2">
         <Attending eventId={event.eventId} />
         <Attend eventId={event.eventId} />
+        {session?.user?.id === event.host.id && (
+          <Link href={`/events/${eventId}/edit`}>
+            <button className="btn btn-outline">Edit event</button>
+          </Link>
+        )}
       </div>
 
       <EventBody description={event.description} />
-
-      <div className="py-2" />
-      {session?.user?.email === event.host.email && (
-        <Link href={`/events/${eventId}/edit`}>
-          <button className="btn">Edit event</button>
-        </Link>
-      )}
-      <div className="py-2" />
 
       {isDev && <Posts eventId={eventId} />}
     </div>
