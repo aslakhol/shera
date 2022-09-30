@@ -39,25 +39,33 @@ const NewPost = (props: NewPostProps) => {
   };
 
   return (
-    <Modal modalId="post-modal" buttonText={"Add a Post"} title={"Add a Post"}>
-      <form
-        onSubmit={methods.handleSubmit(handleSubmit)}
-        className={`form-control w-full max-w-xs gap-2`}
-      >
-        <TextInput
-          name="message"
-          label="Message"
-          registerReturn={methods.register("message")}
-          fieldError={methods.formState.errors.message}
-        />
+    <>
+      {session?.user?.id && (
+        <Modal
+          modalId="post-modal"
+          buttonText={"Add a Post"}
+          title={"Add a Post"}
+        >
+          <form
+            onSubmit={methods.handleSubmit(handleSubmit)}
+            className={`form-control w-full max-w-xs gap-2`}
+          >
+            <TextInput
+              name="message"
+              label="Message"
+              registerReturn={methods.register("message")}
+              fieldError={methods.formState.errors.message}
+            />
 
-        <div className="py-2" />
+            <div className="py-2" />
 
-        <button className="btn" type="submit">
-          {!postMutation.isLoading ? "Create" : <Spinner />}
-        </button>
-      </form>
-    </Modal>
+            <button className="btn" type="submit">
+              {!postMutation.isLoading ? "Create" : <Spinner />}
+            </button>
+          </form>
+        </Modal>
+      )}
+    </>
   );
 };
 
