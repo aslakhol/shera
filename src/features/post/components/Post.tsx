@@ -1,11 +1,13 @@
 import ConfirmDelete from "@/components/ConfirmDelete";
 import { trpc } from "@/utils/trpc";
 import type { Posts, User } from "@prisma/client";
+import { useSession } from "next-auth/react";
 
 type PostProps = { post: Posts & { author: User; eventsId: number } };
 
 const Post = (props: PostProps) => {
   const { post } = props;
+  const { data: session } = useSession();
   const ctx = trpc.useContext();
   const deletePostMutation = trpc.useMutation("posts.deletePost");
 
@@ -39,11 +41,13 @@ const Post = (props: PostProps) => {
             })}
           </span>
         </div>
-        <ConfirmDelete
-          whatToDelete="post"
-          modalId={"post"}
-          deleteAction={deletePost}
-        />
+        {session?.user?.id && post.authorId === session.user.id && (
+          <ConfirmDelete
+            whatToDelete="post"
+            modalId={"post"}
+            deleteAction={deletePost}
+          />
+        )}
       </div>
 
       <p className="py-2">{post.message}</p>
