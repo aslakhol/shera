@@ -38,4 +38,17 @@ export const postsRouter = createRouter()
 
       return posts.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
     },
+  })
+  .mutation("deletePost", {
+    input: z.object({
+      postId: z.number(),
+    }),
+    async resolve({ ctx, input }) {
+      const post = await ctx.prisma.posts.delete({
+        where: {
+          postId: input.postId,
+        },
+      });
+      return post;
+    },
   });
