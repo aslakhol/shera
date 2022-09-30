@@ -29,11 +29,13 @@ export const postsRouter = createRouter()
       eventId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      return await ctx.prisma.posts.findMany({
+      const posts = await ctx.prisma.posts.findMany({
         where: {
           eventsId: idStringToNumber.parse(input.eventId),
         },
         include: { author: true },
       });
+
+      return posts.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
     },
   });

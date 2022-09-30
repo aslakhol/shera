@@ -17,9 +17,21 @@ const PostList = (props: PostListProps) => {
   return (
     <>
       {posts.map((post) => (
-        <div key={post.postId}>
-          <span>{post.author.name || post.author.email || "Anonymous"}</span>
-          <p>{post.message}</p>
+        <div key={post.postId} className="border p-4 rounded w-full">
+          <div className="flex flex-col">
+            <span className="font-bold">
+              {post.author.name || post.author.email || "Anonymous"}
+            </span>
+            <span className="italic text-sm">
+              {post.createdAt.toLocaleString("en-GB", {
+                month: "short",
+                day: "numeric",
+                minute: "numeric",
+                hour: "numeric",
+              })}
+            </span>
+          </div>
+          <p className="py-2">{post.message}</p>
         </div>
       ))}
     </>
