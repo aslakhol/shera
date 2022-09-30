@@ -1,30 +1,27 @@
 import { createRouter } from "./context";
 import { z } from "zod";
+import { postSchema } from "@/features/post/formValidation";
 
 const idStringToNumber = z.string().transform(Number);
 
 export const postsRouter = createRouter()
   .mutation("post", {
-    input: z.object({
-      title: z.string(),
-      content: z.string(),
-      authorEmail: z.string(),
-      authorName: z.string(),
-      eventId: z.string(),
+    input: postSchema.extend({
+      authorId: z.string().cuid(),
+      eventId: idStringToNumber,
     }),
     async resolve({ ctx, input }) {
-      const { eventId, ...post } = input;
+      const { eventId, authorId, ...post } = input;
 
       const postInDb = await ctx.prisma.posts.create({
         data: {
           ...post,
-          events: { connect: { eventId: idStringToNumber.parse(eventId) } },
+          events: { connect: { eventId: eventId } },
+          author: { connect: { id: authorId } },
         },
       });
 
-      return {
-        postInDb,
-      };
+      return postInDb;
     },
   })
   .query("posts", {
@@ -36,6 +33,7 @@ export const postsRouter = createRouter()
         where: {
           eventsId: idStringToNumber.parse(input.eventId),
         },
+        include: { author: true },
       });
     },
   });

@@ -35,13 +35,13 @@ model Events {
 }
 
 model Posts {
-    postId      Int     @id @default(autoincrement())
-    title       String
-    content     String
-    authorEmail String
-    authorName  String
-    events      Events? @relation(fields: [eventsId], references: [eventId])
-    eventsId    Int?
+    postId    Int      @id @default(autoincrement())
+    message   String
+    author    User     @relation(fields: [authorId], references: [id])
+    authorId  String
+    events    Events   @relation(fields: [eventsId], references: [eventId])
+    eventsId  Int
+    createdAt DateTime @default(now())
 }
 
 model Attendees {
@@ -91,6 +91,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     Events        Events[]
+    Posts         Posts[]
 }
 
 model VerificationToken {

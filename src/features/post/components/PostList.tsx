@@ -18,10 +18,8 @@ const PostList = (props: PostListProps) => {
     <>
       {posts.map((post) => (
         <div key={post.postId}>
-          <span>
-            {post.authorName} - {post.authorEmail}
-          </span>
-          <p>{post.content}</p>
+          <span>{post.author.name || post.author.email || "Anonymous"}</span>
+          <p>{post.message}</p>
         </div>
       ))}
     </>
