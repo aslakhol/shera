@@ -51,7 +51,7 @@ const Event = (props: EventProps) => {
 
       <EventBody description={event.description} />
 
-      {isDev && <Posts eventId={eventId} />}
+      <Posts eventId={eventId} />
     </div>
   );
 };
