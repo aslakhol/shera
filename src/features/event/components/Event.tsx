@@ -1,7 +1,6 @@
 import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useIsDev } from "../../../utils/useIsDev";
 import Posts from "../../post/components/Posts";
 import Attend from "./Attend";
 import Attending from "./Attending";
@@ -12,19 +11,19 @@ type EventProps = { eventId: string };
 const Event = (props: EventProps) => {
   const { eventId } = props;
   const { data: session } = useSession();
-  const isDev = useIsDev();
 
-  const { data: event, isSuccess } = trpc.useQuery([
-    "events.event",
-    { eventId },
-  ]);
+  const {
+    data: event,
+    isSuccess,
+    error,
+  } = trpc.useQuery(["events.event", { eventId }], {});
+
+  if (error) {
+    return <div className="h-screen">{error.message}</div>;
+  }
 
   if (!isSuccess) {
     return <div className="h-screen"></div>;
-  }
-
-  if (event === null) {
-    return <>No event with id {eventId}</>;
   }
 
   return (

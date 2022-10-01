@@ -1,6 +1,7 @@
 import { createRouter } from "./context";
 import { z } from "zod";
 import { attendEventSchema } from "@/features/event/formValidation";
+import * as trpc from "@trpc/server";
 
 const idStringToNumber = z.string().transform(Number);
 
@@ -25,6 +26,27 @@ export const eventsRouter = createRouter()
       };
     },
   })
+  .mutation("update-event", {
+    input: z.object({
+      title: z.string(),
+      time: z.string(),
+      place: z.string().optional(),
+      description: z.string(),
+      eventId: z.number(),
+    }),
+    async resolve({ ctx, input }) {
+      const { eventId, ...event } = input;
+
+      const eventInDb = await ctx.prisma.events.update({
+        where: { eventId },
+        data: { ...event },
+      });
+
+      return {
+        event: eventInDb,
+      };
+    },
+  })
   .query("events", {
     async resolve({ ctx }) {
       return await ctx.prisma.events.findMany();
@@ -35,12 +57,21 @@ export const eventsRouter = createRouter()
       eventId: z.string(),
     }),
     async resolve({ ctx, input }) {
-      return await ctx.prisma.events.findFirst({
+      const event = await ctx.prisma.events.findFirst({
         where: {
           eventId: idStringToNumber.parse(input.eventId),
         },
         include: { host: true },
       });
+
+      if (!event) {
+        throw new trpc.TRPCError({
+          code: "NOT_FOUND",
+          message: `No event found with id ${input.eventId}`,
+        });
+      }
+
+      return event;
     },
   })
   .query("events-attended-by-user", {
