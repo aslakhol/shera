@@ -8,6 +8,9 @@ import {
 import { useZodForm } from "@/utils/zodForm";
 import { Events, User } from "@prisma/client";
 import { useUpdateEvent } from "../hooks/useUpdateEvent";
+import Description from "./Description";
+import Place from "./Place";
+import Time from "./Time";
 import Title from "./Title";
 
 type EventFormProps = {
@@ -36,27 +39,9 @@ const EventForm = (props: EventFormProps) => {
       className={`form-control w-full max-w-xs gap-2`}
     >
       <Title methods={methods} />
-
-      <TextInput
-        name="time"
-        label="Time"
-        registerReturn={methods.register("time")}
-        fieldError={methods.formState.errors.time}
-      />
-
-      <TextInput
-        name="place"
-        label="Place"
-        registerReturn={methods.register("place")}
-        fieldError={methods.formState.errors.place}
-      />
-
-      <Textarea
-        name="description"
-        label="Description"
-        registerReturn={methods.register("description")}
-        fieldError={methods.formState.errors.description}
-      />
+      <Time methods={methods} />
+      <Place methods={methods} />
+      <Description methods={methods} />
 
       <div className="py-2" />
 

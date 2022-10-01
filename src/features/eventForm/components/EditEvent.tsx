@@ -3,7 +3,7 @@ import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useUpdateEvent } from "../hooks/useUpdateEvent";
-import EditEventForm from "./EventForm";
+import EventForm from "./EventForm";
 
 type EditEventProps = { eventId: string };
 
@@ -30,10 +30,6 @@ const EditEvent = (props: EditEventProps) => {
 
   if (!isSuccess || status !== "authenticated") {
     return <div className="h-screen"></div>;
-  }
-
-  if (!session.user.id) {
-    return <>Not logged in</>;
   }
 
   if (session.user.id !== event.host.id) {
@@ -63,7 +59,7 @@ const EditEvent = (props: EditEventProps) => {
       <div className="prose">
         <h1 className="py-2 text-center">Edit {event.title}</h1>
       </div>
-      <EditEventForm event={event} submit={handleSubmit} submitLabel="Save" />
+      <EventForm event={event} submit={handleSubmit} submitLabel="Save" />
     </div>
   );
 };
