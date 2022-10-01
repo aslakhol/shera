@@ -1,8 +1,8 @@
 import { UseFormReturn } from "react-hook-form";
 import TextInput from "../../../components/TextInput";
-import { CreateEventSchemaType } from "../formValidation";
+import { EventSchemaType } from "../formValidation";
 
-type TitleProps = { methods: UseFormReturn<CreateEventSchemaType> };
+type TitleProps = { methods: UseFormReturn<EventSchemaType> };
 
 const Title = (props: TitleProps) => {
   const { methods } = props;

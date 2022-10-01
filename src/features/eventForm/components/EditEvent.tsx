@@ -1,9 +1,9 @@
-import { CreateEventSchemaType } from "@/features/newEvent/formValidation";
+import { EventSchemaType } from "@/features/eventForm/formValidation";
 import { trpc } from "@/utils/trpc";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useUpdateEvent } from "../hooks/useUpdateEvent";
-import EditEventForm from "./EditEventForm";
+import EditEventForm from "./EventForm";
 
 type EditEventProps = { eventId: string };
 
@@ -41,7 +41,7 @@ const EditEvent = (props: EditEventProps) => {
   }
 
   const handleSubmit = (
-    values: CreateEventSchemaType,
+    values: EventSchemaType,
     successActions: () => void
   ) => {
     updateEventMutation.mutate(
@@ -63,7 +63,7 @@ const EditEvent = (props: EditEventProps) => {
       <div className="prose">
         <h1 className="py-2 text-center">Edit {event.title}</h1>
       </div>
-      <EditEventForm event={event} submit={handleSubmit} />
+      <EditEventForm event={event} submit={handleSubmit} submitLabel="Save" />
     </div>
   );
 };

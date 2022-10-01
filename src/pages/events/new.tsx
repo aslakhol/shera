@@ -1,4 +1,4 @@
-import NewEvent from "@/features/newEvent/components/NewEvent";
+import NewEvent from "@/features/eventForm/components/NewEvent";
 import { NextPage } from "next";
 import Head from "next/head";
 

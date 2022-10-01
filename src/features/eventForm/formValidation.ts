@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-export type CreateEventSchemaType = z.infer<typeof createEventSchema>;
+export type EventSchemaType = z.infer<typeof eventSchema>;
 
-export const createEventSchema = z.object({
+export const eventSchema = z.object({
   title: z.string().min(3).max(100),
   description: z.string().min(3).max(1000),
   time: z.string(),
