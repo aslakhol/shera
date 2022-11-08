@@ -1,6 +1,4 @@
 import Spinner from "@/components/Spinner";
-import Textarea from "@/components/Textarea";
-import TextInput from "@/components/TextInput";
 import {
   eventSchema,
   EventSchemaType,
@@ -8,6 +6,7 @@ import {
 import { useZodForm } from "@/utils/zodForm";
 import { Events, User } from "@prisma/client";
 import { useUpdateEvent } from "../hooks/useUpdateEvent";
+import DateTime from "./DateTime";
 import Description from "./Description";
 import Place from "./Place";
 import Time from "./Time";
@@ -29,6 +28,7 @@ const EventForm = (props: EventFormProps) => {
     schema: eventSchema,
     defaultValues: {
       ...event,
+      dateTime: event?.dateTime.toISOString().replace("Z", ""),
       place: event?.place || undefined,
     },
   });
@@ -40,11 +40,10 @@ const EventForm = (props: EventFormProps) => {
     >
       <Title methods={methods} />
       <Time methods={methods} />
+      <DateTime methods={methods} />
       <Place methods={methods} />
       <Description methods={methods} />
-
       <div className="py-2" />
-
       <button className="btn" type="submit">
         {!updateEventMutation.isLoading ? submitLabel : <Spinner />}
       </button>

@@ -2,25 +2,20 @@ import { createRouter } from "./context";
 import { z } from "zod";
 import { attendEventSchema } from "@/features/event/formValidation";
 import * as trpc from "@trpc/server";
+import { eventSchema } from "@/features/eventForm/formValidation";
 
 const idStringToNumber = z.string().transform(Number);
 
 export const eventsRouter = createRouter()
   .mutation("create-event", {
-    input: z.object({
-      title: z.string(),
-      time: z.string(),
-      place: z.string().optional(),
-      description: z.string(),
-      userId: z.string(),
-    }),
+    input: eventSchema.extend({ userId: z.string() }),
     async resolve({ ctx, input }) {
       const { userId, ...event } = input;
 
       const eventInDb = await ctx.prisma.events.create({
         data: {
           ...event,
-          dateTime: new Date().toISOString(),
+          dateTime: new Date(event.dateTime),
           host: { connect: { id: userId } },
         },
       });
@@ -31,19 +26,13 @@ export const eventsRouter = createRouter()
     },
   })
   .mutation("update-event", {
-    input: z.object({
-      title: z.string(),
-      time: z.string(),
-      place: z.string().optional(),
-      description: z.string(),
-      eventId: z.number(),
-    }),
+    input: eventSchema.extend({ eventId: z.number() }),
     async resolve({ ctx, input }) {
       const { eventId, ...event } = input;
 
       const eventInDb = await ctx.prisma.events.update({
         where: { eventId },
-        data: { ...event },
+        data: { ...event, dateTime: new Date(event.dateTime) },
       });
       return {
         event: eventInDb,
