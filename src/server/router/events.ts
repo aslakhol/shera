@@ -18,7 +18,11 @@ export const eventsRouter = createRouter()
       const { userId, ...event } = input;
 
       const eventInDb = await ctx.prisma.events.create({
-        data: { ...event, host: { connect: { id: userId } } },
+        data: {
+          ...event,
+          dateTime: new Date().toISOString(),
+          host: { connect: { id: userId } },
+        },
       });
 
       return {
@@ -41,7 +45,6 @@ export const eventsRouter = createRouter()
         where: { eventId },
         data: { ...event },
       });
-
       return {
         event: eventInDb,
       };

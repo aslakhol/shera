@@ -27,6 +27,7 @@ model Events {
     description String
     title       String
     time        String
+    dateTime    DateTime
     place       String?
     host        User        @relation(fields: [hostId], references: [id])
     hostId      String
