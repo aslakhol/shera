@@ -10,7 +10,7 @@ const Time = (props: TimeProps) => {
   return (
     <TextInput
       name="time"
-      label="Time"
+      label="Old: Time"
       registerReturn={methods.register("time")}
       fieldError={methods.formState.errors.time}
     />

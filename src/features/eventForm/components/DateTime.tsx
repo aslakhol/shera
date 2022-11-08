@@ -10,7 +10,7 @@ const DateTime = (props: DateTimeProps) => {
     <div className="form-control">
       <label className="label" htmlFor={"dateTime"}>
         <span className="label-text">
-          DateTime
+          When
           {/* {required && <span>*</span>} */}
         </span>
       </label>

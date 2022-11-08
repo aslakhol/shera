@@ -33,7 +33,8 @@ const Event = (props: EventProps) => {
       </div>
 
       <div className="info flex flex-col gap-2">
-        <span>Time: {event.time}</span>
+        <span>(Old)Time: {event.time}</span>
+        <span>When: {event.dateTime.toLocaleString()}</span>
         <span>Place: {event.place}</span>
         <span>Host: {event.host.name || event.host.email}</span>
       </div>
