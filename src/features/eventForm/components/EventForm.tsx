@@ -5,6 +5,7 @@ import {
 } from "@/features/eventForm/formValidation";
 import { useZodForm } from "@/utils/zodForm";
 import { Events, User } from "@prisma/client";
+import { formatISO } from "date-fns";
 import { useUpdateEvent } from "../hooks/useUpdateEvent";
 import DateTime from "./DateTime";
 import Description from "./Description";
@@ -28,7 +29,7 @@ const EventForm = (props: EventFormProps) => {
     schema: eventSchema,
     defaultValues: {
       ...event,
-      dateTime: event?.dateTime.toISOString().replace(/.\d+Z$/g, ""),
+      dateTime: event && formatISO(event.dateTime).split("+")[0],
       place: event?.place || undefined,
     },
   });
