@@ -7,6 +7,7 @@ import Attend from "./Attend";
 import Attending from "./Attending";
 import EventBody from "./EventBody";
 import GoogleCalendar from "./GoogleCalendar";
+import Invite from "./Invite";
 
 type EventProps = { eventId: string };
 
@@ -48,6 +49,7 @@ const Event = (props: EventProps) => {
             <button className="btn btn-outline">Edit event</button>
           </Link>
         )}
+        <Invite event={event} />
       </div>
 
       <EventBody description={event.description} />
