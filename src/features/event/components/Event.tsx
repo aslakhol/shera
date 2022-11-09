@@ -6,6 +6,7 @@ import Posts from "../../post/components/Posts";
 import Attend from "./Attend";
 import Attending from "./Attending";
 import EventBody from "./EventBody";
+import GoogleCalendar from "./GoogleCalendar";
 
 type EventProps = { eventId: string };
 
@@ -50,6 +51,7 @@ const Event = (props: EventProps) => {
       </div>
 
       <EventBody description={event.description} />
+      <GoogleCalendar event={event} />
 
       <Posts eventId={eventId} />
     </div>
