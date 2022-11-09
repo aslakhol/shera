@@ -41,7 +41,7 @@ const Event = (props: EventProps) => {
         <span>Host: {event.host.name || event.host.email}</span>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap justify-center">
         <Attending eventId={event.eventId} />
         <Attend eventId={event.eventId} />
         {session?.user?.id === event.host.id && (
