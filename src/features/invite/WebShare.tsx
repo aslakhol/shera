@@ -1,13 +1,13 @@
 import { Events } from "@prisma/client";
 import { User } from "next-auth";
 
-type InviteProps = {
+type WebShareProps = {
   event: Events & {
     host: User;
   };
 };
 
-const Invite = (props: InviteProps) => {
+const WebShare = (props: WebShareProps) => {
   const { event } = props;
 
   const share = () => {
@@ -22,14 +22,10 @@ const Invite = (props: InviteProps) => {
   };
 
   return (
-    <>
-      {!!navigator.share && (
-        <button className="btn btn-outline" onClick={share}>
-          Invite friends
-        </button>
-      )}
-    </>
+    <button className="btn btn-outline" onClick={share}>
+      Invite
+    </button>
   );
 };
 
-export default Invite;
+export default WebShare;
