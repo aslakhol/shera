@@ -8,14 +8,13 @@ const idStringToNumber = z.string().transform(Number);
 
 export const eventsRouter = createRouter()
   .mutation("create-event", {
-    input: eventSchema.extend({ userId: z.string() }),
+    input: eventSchema.extend({ userId: z.string(), dateTime: z.date() }),
     async resolve({ ctx, input }) {
       const { userId, ...event } = input;
 
       const eventInDb = await ctx.prisma.events.create({
         data: {
           ...event,
-          dateTime: new Date(event.dateTime),
           host: { connect: { id: userId } },
         },
       });
@@ -26,13 +25,13 @@ export const eventsRouter = createRouter()
     },
   })
   .mutation("update-event", {
-    input: eventSchema.extend({ eventId: z.number() }),
+    input: eventSchema.extend({ eventId: z.number(), dateTime: z.date() }),
     async resolve({ ctx, input }) {
       const { eventId, ...event } = input;
 
       const eventInDb = await ctx.prisma.events.update({
         where: { eventId },
-        data: { ...event, dateTime: new Date(event.dateTime) },
+        data: { ...event },
       });
       return {
         event: eventInDb,

@@ -43,6 +43,7 @@ const EditEvent = (props: EditEventProps) => {
     updateEventMutation.mutate(
       {
         ...values,
+        dateTime: new Date(values.dateTime),
         eventId: event.eventId,
       },
       {

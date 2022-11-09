@@ -28,7 +28,7 @@ const EventForm = (props: EventFormProps) => {
     schema: eventSchema,
     defaultValues: {
       ...event,
-      dateTime: event?.dateTime.toISOString().replace("Z", ""),
+      dateTime: event?.dateTime.toISOString().replace(/.\d+Z$/g, ""),
       place: event?.place || undefined,
     },
   });

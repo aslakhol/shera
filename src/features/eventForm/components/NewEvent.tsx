@@ -22,6 +22,7 @@ const NewEvent = () => {
     createEventMutation.mutate(
       {
         ...values,
+        dateTime: new Date(values.dateTime),
         userId: userId,
       },
       {
