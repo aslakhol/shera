@@ -10,7 +10,6 @@ import { useUpdateEvent } from "../hooks/useUpdateEvent";
 import DateTime from "./DateTime";
 import Description from "./Description";
 import Place from "./Place";
-import Time from "./Time";
 import Title from "./Title";
 
 type EventFormProps = {
@@ -40,7 +39,6 @@ const EventForm = (props: EventFormProps) => {
       className={`form-control w-full max-w-xs gap-2`}
     >
       <Title methods={methods} />
-      <Time methods={methods} />
       <DateTime methods={methods} />
       <Place methods={methods} />
       <Description methods={methods} />
