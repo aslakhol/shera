@@ -3,6 +3,7 @@ import { z } from "zod";
 import { attendEventSchema } from "@/features/event/formValidation";
 import * as trpc from "@trpc/server";
 import { eventSchema } from "@/features/eventForm/formValidation";
+import { compareDesc } from "date-fns";
 
 const idStringToNumber = z.string().transform(Number);
 
@@ -70,7 +71,7 @@ export const eventsRouter = createRouter()
       userEmail: z.string().email(),
     }),
     async resolve({ ctx, input }) {
-      return await ctx.prisma.events.findMany({
+      const eventsInDb = await ctx.prisma.events.findMany({
         where: {
           attendees: {
             some: {
@@ -80,6 +81,8 @@ export const eventsRouter = createRouter()
         },
         include: { host: true },
       });
+
+      return eventsInDb.sort((a, b) => compareDesc(a.dateTime, b.dateTime));
     },
   })
   .query("events-hosted-by-user", {
@@ -87,7 +90,7 @@ export const eventsRouter = createRouter()
       userEmail: z.string().email(),
     }),
     async resolve({ ctx, input }) {
-      return await ctx.prisma.events.findMany({
+      const eventsInDb = await ctx.prisma.events.findMany({
         where: {
           host: {
             email: input.userEmail,
@@ -95,6 +98,8 @@ export const eventsRouter = createRouter()
         },
         include: { host: true },
       });
+
+      return eventsInDb.sort((a, b) => compareDesc(a.dateTime, b.dateTime));
     },
   })
   .mutation("attend", {
