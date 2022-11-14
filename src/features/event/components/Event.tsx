@@ -9,6 +9,7 @@ import EventBody from "./EventBody";
 import GoogleCalendar from "./GoogleCalendar";
 import Invite from "../../invite/Invite";
 import LoggedInAttend from "./LoggedInAttend";
+import Spinner from "@/components/Spinner";
 
 type EventProps = { eventId: number };
 
@@ -20,7 +21,16 @@ const Event = (props: EventProps) => {
     data: event,
     isSuccess,
     error,
+    isLoading,
   } = trpc.useQuery(["events.event", { eventId }]);
+
+  if (isLoading) {
+    return (
+      <div className="flex w-full h-[50vh] justify-center items-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   if (error || !isSuccess) {
     return <div className="h-screen">{error?.message}</div>;
