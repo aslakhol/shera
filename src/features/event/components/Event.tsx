@@ -8,6 +8,7 @@ import Attending from "./Attending";
 import EventBody from "./EventBody";
 import GoogleCalendar from "./GoogleCalendar";
 import Invite from "../../invite/Invite";
+import LoggedInAttend from "./LoggedInAttend";
 
 type EventProps = { eventId: number };
 
@@ -39,7 +40,11 @@ const Event = (props: EventProps) => {
 
       <div className="flex gap-2 flex-wrap justify-center">
         <Attending eventId={event.eventId} />
-        <Attend eventId={event.eventId} />
+        {session?.user ? (
+          <LoggedInAttend eventId={event.eventId} />
+        ) : (
+          <Attend eventId={event.eventId} />
+        )}
         {session?.user?.id === event.host.id && (
           <Link href={`/events/${eventId}/edit`}>
             <button className="btn btn-outline">Edit event</button>
