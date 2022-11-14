@@ -5,8 +5,6 @@ import * as trpc from "@trpc/server";
 import { eventSchema } from "@/features/eventForm/formValidation";
 import { compareDesc } from "date-fns";
 
-const idStringToNumber = z.string().transform(Number);
-
 export const eventsRouter = createRouter()
   .mutation("create-event", {
     input: eventSchema.extend({ userId: z.string(), dateTime: z.date() }),
@@ -46,12 +44,12 @@ export const eventsRouter = createRouter()
   })
   .query("event", {
     input: z.object({
-      eventId: z.string(),
+      eventId: z.number(),
     }),
     async resolve({ ctx, input }) {
       const event = await ctx.prisma.events.findFirst({
         where: {
-          eventId: idStringToNumber.parse(input.eventId),
+          eventId: input.eventId,
         },
         include: { host: true },
       });

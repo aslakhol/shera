@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { PostSchemaType, postSchema } from "../formValidation";
 import { usePerformPost } from "../hooks/usePerformPost";
 
-type NewPostProps = { eventId: string };
+type NewPostProps = { eventId: number };
 
 const NewPost = (props: NewPostProps) => {
   const { eventId } = props;

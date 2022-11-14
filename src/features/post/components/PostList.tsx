@@ -1,7 +1,7 @@
 import { trpc } from "../../../utils/trpc";
 import Post from "./Post";
 
-type PostListProps = { eventId: string };
+type PostListProps = { eventId: number };
 
 const PostList = (props: PostListProps) => {
   const { eventId } = props;

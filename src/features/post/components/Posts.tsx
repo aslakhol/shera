@@ -2,7 +2,7 @@ import NewPost from "./NewPost";
 import PostList from "./PostList";
 
 type PostsProps = {
-  eventId: string;
+  eventId: number;
 };
 
 const Posts = (props: PostsProps) => {

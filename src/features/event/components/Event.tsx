@@ -9,7 +9,7 @@ import EventBody from "./EventBody";
 import GoogleCalendar from "./GoogleCalendar";
 import Invite from "../../invite/Invite";
 
-type EventProps = { eventId: string };
+type EventProps = { eventId: number };
 
 const Event = (props: EventProps) => {
   const { eventId } = props;
@@ -21,12 +21,8 @@ const Event = (props: EventProps) => {
     error,
   } = trpc.useQuery(["events.event", { eventId }]);
 
-  if (error) {
-    return <div className="h-screen">{error.message}</div>;
-  }
-
-  if (!isSuccess) {
-    return <div className="h-screen"></div>;
+  if (error || !isSuccess) {
+    return <div className="h-screen">{error?.message}</div>;
   }
 
   return (
