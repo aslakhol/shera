@@ -1,5 +1,6 @@
 import { BuiltInProviderType } from "next-auth/providers";
 import { ClientSafeProvider, LiteralUnion, signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import GitHubIcon from "./GitHubIcon";
 import GoogleIcon from "./GoogleIcon";
@@ -15,6 +16,7 @@ type SignInProps = {
 const SignIn = (props: SignInProps) => {
   const { providers, callbackUrl = "/" } = props;
   const [email, setEmail] = useState("");
+  const { query } = useRouter();
 
   const handleSignIn = (providerId: string, email?: string) => {
     signIn(providerId, { email: email, callbackUrl: callbackUrl });
@@ -22,6 +24,16 @@ const SignIn = (props: SignInProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen-content mx-auto md:w-1/2 ">
+      {query.error === "OAuthAccountNotLinked" && (
+        <div className={`toast toast-end fixed bottom-2`}>
+          <div className="alert alert-error">
+            <span>
+              To confirm your identity, sign in with the same provider you used
+              originally.
+            </span>
+          </div>
+        </div>
+      )}
       <div className="border flex flex-col items-center justify-center gap-4 p-8 rounded">
         <button
           className="btn btn-outline"
