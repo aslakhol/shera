@@ -118,6 +118,16 @@ export const eventsRouter = createRouter()
       });
     },
   })
+  .mutation("unattend", {
+    input: z.object({ attendeeId: z.string().cuid() }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.attendees.delete({
+        where: {
+          attendeeId: input.attendeeId,
+        },
+      });
+    },
+  })
   .query("attendees", {
     input: z.object({
       eventId: z.number(),

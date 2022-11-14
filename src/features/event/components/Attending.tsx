@@ -1,5 +1,6 @@
 import Modal from "@/components/Modal";
 import { trpc } from "@/utils/trpc";
+import Attendee from "./Attendee";
 
 type AttendingProps = { eventId: number };
 
@@ -18,8 +19,12 @@ const Attending = (props: AttendingProps) => {
       title={"Attendees:"}
     >
       {isSuccess &&
-        attendees.map((attendee, index) => (
-          <li key={`${attendee.name}-${index}`}>{attendee.name}</li>
+        attendees.map((attendee) => (
+          <Attendee
+            key={`${attendee.attendeeId}`}
+            eventId={eventId}
+            attendee={attendee}
+          />
         ))}
     </Modal>
   );
