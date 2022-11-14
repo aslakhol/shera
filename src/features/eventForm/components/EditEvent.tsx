@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useUpdateEvent } from "../hooks/useUpdateEvent";
 import EventForm from "./EventForm";
 
-type EditEventProps = { eventId: string };
+type EditEventProps = { eventId: number };
 
 const EditEvent = (props: EditEventProps) => {
   const { eventId } = props;

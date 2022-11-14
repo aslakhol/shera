@@ -1,4 +1,5 @@
 import EditEvent from "@/features/eventForm/components/EditEvent";
+import { zStringToNumber } from "@/utils/zStringToNumber";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -6,10 +7,15 @@ import { useRouter } from "next/router";
 const EditEventPage: NextPage = () => {
   const { eventId } = useRouter().query;
 
-  if (!eventId || Array.isArray(eventId)) {
-    return <></>;
+  if (!eventId) {
+    return <div>Event not found</div>;
   }
 
+  const id = zStringToNumber.parse(eventId);
+
+  if (!id) {
+    return <div>Event not found</div>;
+  }
   return (
     <>
       <Head>
@@ -18,7 +24,7 @@ const EditEventPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <EditEvent eventId={eventId} />
+      <EditEvent eventId={id} />
     </>
   );
 };

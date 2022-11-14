@@ -16,10 +16,7 @@ const Post = (props: PostProps) => {
       { postId: post.postId },
       {
         onSuccess: () => {
-          ctx.invalidateQueries([
-            "posts.posts",
-            { eventId: post.eventsId.toString() },
-          ]);
+          ctx.invalidateQueries(["posts.posts", { eventId: post.eventsId }]);
         },
       }
     );
