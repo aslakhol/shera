@@ -7,11 +7,19 @@ type TextInputProps = {
   required?: boolean;
   registerReturn: UseFormRegisterReturn;
   fieldError?: FieldError;
+  type?: "text" | "email" | "password";
 };
 
 const TextInput = (props: TextInputProps) => {
-  const { name, label, placeholder, required, registerReturn, fieldError } =
-    props;
+  const {
+    name,
+    label,
+    placeholder,
+    required,
+    registerReturn,
+    fieldError,
+    type = "text",
+  } = props;
 
   return (
     <div className="form-control">
@@ -23,7 +31,7 @@ const TextInput = (props: TextInputProps) => {
       </label>
       <input
         id={name}
-        type="text"
+        type={type}
         placeholder={placeholder || label}
         className={`input input-bordered w-full max-w-xs ${
           fieldError ? "input-error" : ""
