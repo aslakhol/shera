@@ -1,6 +1,8 @@
 import Spinner from "@/components/Spinner";
+import { trpc } from "@/utils/trpc";
 import { useZodForm } from "@/utils/zodForm";
 import { Session } from "next-auth";
+import { useRouter } from "next/router";
 import Email from "./Email";
 import { profileSchema, ProfileSchemaType } from "./formValidation";
 import Name from "./Name";
@@ -9,6 +11,9 @@ type ProfileFormProps = { user: Session["user"] };
 
 const ProfileForm = (props: ProfileFormProps) => {
   const { user } = props;
+  const router = useRouter();
+
+  const mutation = trpc.useMutation(["users.update-profile"], {});
 
   const methods = useZodForm({
     schema: profileSchema,
@@ -20,19 +25,14 @@ const ProfileForm = (props: ProfileFormProps) => {
 
   const handleSubmit = (values: ProfileSchemaType) => {
     console.log(values);
-    // updateEventMutation.mutate(
-    //   {
-    //     ...values,
-    //     dateTime: new Date(values.dateTime),
-    //     eventId: event.eventId,
-    //   },
-    //   {
-    //     onSuccess: (result) => {
-    //       router.push(`/events/${result.event.eventId}`);
-    //       successActions();
-    //     },
-    //   }
-    // );
+    mutation.mutate(
+      { userId: user.id!, ...values },
+      {
+        onError: () => {
+          router.reload();
+        },
+      }
+    );
   };
 
   return (
@@ -41,7 +41,7 @@ const ProfileForm = (props: ProfileFormProps) => {
       <Email methods={methods} />
       <div className="py-2" />
       <button className="btn" type="submit">
-        {true ? "Update" : <Spinner />}
+        {!mutation.isLoading ? "Update" : <Spinner />}
       </button>
     </form>
   );
