@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import Email from "./Email";
 import { profileSchema, ProfileSchemaType } from "./formValidation";
 import Name from "./Name";
+import ProfilePicture from "./ProfilePicture";
 
 type ProfileFormProps = { user: Session["user"] };
 
@@ -20,11 +21,11 @@ const ProfileForm = (props: ProfileFormProps) => {
     defaultValues: {
       name: user.name || "",
       email: user.email || "",
+      image: user.image || "",
     },
   });
 
   const handleSubmit = (values: ProfileSchemaType) => {
-    console.log(values);
     mutation.mutate(
       { userId: user.id!, ...values },
       {
@@ -39,6 +40,7 @@ const ProfileForm = (props: ProfileFormProps) => {
     <form onSubmit={methods.handleSubmit(handleSubmit)}>
       <Name methods={methods} />
       <Email methods={methods} />
+      <ProfilePicture methods={methods} />
       <div className="py-2" />
       <button className="btn" type="submit">
         {!mutation.isLoading ? "Update" : <Spinner />}

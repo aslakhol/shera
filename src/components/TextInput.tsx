@@ -7,7 +7,8 @@ type TextInputProps = {
   required?: boolean;
   registerReturn: UseFormRegisterReturn;
   fieldError?: FieldError;
-  type?: "text" | "email" | "password";
+  type?: "text" | "email" | "password" | "url";
+  description?: string;
 };
 
 const TextInput = (props: TextInputProps) => {
@@ -18,6 +19,7 @@ const TextInput = (props: TextInputProps) => {
     required,
     registerReturn,
     fieldError,
+    description,
     type = "text",
   } = props;
 
@@ -38,6 +40,11 @@ const TextInput = (props: TextInputProps) => {
         }`}
         {...registerReturn}
       />
+      {description && (
+        <label className="label">
+          <span className="label-text-alt">{description}</span>
+        </label>
+      )}
       {fieldError?.message && (
         <label className="label">
           <span className="label-text-alt text-error">
