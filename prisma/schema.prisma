@@ -22,6 +22,38 @@ model Post {
     @@index([name])
 }
 
+model Events {
+    eventId     Int         @id @default(autoincrement())
+    description String
+    title       String
+    dateTime    DateTime
+    place       String?
+    host        User        @relation(fields: [hostId], references: [id])
+    hostId      String
+    attendees   Attendees[]
+    posts       Posts[]
+}
+
+model Posts {
+    postId    Int      @id @default(autoincrement())
+    message   String
+    author    User     @relation(fields: [authorId], references: [id])
+    authorId  String
+    events    Events   @relation(fields: [eventsId], references: [eventId])
+    eventsId  Int
+    createdAt DateTime @default(now())
+}
+
+model Attendees {
+    attendeeId String  @id @default(cuid())
+    name       String
+    email      String?
+    Events     Events  @relation(fields: [eventId], references: [eventId])
+    eventId    Int
+
+    @@unique([name, eventId])
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -58,6 +90,8 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    Events        Events[]
+    Posts         Posts[]
 }
 
 model VerificationToken {
