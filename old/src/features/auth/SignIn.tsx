@@ -23,7 +23,7 @@ const SignIn = (props: SignInProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen-content mx-auto md:w-1/2 ">
+    <div className="min-h-screen-content mx-auto flex flex-col items-center justify-center md:w-1/2 ">
       {query.error === "OAuthAccountNotLinked" && (
         <div className={`toast toast-end fixed bottom-2`}>
           <div className="alert alert-error">
@@ -34,7 +34,7 @@ const SignIn = (props: SignInProps) => {
           </div>
         </div>
       )}
-      <div className="border flex flex-col items-center justify-center gap-4 p-8 rounded">
+      <div className="flex flex-col items-center justify-center gap-4 rounded border p-8">
         <button
           className="btn btn-outline"
           onClick={() => handleSignIn(providers.google.id)}
@@ -43,7 +43,7 @@ const SignIn = (props: SignInProps) => {
           Sign in with Google
         </button>
         <button
-          className="btn btn-outline flex gap-1 justify-center items-center"
+          className="btn btn-outline flex items-center justify-center gap-1"
           onClick={() => handleSignIn(providers.github.id)}
         >
           <div className="px-4">

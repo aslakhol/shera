@@ -1,8 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { eventSchema } from "../../../features/eventForm/formValidation";
 import { compareDesc } from "date-fns";
-import { attendEventSchema } from "../../../utils/formValidation";
+import { attendEventSchema, eventSchema } from "../../../utils/formValidation";
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
