@@ -11,7 +11,25 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
-        <Button>alsjdkajsh</Button>
+        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+          Shera
+        </h1>
+        <p className="leading-7">
+          Shera is a tool for managing events without being tied to a social
+          network.
+        </p>
+        <p className="leading-7">
+          Do you need to invite people to an event, but they are spread across
+          multiple messaging services or social networks? Then Shera is for you.
+        </p>
+        <p className="leading-7">
+          You can keep your attendees updated on your event on their terms. They
+          decide how they get their information, without needing to create
+          accounts or download an app.
+        </p>
+        <p className="leading-7">
+          Log in to create an event, and invite your friends to join.
+        </p>
       </main>
     </>
   );
