@@ -38,8 +38,8 @@ const SignedIn = ({ session }: SignedInProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative m-2 h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
+        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+          <Avatar className="h-10 w-10">
             <AvatarImage
               src={session?.data?.user.image ?? ""}
               alt={session?.data?.user.name ?? "user icon"}
@@ -100,8 +100,8 @@ const SignedOut = ({}: SignedOutProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8 align-middle">
+        <Button variant="ghost" className="relative h-10 w-10 rounded-full ">
+          <Avatar className="h-10 w-10">
             <AvatarFallback>
               <User size={24} />
             </AvatarFallback>
