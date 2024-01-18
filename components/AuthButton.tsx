@@ -23,99 +23,90 @@ export const AuthButton = () => {
 
   return (
     <div className="dropdown dropdown-end">
-      {session.status === "authenticated" ? (
-        <SignedIn session={session} />
-      ) : (
-        <SignedOut session={session} />
-      )}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+            <Avatar className="h-10 w-10">
+              <AvatarImage
+                src={session?.data?.user.image ?? ""}
+                alt={session?.data?.user.name ?? "user icon"}
+              />
+              <AvatarFallback>
+                <User size={24} />
+              </AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+          {session.status === "authenticated" ? (
+            <SignedInContent session={session} />
+          ) : (
+            <SignedOutContent session={session} />
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
 
-type SignedInProps = { session: ReturnType<typeof useSession> };
+type SignedInContentProps = { session: ReturnType<typeof useSession> };
 
-const SignedIn = ({ session }: SignedInProps) => {
+const SignedInContent = ({ session }: SignedInContentProps) => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-          <Avatar className="h-10 w-10">
-            <AvatarImage
-              src={session?.data?.user.image ?? ""}
-              alt={session?.data?.user.name ?? "user icon"}
-            />
-            <AvatarFallback>
-              <User size={24} />
-            </AvatarFallback>
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
-              {session.data?.user.name ?? "No name"}
-            </p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {session.data?.user.email ?? "No email"}
-            </p>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <Link href="/profile">
-            <DropdownMenuItem>
-              Profile
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"/events/new"}>
-            <DropdownMenuItem>
-              New Event
-              <DropdownMenuShortcut>⇧⌘N</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"/events"}>
-            <DropdownMenuItem>
-              Events
-              <DropdownMenuShortcut>⇧⌘E</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </Link>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <Link href={"/signout"}>
+    <>
+      <DropdownMenuLabel className="font-normal">
+        <div className="flex flex-col space-y-1">
+          <p className="text-sm font-medium leading-none">
+            {session.data?.user.name ?? "No name"}
+          </p>
+          <p className="text-xs leading-none text-muted-foreground">
+            {session.data?.user.email ?? "No email"}
+          </p>
+        </div>
+      </DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <Link href="/profile">
           <DropdownMenuItem>
-            Log out
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+            Profile
+            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
         </Link>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        <Link href={"/events/new"}>
+          <DropdownMenuItem>
+            New Event
+            <DropdownMenuShortcut>⇧⌘N</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </Link>
+        <Link href={"/events"}>
+          <DropdownMenuItem>
+            Events
+            <DropdownMenuShortcut>⇧⌘E</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </Link>
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <Link href={"/signout"}>
+        <DropdownMenuItem>
+          Log out
+          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </Link>
+    </>
   );
 };
 
-type SignedOutProps = { session: ReturnType<typeof useSession> };
+type SignedOutContentContentProps = { session: ReturnType<typeof useSession> };
 
-const SignedOut = ({}: SignedOutProps) => {
+const SignedOutContent = ({ session }: SignedOutContentContentProps) => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full ">
-          <Avatar className="h-10 w-10">
-            <AvatarFallback>
-              <User size={24} />
-            </AvatarFallback>
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <Link href={"/signin"}>
-          <DropdownMenuItem>
-            Log In
-            <DropdownMenuShortcut>⇧⌘L</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </Link>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <Link href={"/signin"}>
+        <DropdownMenuItem>
+          Log In
+          <DropdownMenuShortcut>⇧⌘L</DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </Link>
+    </>
   );
 };
