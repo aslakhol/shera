@@ -13,6 +13,11 @@ import { Input } from "./ui/input";
 import { eventSchema, type EventSchemaType } from "../utils/formValidation";
 import { type Events } from "@prisma/client";
 import { Textarea } from "./ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { format } from "date-fns";
+import { cn } from "../utils/cn";
+import { Calendar } from "./ui/calendar";
+import { CalendarIcon } from "lucide-react";
 
 type Props = {
   event?: Events;
@@ -25,19 +30,15 @@ export const EventForm = ({ event, onSubmit }: Props) => {
     defaultValues: {
       title: event?.title ?? "",
       description: event?.description ?? "",
-      // dateTime: event?.dateTime && formatISO(event.dateTime).split("+")[0],
+      dateTime: event?.dateTime,
       place: event?.place ?? "",
     },
   });
 
   const handleSubmit = (values: EventSchemaType) => {
-    console.log("handleSubmit", values, form.formState.isDirty);
-
     if (!form.formState.isDirty) {
       return;
     }
-
-    console.log("after if");
 
     onSubmit(values);
   };
@@ -59,19 +60,41 @@ export const EventForm = ({ event, onSubmit }: Props) => {
           )}
         />
 
-        {/* <FormField
+        <FormField
           control={form.control}
           name="dateTime"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel>When</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground",
+                      )}
+                    >
+                      {field.value ? format(field.value, "PPP") : <span></span>}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}
-        /> */}
+        />
 
         <FormField
           control={form.control}
