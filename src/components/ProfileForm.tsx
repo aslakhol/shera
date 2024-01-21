@@ -13,12 +13,15 @@ import {
 import { Input } from "./ui/input";
 import { type Session } from "next-auth";
 import { type ProfileSchemaType, profileSchema } from "../utils/formValidation";
+import { api } from "../utils/api";
 
 type Props = {
   user: Session["user"];
 };
 
 export const ProfileForm = ({ user }: Props) => {
+  const updateProfileMutation = api.users.updateProfile.useMutation();
+
   const form = useForm<ProfileSchemaType>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -29,9 +32,7 @@ export const ProfileForm = ({ user }: Props) => {
   });
 
   const onSubmit = (values: ProfileSchemaType) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    updateProfileMutation.mutate({ userId: user.id, ...values });
   };
 
   return (
