@@ -1,8 +1,12 @@
 import Head from "next/head";
 import NavBar from "../components/NavBar";
 import { ProfileForm } from "../components/ProfileForm";
+import { useSession } from "next-auth/react";
 
 export default function ProfilePage() {
+  const session = useSession();
+  const user = session.data?.user;
+
   return (
     <>
       <Head>
@@ -13,7 +17,7 @@ export default function ProfilePage() {
       <NavBar />
       <main className="flex min-h-screen flex-col items-center">
         <h2 className="text-2xl font-bold tracking-tight">Profile</h2>
-        <ProfileForm />
+        {user && <ProfileForm user={user} />}
       </main>
     </>
   );

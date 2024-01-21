@@ -12,14 +12,19 @@ import {
   Form,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { type Session } from "next-auth";
 
-export const ProfileForm = () => {
+type Props = {
+  user: Session["user"];
+};
+
+export const ProfileForm = ({ user }: Props) => {
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      image: "",
+      name: user.name ?? "",
+      email: user.email ?? "",
+      image: user.image ?? "",
     },
   });
 
@@ -87,5 +92,5 @@ export const ProfileForm = () => {
 const profileSchema = z.object({
   name: z.string().min(2).max(50),
   email: z.string().email(),
-  image: z.string().url(),
+  image: z.string().url().optional(),
 });
