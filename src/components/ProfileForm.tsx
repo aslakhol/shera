@@ -18,6 +18,8 @@ export const ProfileForm = () => {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: "",
+      email: "",
+      image: "",
     },
   });
 
@@ -46,6 +48,36 @@ export const ProfileForm = () => {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="email@example.com" {...field} />
+              </FormControl>
+              <FormDescription>
+                Your default name when attending events.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Profile picture</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>Link to your profile picture.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit">Submit</Button>
       </form>
     </Form>
@@ -54,4 +86,6 @@ export const ProfileForm = () => {
 
 const profileSchema = z.object({
   name: z.string().min(2).max(50),
+  email: z.string().email(),
+  image: z.string().url(),
 });
