@@ -14,13 +14,21 @@ import { Input } from "./ui/input";
 import { type Session } from "next-auth";
 import { type ProfileSchemaType, profileSchema } from "../utils/formValidation";
 import { api } from "../utils/api";
+import { toast } from "sonner";
 
 type Props = {
   user: Session["user"];
 };
 
 export const ProfileForm = ({ user }: Props) => {
-  const updateProfileMutation = api.users.updateProfile.useMutation();
+  const updateProfileMutation = api.users.updateProfile.useMutation({
+    onSuccess: () => {
+      toast.success("Profile updated");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const form = useForm<ProfileSchemaType>({
     resolver: zodResolver(profileSchema),
@@ -32,6 +40,10 @@ export const ProfileForm = ({ user }: Props) => {
   });
 
   const onSubmit = (values: ProfileSchemaType) => {
+    if (!form.formState.isDirty) {
+      return;
+    }
+
     updateProfileMutation.mutate({ userId: user.id, ...values });
   };
 
