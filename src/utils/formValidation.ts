@@ -29,8 +29,8 @@ export const eventSchema = z.object({
 export type ProfileSchemaType = z.infer<typeof profileSchema>;
 
 export const profileSchema = z.object({
-  name: z.string().min(1).max(100),
-  email: z.string().email(),
+  name: z.string().min(1).max(50),
+  email: z.string().email().max(254),
   image: z
     .string()
     .url("Needs to be a valid url to a picture.")

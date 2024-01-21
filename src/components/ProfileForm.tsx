@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "./ui/button";
 import {
   FormField,
@@ -13,13 +12,14 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { type Session } from "next-auth";
+import { type ProfileSchemaType, profileSchema } from "../utils/formValidation";
 
 type Props = {
   user: Session["user"];
 };
 
 export const ProfileForm = ({ user }: Props) => {
-  const form = useForm<z.infer<typeof profileSchema>>({
+  const form = useForm<ProfileSchemaType>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: user.name ?? "",
@@ -28,7 +28,7 @@ export const ProfileForm = ({ user }: Props) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof profileSchema>) => {
+  const onSubmit = (values: ProfileSchemaType) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
@@ -88,9 +88,3 @@ export const ProfileForm = ({ user }: Props) => {
     </Form>
   );
 };
-
-const profileSchema = z.object({
-  name: z.string().min(2).max(50),
-  email: z.string().email(),
-  image: z.string().url().optional(),
-});
