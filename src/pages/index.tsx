@@ -30,7 +30,7 @@ export default function Home() {
           accounts or download an app.
         </p>
         <p className="leading-7">
-          Log in to create an event, and invite your friends to join.
+          Sign in to create an event, and invite your friends to join.
         </p>
       </main>
     </>

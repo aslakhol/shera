@@ -1,4 +1,4 @@
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -41,7 +41,7 @@ export const AuthButton = () => {
           {session.status === "authenticated" ? (
             <SignedInContent session={session} />
           ) : (
-            <SignedOutContent session={session} />
+            <SignedOutContent />
           )}
         </DropdownMenuContent>
       </DropdownMenu>
@@ -88,7 +88,7 @@ const SignedInContent = ({ session }: SignedInContentProps) => {
       <DropdownMenuSeparator />
       <Link href={"/api/auth/signout"}>
         <DropdownMenuItem>
-          Log out
+          Sign out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </Link>
@@ -96,21 +96,12 @@ const SignedInContent = ({ session }: SignedInContentProps) => {
   );
 };
 
-type SignedOutContentContentProps = { session: ReturnType<typeof useSession> };
-
-const SignedOutContent = ({ session }: SignedOutContentContentProps) => {
+const SignedOutContent = () => {
   return (
     <>
       <Link href={"/api/auth/signin"}>
-        <DropdownMenuItem
-        // onClick={() =>
-        //   signIn("email", {
-        //     email: "aslakhol@gmail.com",
-        //     callbackUrl: "/foobar",
-        //   })
-        // }
-        >
-          Log In
+        <DropdownMenuItem>
+          Sign In
           <DropdownMenuShortcut>⇧⌘L</DropdownMenuShortcut>
         </DropdownMenuItem>
       </Link>

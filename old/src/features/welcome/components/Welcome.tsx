@@ -2,8 +2,8 @@ import WelcomeActionButton from "./WelcomeActionButton";
 
 const Welcome = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen-content mx-auto pt-2 w-8/12 md:w-1/2 gap-3">
-      <h1 className="font-extrabold text-7xl ">Shera</h1>
+    <div className="min-h-screen-content mx-auto flex w-8/12 flex-col items-center justify-center gap-3 pt-2 md:w-1/2">
+      <h1 className="text-7xl font-extrabold ">Shera</h1>
       <div className="py-2" />
       <p className="leading-7">
         Shera is a tool for managing events without being tied to a social
@@ -19,7 +19,7 @@ const Welcome = () => {
         accounts or download an app.
       </p>
       <p className="leading-7">
-        Log in to create an event, and invite your friends to join.
+        Sign in to create an event, and invite your friends to join.
       </p>
       <div className="py-2" />
       <WelcomeActionButton />
