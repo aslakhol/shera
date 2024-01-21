@@ -36,10 +36,6 @@ export const EventForm = ({ event, onSubmit }: Props) => {
   });
 
   const handleSubmit = (values: EventSchemaType) => {
-    if (!form.formState.isDirty) {
-      return;
-    }
-
     onSubmit(values);
   };
 

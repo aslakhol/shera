@@ -5,7 +5,7 @@ import { attendEventSchema, eventSchema } from "../../../utils/formValidation";
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
-    .input(eventSchema.extend({ userId: z.string(), dateTime: z.date() }))
+    .input(eventSchema.extend({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { userId, ...event } = input;
 
@@ -21,7 +21,7 @@ export const eventsRouter = createTRPCRouter({
       };
     }),
   updateEvent: publicProcedure
-    .input(eventSchema.extend({ eventId: z.number(), dateTime: z.date() }))
+    .input(eventSchema.extend({ eventId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const { eventId, ...event } = input;
 
