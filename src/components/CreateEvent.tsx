@@ -25,3 +25,7 @@ export const CreateEvent = () => {
 
   return <EventForm onSubmit={createEvent} />;
 };
+
+// Make event page
+// Redirect to event page
+// Edit event

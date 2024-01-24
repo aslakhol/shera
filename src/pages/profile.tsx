@@ -11,7 +11,7 @@ export default function ProfilePage() {
   return (
     <>
       <Head>
-        <title>Shera | Profile</title>
+        <title>Profile | Shera</title>
         <meta name="description" content="Profile page for Shera" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

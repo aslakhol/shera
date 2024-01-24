@@ -3,12 +3,12 @@ import { CreateEvent } from "../../components/CreateEvent";
 import NavBar from "../../components/NavBar";
 import { Toaster } from "../../components/ui/sonner";
 
-export default function ProfilePage() {
+export default function CreateEventPage() {
   return (
     <>
       <Head>
-        <title>Shera | Profile</title>
-        <meta name="description" content="Profile page for Shera" />
+        <title>New event | Shera</title>
+        <meta name="description" content="Create event page for Shera" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavBar />
