@@ -1,20 +1,19 @@
 import Head from "next/head";
-import { CreateEvent } from "../../components/event/CreateEvent";
 import NavBar from "../../components/NavBar";
 import { Toaster } from "../../components/ui/sonner";
+import { Event } from "../../components/event/Event";
 
-export default function CreateEventPage() {
+export default function EventPage() {
   return (
     <>
       <Head>
-        <title>New event | Shera</title>
-        <meta name="description" content="Create event page for Shera" />
+        <title>Event | Shera</title>
+        <meta name="description" content="Event page for Shera" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavBar />
       <main className="flex min-h-screen flex-col items-center">
-        <h2 className="text-2xl font-bold tracking-tight">Create an event</h2>
-        <CreateEvent />
+        <Event />
       </main>
       <Toaster />
     </>
