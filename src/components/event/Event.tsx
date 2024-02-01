@@ -9,6 +9,7 @@ import { Attend } from "./Attend";
 import { LoggedInAttend } from "./LoggedInAttend";
 import Invite from "../invite/Invite";
 import { Button } from "../ui/button";
+import Posts from "../post/Posts";
 
 type Props = { eventId: number };
 
@@ -51,7 +52,7 @@ export const Event = ({ eventId }: Props) => {
 
       <GoogleCalendar event={event} />
 
-      <>Posts</>
+      <Posts eventId={eventId} />
     </>
   );
 };
