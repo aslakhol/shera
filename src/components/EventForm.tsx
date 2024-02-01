@@ -18,6 +18,7 @@ import { format } from "date-fns";
 import { cn } from "../utils/cn";
 import { Calendar } from "./ui/calendar";
 import { CalendarIcon } from "lucide-react";
+import { useZodForm } from "../utils/zod";
 
 type Props = {
   event?: Events;
@@ -25,8 +26,8 @@ type Props = {
 };
 
 export const EventForm = ({ event, onSubmit }: Props) => {
-  const form = useForm<EventSchemaType>({
-    resolver: zodResolver(eventSchema),
+  const form = useZodForm({
+    schema: eventSchema,
     defaultValues: {
       title: event?.title ?? "",
       description: event?.description ?? "",
