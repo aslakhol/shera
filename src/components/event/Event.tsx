@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import Attending from "./Attending";
 import Link from "next/link";
 import { Attend } from "./Attend";
+import { LoggedInAttend } from "./LoggedInAttend";
 
 type Props = { eventId: number };
 
@@ -31,13 +32,12 @@ export const Event = ({ eventId }: Props) => {
       </div>
       <div className="flex flex-wrap justify-center gap-2">
         <Attending eventId={event.eventId} />
-        <Attend eventId={event.eventId} />
-        {/* 
+
         {session?.user ? (
           <LoggedInAttend eventId={event.eventId} />
         ) : (
           <Attend eventId={event.eventId} />
-        )} */}
+        )}
         {session?.user?.id === event.host.id && (
           <Link href={`/events/${eventId}/edit`}>
             <button className="btn btn-outline">Edit event</button>
