@@ -53,7 +53,7 @@ export const Attend = ({ eventId }: Props) => {
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <Button asChild>
+      <Button asChild variant="outline">
         <DialogTrigger>Attend?</DialogTrigger>
       </Button>
       <DialogContent>

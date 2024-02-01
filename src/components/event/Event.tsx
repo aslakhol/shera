@@ -7,6 +7,8 @@ import Attending from "./Attending";
 import Link from "next/link";
 import { Attend } from "./Attend";
 import { LoggedInAttend } from "./LoggedInAttend";
+import Invite from "../invite/Invite";
+import { Button } from "../ui/button";
 
 type Props = { eventId: number };
 
@@ -40,10 +42,10 @@ export const Event = ({ eventId }: Props) => {
         )}
         {session?.user?.id === event.host.id && (
           <Link href={`/events/${eventId}/edit`}>
-            <button className="btn btn-outline">Edit event</button>
+            <Button variant={"outline"}>Edit event</Button>
           </Link>
         )}
-        {/* <Invite event={event} /> */}
+        <Invite event={event} />
       </div>
       <Body description={event.description} />
 

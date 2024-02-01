@@ -19,7 +19,7 @@ const Attending = ({ eventId }: Props) => {
 
   return (
     <Dialog>
-      <Button asChild>
+      <Button asChild variant="outline">
         <DialogTrigger>{attendees?.length ?? 0} going</DialogTrigger>
       </Button>
       <DialogContent>
