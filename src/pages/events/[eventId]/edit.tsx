@@ -1,9 +1,15 @@
 import Head from "next/head";
-import { CreateEvent } from "../../components/event/CreateEvent";
-import NavBar from "../../components/NavBar";
-import { Toaster } from "../../components/ui/sonner";
+import { useRouter } from "next/router";
+import { Toaster } from "sonner";
+import NavBar from "../../../components/NavBar";
+import { EditEvent } from "../../../components/event/EditEvent";
 
 export default function EditEventPage() {
+  const { query } = useRouter();
+
+  if (!query.eventId || !Number(query.eventId)) {
+    return <div>Event not found</div>;
+  }
   return (
     <>
       <Head>
@@ -13,7 +19,7 @@ export default function EditEventPage() {
       </Head>
       <NavBar />
       <main className="flex min-h-screen flex-col items-center">
-        {/* Edit event */}
+        <EditEvent eventId={Number(query.eventId)} />
       </main>
       <Toaster />
     </>

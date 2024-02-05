@@ -1,7 +1,7 @@
 import Head from "next/head";
-import NavBar from "../../components/NavBar";
-import { Toaster } from "../../components/ui/sonner";
-import { Event } from "../../components/event/Event";
+import NavBar from "../../../components/NavBar";
+import { Toaster } from "../../../components/ui/sonner";
+import { Event } from "../../../components/event/Event";
 import { useRouter } from "next/router";
 
 export default function EventPage() {
