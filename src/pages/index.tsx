@@ -1,16 +1,8 @@
-import Head from "next/head";
+import { type NextPageWithLayout } from "./_app";
 
-import NavBar from "../components/NavBar";
-
-export default function Home() {
+const Home: NextPageWithLayout = () => {
   return (
     <>
-      <Head>
-        <title>Shera</title>
-        <meta name="description" content="Welcome page for Shera" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <NavBar />
       <main className="flex min-h-screen flex-col items-center justify-center">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           Shera
@@ -35,4 +27,6 @@ export default function Home() {
       </main>
     </>
   );
-}
+};
+
+export default Home;

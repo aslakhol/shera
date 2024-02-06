@@ -1,10 +1,11 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { Toaster } from "sonner";
-import NavBar from "../../../components/NavBar";
 import { EditEvent } from "../../../components/event/EditEvent";
+import { type NextPageWithLayout } from "../../_app";
+import { type ReactElement } from "react";
+import { MainLayout } from "../../../components/Layout";
 
-export default function EditEventPage() {
+const EditEventPage: NextPageWithLayout = () => {
   const { query } = useRouter();
 
   if (!query.eventId || !Number(query.eventId)) {
@@ -12,16 +13,24 @@ export default function EditEventPage() {
   }
   return (
     <>
+      <main className="flex min-h-screen flex-col items-center">
+        <EditEvent eventId={Number(query.eventId)} />
+      </main>
+    </>
+  );
+};
+
+EditEventPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <MainLayout>
       <Head>
         <title>Edit event | Shera</title>
         <meta name="description" content="Create event page for Shera" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <NavBar />
-      <main className="flex min-h-screen flex-col items-center">
-        <EditEvent eventId={Number(query.eventId)} />
-      </main>
-      <Toaster />
-    </>
+      {page}
+    </MainLayout>
   );
-}
+};
+
+export default EditEventPage;

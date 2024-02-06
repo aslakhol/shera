@@ -1,10 +1,11 @@
 import Head from "next/head";
-import NavBar from "../../components/NavBar";
-import { Toaster } from "../../components/ui/sonner";
 import { MyEvents } from "../../components/myEvents/MyEvents";
 import { useSession } from "next-auth/react";
+import { type NextPageWithLayout } from "../_app";
+import { MainLayout } from "../../components/Layout";
+import { type ReactElement } from "react";
 
-export default function EventsPage() {
+const EventsPage: NextPageWithLayout = () => {
   const { data: session } = useSession();
 
   if (!session?.user.email) {
@@ -13,16 +14,24 @@ export default function EventsPage() {
 
   return (
     <>
+      <main className="flex min-h-screen flex-col items-center">
+        <MyEvents email={session.user.email} />
+      </main>
+    </>
+  );
+};
+
+EventsPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <MainLayout>
       <Head>
         <title>Events | Shera</title>
         <meta name="description" content="Create event page for Shera" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <NavBar />
-      <main className="flex min-h-screen flex-col items-center">
-        <MyEvents email={session.user.email} />
-      </main>
-      <Toaster />
-    </>
+      {page}
+    </MainLayout>
   );
-}
+};
+
+export default EventsPage;

@@ -1,22 +1,31 @@
 import Head from "next/head";
 import { CreateEvent } from "../../components/event/CreateEvent";
-import NavBar from "../../components/NavBar";
-import { Toaster } from "../../components/ui/sonner";
+import { type NextPageWithLayout } from "../_app";
+import { type ReactElement } from "react";
+import { MainLayout } from "../../components/Layout";
 
-export default function CreateEventPage() {
+const CreateEventPage: NextPageWithLayout = () => {
   return (
     <>
+      <main className="flex min-h-screen flex-col items-center">
+        <h2 className="text-2xl font-bold tracking-tight">Create an event</h2>
+        <CreateEvent />
+      </main>
+    </>
+  );
+};
+
+CreateEventPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <MainLayout>
       <Head>
         <title>New event | Shera</title>
         <meta name="description" content="Create event page for Shera" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <NavBar />
-      <main className="flex min-h-screen flex-col items-center">
-        <h2 className="text-2xl font-bold tracking-tight">Create an event</h2>
-        <CreateEvent />
-      </main>
-      <Toaster />
-    </>
+      {page}
+    </MainLayout>
   );
-}
+};
+
+export default CreateEventPage;
