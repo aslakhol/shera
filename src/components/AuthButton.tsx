@@ -74,30 +74,18 @@ const SignedInContent = ({ session }: SignedInContentProps) => {
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <Link href="/profile">
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem>Profile</DropdownMenuItem>
         </Link>
         <Link href={"/events/new"}>
-          <DropdownMenuItem>
-            New Event
-            <DropdownMenuShortcut>⇧⌘N</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem>New Event</DropdownMenuItem>
         </Link>
         <Link href={"/events"}>
-          <DropdownMenuItem>
-            Events
-            <DropdownMenuShortcut>⇧⌘E</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <DropdownMenuItem>Events</DropdownMenuItem>
         </Link>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <Link href={"/api/auth/signout"}>
-        <DropdownMenuItem>
-          Sign out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        <DropdownMenuItem>Sign out</DropdownMenuItem>
       </Link>
     </>
   );
