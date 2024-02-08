@@ -25,7 +25,9 @@ export const AuthButton = () => {
     <div className="flex items-center justify-center gap-2">
       {session.status === "authenticated" && (
         <span>
-          {session.data?.user.name ?? session.data?.user.email ?? "Logged in"}
+          {session.data?.user.name?.split(" ")[0] ??
+            session.data?.user.email ??
+            "Logged in"}
         </span>
       )}
       <DropdownMenu>
