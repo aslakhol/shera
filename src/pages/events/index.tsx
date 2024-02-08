@@ -13,11 +13,9 @@ const EventsPage: NextPageWithLayout = () => {
   }
 
   return (
-    <>
-      <main className="flex min-h-screen flex-col items-center">
-        <MyEvents email={session.user.email} />
-      </main>
-    </>
+    <main className="flex flex-grow flex-col items-center">
+      <MyEvents email={session.user.email} />
+    </main>
   );
 };
 

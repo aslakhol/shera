@@ -6,12 +6,10 @@ import { MainLayout } from "../../components/Layout";
 
 const CreateEventPage: NextPageWithLayout = () => {
   return (
-    <>
-      <main className="flex min-h-screen flex-col items-center">
-        <h2 className="text-2xl font-bold tracking-tight">Create an event</h2>
-        <CreateEvent />
-      </main>
-    </>
+    <main className="flex flex-grow flex-col items-center">
+      <h2 className="text-2xl font-bold tracking-tight">Create an event</h2>
+      <CreateEvent />
+    </main>
   );
 };
 

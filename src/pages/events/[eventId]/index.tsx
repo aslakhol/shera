@@ -13,11 +13,9 @@ const EventPage: NextPageWithLayout = () => {
   }
 
   return (
-    <>
-      <main className="flex min-h-screen flex-col items-center">
-        <Event eventId={Number(query.eventId)} />
-      </main>
-    </>
+    <main className="flex flex-grow flex-col items-center">
+      <Event eventId={Number(query.eventId)} />
+    </main>
   );
 };
 

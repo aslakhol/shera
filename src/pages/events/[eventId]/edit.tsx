@@ -12,11 +12,9 @@ const EditEventPage: NextPageWithLayout = () => {
     return <div>Event not found</div>;
   }
   return (
-    <>
-      <main className="flex min-h-screen flex-col items-center">
-        <EditEvent eventId={Number(query.eventId)} />
-      </main>
-    </>
+    <main className="flex flex-grow flex-col items-center">
+      <EditEvent eventId={Number(query.eventId)} />
+    </main>
   );
 };
 
