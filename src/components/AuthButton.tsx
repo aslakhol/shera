@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -95,10 +94,7 @@ const SignedOutContent = () => {
   return (
     <>
       <Link href={"/api/auth/signin"}>
-        <DropdownMenuItem>
-          Sign In
-          <DropdownMenuShortcut>⇧⌘L</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        <DropdownMenuItem>Sign In</DropdownMenuItem>
       </Link>
     </>
   );
