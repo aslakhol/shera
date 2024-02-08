@@ -22,7 +22,12 @@ export const AuthButton = () => {
   }
 
   return (
-    <div className="dropdown dropdown-end">
+    <div className="flex items-center justify-center gap-2">
+      {session.status === "authenticated" && (
+        <span>
+          {session.data?.user.name ?? session.data?.user.email ?? "Logged in"}
+        </span>
+      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-10 w-10 rounded-full">
