@@ -27,7 +27,7 @@ export const AuthButton = () => {
         <span>
           {session.data?.user.name?.split(" ")[0] ??
             session.data?.user.email ??
-            "Logged in"}
+            "Signed in"}
         </span>
       )}
       <DropdownMenu>
