@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { asOptionalField } from "../../old/src/utils/zodForm";
+import { asOptionalField } from "./zod";
 
 export type AttendEventSchemaType = z.infer<typeof attendEventSchema>;
 
