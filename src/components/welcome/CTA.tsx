@@ -16,12 +16,20 @@ export const CTA = () => {
   return (
     <>
       {session !== null ? (
-        <Button asChild>
+        <Button
+          asChild
+          className="bg-gradient shadow-lg hover:text-primary-foreground/80"
+        >
           <Link href={"/events/new"}>Create event</Link>
         </Button>
       ) : (
         <Button asChild>
-          <Link href={"/api/auth/signin"}>Create event</Link>
+          <Link
+            href={"/api/auth/signin"}
+            className="border shadow-lg hover:text-primary-foreground/80"
+          >
+            Create event
+          </Link>
         </Button>
       )}
     </>

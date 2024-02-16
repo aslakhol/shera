@@ -5,7 +5,11 @@ import { AuthButton } from "./AuthButton";
 const NavBar = () => {
   return (
     <div className="w-100 flex items-center justify-between p-1">
-      <Button asChild variant="ghost" className="text-lg">
+      <Button
+        asChild
+        variant="ghost"
+        className="text-lg hover:bg-gradient hover:text-white"
+      >
         <Link href="/">Shera</Link>
       </Button>
       <AuthButton />

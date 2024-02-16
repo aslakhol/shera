@@ -1,76 +1,127 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --gradient: linear-gradient(
+      to top left,
+      #03001e,
+      #7303c0,
+      #ec38bc,
+      #fdeff9
+    );
+    --background: 261 100% 98.12%;
+    --foreground: 261 10% 0.24%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
- 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
- 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
- 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
- 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
- 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
- 
+    --muted: 261 10% 90.6%;
+    --muted-foreground: 261 5% 40.6%;
+
+    --popover: 261 50% 91.54%;
+    --popover-foreground: 261 10% 0.3%;
+
+    --card: 261 50% 91.54%;
+    --card-foreground: 261 10% 0.3%;
+
+    --border: 261 15% 89.24%;
+    --input: 261 15% 89.24%;
+
+    --primary: 261 100% 6%;
+    --primary-foreground: 261 2% 90.6%;
+
+    --secondary: 261 6% 81.2%;
+    --secondary-foreground: 261 7% 10.6%;
+
+    --accent: 261 6% 81.2%;
+    --accent-foreground: 261 7% 10.6%;
+
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
- 
+    --ring: 261 100% 6%;
+
     --radius: 0.5rem;
   }
- 
+
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
- 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
- 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
- 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
- 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
- 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
- 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
- 
+    /* CSS: .bg-gradient { background: var(--gradient) } */
+    --gradient: linear-gradient(to top left, #77a1d3, #79cbca, #e684ae);
+
+    --background: 226 33.15% 5.2%;
+    --foreground: 226 5.1% 98.25%;
+
+    --muted: 226 26.52% 22.75%;
+    --muted-foreground: 226 5.1% 56.5%;
+
+    --popover: 226 54.8% 8.450000000000001%;
+    --popover-foreground: 226 5.1% 98.25%;
+
+    --card: 226 54.8% 8.450000000000001%;
+    --card-foreground: 226 5.1% 98.25%;
+
+    --border: 226 26.52% 22.75%;
+    --input: 226 26.52% 22.75%;
+
+    --primary: 226 51% 65%;
+    --primary-foreground: 226 5.1% 6.5%;
+
+    --secondary: 226 26.52% 22.75%;
+    --secondary-foreground: 226 5.1% 98.25%;
+
+    --accent: 226 26.52% 22.75%;
+    --accent-foreground: 226 5.1% 98.25%;
+
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
- 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --destructive-foreground: 226 5.1% 98.25%;
+
+    --ring: 226 51% 65%;
+
+    --radius: 0.5rem;
+  }
+
+  .other-dark {
+    /* CSS: .bg-gradient { background: var(--gradient) } */
+    --gradient: linear-gradient(to top left, #9796f0, #fbc7d4);
+
+    --background: 256 48.75% 6.08%;
+    --foreground: 256 7.5% 98.8%;
+
+    --muted: 256 36% 21.28%;
+    --muted-foreground: 256 7.5% 57.6%;
+
+    --popover: 256 53% 13.68%;
+    --popover-foreground: 256 7.5% 98.8%;
+
+    --card: 256 53% 13.68%;
+    --card-foreground: 256 7.5% 98.8%;
+
+    --border: 256 36% 21.28%;
+    --input: 256 36% 21.28%;
+
+    --primary: 256 75% 76%;
+    --primary-foreground: 256 7.5% 7.6%;
+
+    --secondary: 256 36% 21.28%;
+    --secondary-foreground: 256 7.5% 98.8%;
+
+    --accent: 256 36% 21.28%;
+    --accent-foreground: 256 7.5% 98.8%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 256 7.5% 98.8%;
+
+    --ring: 256 75% 76%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .text-gradient {
+    @apply bg-gradient bg-cover bg-clip-text text-transparent;
   }
 }
