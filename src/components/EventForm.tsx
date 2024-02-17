@@ -17,6 +17,7 @@ import { cn } from "../utils/cn";
 import { Calendar } from "./ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { useZodForm } from "../utils/zod";
+import { TimePicker } from "./ui/timepicker/time-picker";
 
 type Props = {
   event?: Events;
@@ -84,6 +85,9 @@ export const EventForm = ({ event, onSubmit }: Props) => {
                     disabled={(date) => date < new Date()}
                     initialFocus
                   />
+                  <div className="border-t border-border p-3">
+                    <TimePicker setDate={field.onChange} date={field.value} />
+                  </div>
                 </PopoverContent>
               </Popover>
               <FormMessage />
