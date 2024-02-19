@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { compareDesc } from "date-fns";
 import { attendEventSchema, eventSchema } from "../../../utils/formValidation";
+import { type Prisma } from "@prisma/client";
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
@@ -68,6 +69,28 @@ export const eventsRouter = createTRPCRouter({
         },
         include: {
           host: true,
+        },
+      });
+
+      return eventsInDb.sort((a, b) => compareDesc(a.dateTime, b.dateTime));
+    }),
+  myEvents: publicProcedure
+    .input(z.object({ userEmail: z.string().email() }))
+    .query(async ({ input, ctx }) => {
+      const attends: Prisma.EventsWhereInput = {
+        attendees: { some: { email: input.userEmail } },
+      };
+      const hosts: Prisma.EventsWhereInput = {
+        host: { email: input.userEmail },
+      };
+
+      const eventsInDb = await ctx.db.events.findMany({
+        where: {
+          OR: [hosts, attends],
+        },
+        include: {
+          host: true,
+          attendees: true,
         },
       });
 

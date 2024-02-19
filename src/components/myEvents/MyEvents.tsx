@@ -1,70 +1,108 @@
-import { type Events, type User } from "@prisma/client";
+import { type Attendees, type Events, type User } from "@prisma/client";
 import Link from "next/link";
 import { api } from "../../utils/api";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { format } from "date-fns";
+import {
+  Clock,
+  Clock1,
+  Clock10,
+  Clock11,
+  Clock12,
+  Clock2,
+  Clock3,
+  Clock4,
+  Clock5,
+  Clock6,
+  Clock7,
+  Clock8,
+  Clock9,
+  MapPin,
+  UserRound,
+  UsersRound,
+} from "lucide-react";
 
 type MyEventsProps = { email: string };
 
 export const MyEvents = ({ email }: MyEventsProps) => {
-  const { data: attendingEvents } = api.events.eventsAttendedByUser.useQuery({
-    userEmail: email,
-  });
-
-  const { data: hostingEvents } = api.events.eventsHostedByUser.useQuery({
+  const { data: events } = api.events.myEvents.useQuery({
     userEmail: email,
   });
 
   return (
-    <div className="px-4 py-8">
-      <h1 className="py-2 text-center text-4xl font-extrabold">My Events</h1>
+    <div className="flex max-w-4xl flex-col gap-8 p-4">
+      <h1 className="py-2 text-4xl font-extrabold">Events</h1>
 
-      <h2 className="py-4 text-xl font-extrabold">Attending</h2>
-      <div className="flex flex-wrap justify-start gap-3 pb-4">
-        {attendingEvents?.map((e) => (
-          <Event event={e} key={`attendingEvent-${e.eventId}`} />
-        ))}
-      </div>
-
-      <h2 className="py-4 text-xl font-extrabold">Hosting</h2>
-      <div className="flex flex-wrap justify-start gap-3">
-        {hostingEvents?.map((e) => (
-          <Event event={e} key={`hostingEvents-${e.eventId}`} />
-        ))}
-      </div>
+      {events?.map((event) => (
+        <EventRow event={event} key={`event-${event.eventId}`} />
+      ))}
     </div>
   );
 };
 
-type EventProps = {
-  event: Events & {
-    host: User;
-  };
+type EventRowProps = { event: Events & { host: User; attendees: Attendees[] } };
+
+const EventRow = ({ event }: EventRowProps) => {
+  return (
+    <div className="flex">
+      <div className="w-32">
+        <p>{format(event.dateTime, "d. MMM")}</p>
+        <p className="text-primary/50">{format(event.dateTime, "eeee")}</p>
+      </div>
+
+      <Link
+        href={`/events/${event.eventId}`}
+        className="w-full hover:shadow-xl"
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle>{event.title}</CardTitle>
+            <CardDescription>
+              <div className="flex items-center gap-2">
+                <ClockIcon date={event.dateTime} size={16} />
+                <p>{format(event.dateTime, "H:mm")}</p>
+              </div>
+              {event.place && (
+                <div className="flex items-center gap-2">
+                  <MapPin size={16} />
+                  <p>{event.place}</p>
+                </div>
+              )}
+              {!!event.attendees.length && (
+                <div className="flex items-center gap-2">
+                  <UsersRound size={16} />
+                  <p>{event.attendees.length} attendees</p>
+                </div>
+              )}
+              {event.hostId && (
+                <div className="flex items-center gap-2">
+                  <UserRound size={16} />
+                  <p>{event.host.name ?? event.host.email}</p>
+                </div>
+              )}
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </Link>
+    </div>
+  );
 };
 
-const Event = (props: EventProps) => {
-  const { event } = props;
+type ClockIconProps = { date: Date; size?: number };
 
-  return (
-    <Link href={`/events/${event.eventId}`}>
-      <Card className="w-96">
-        <CardHeader>
-          <CardTitle>{event.title}</CardTitle>
-          <CardDescription>
-            <p>{format(event.dateTime, "PP H:mm")}</p>
-            <p>{event.host.name ?? event.host.email}</p>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="line-clamp-3">{event.description}</p>
-        </CardContent>
-      </Card>
-    </Link>
-  );
+const ClockIcon = ({ date, size }: ClockIconProps) => {
+  const hour12 = Number(format(date, "H")) % 12;
+  if (hour12 === 0) return <Clock12 size={size} />;
+  if (hour12 === 1) return <Clock1 size={size} />;
+  if (hour12 === 2) return <Clock2 size={size} />;
+  if (hour12 === 3) return <Clock3 size={size} />;
+  if (hour12 === 4) return <Clock4 size={size} />;
+  if (hour12 === 5) return <Clock5 size={size} />;
+  if (hour12 === 6) return <Clock6 size={size} />;
+  if (hour12 === 7) return <Clock7 size={size} />;
+  if (hour12 === 8) return <Clock8 size={size} />;
+  if (hour12 === 9) return <Clock9 size={size} />;
+  if (hour12 === 10) return <Clock10 size={size} />;
+  if (hour12 === 11) return <Clock11 size={size} />;
+  return <Clock size={size} />;
 };
