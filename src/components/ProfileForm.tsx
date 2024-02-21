@@ -15,15 +15,18 @@ import { type Session } from "next-auth";
 import { type ProfileSchemaType, profileSchema } from "../utils/formValidation";
 import { api } from "../utils/api";
 import { toast } from "sonner";
+import { useRouter } from "next/router";
 
 type Props = {
   user: Session["user"];
 };
 
 export const ProfileForm = ({ user }: Props) => {
+  const router = useRouter();
   const updateProfileMutation = api.users.updateProfile.useMutation({
     onSuccess: () => {
       toast.success("Profile updated");
+      router.reload();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -96,7 +99,12 @@ export const ProfileForm = ({ user }: Props) => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          disabled={!form.formState.isDirty || updateProfileMutation.isLoading}
+        >
+          Submit
+        </Button>
       </form>
     </Form>
   );
