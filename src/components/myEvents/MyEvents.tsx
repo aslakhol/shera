@@ -3,8 +3,9 @@ import Link from "next/link";
 import { api } from "../../utils/api";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { format } from "date-fns";
-import { Crown, MapPin, UsersRound } from "lucide-react";
+import { Crown, MapPin, Plus, UsersRound } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
+import { Button } from "../ui/button";
 
 type MyEventsProps = { email: string };
 
@@ -14,12 +15,23 @@ export const MyEvents = ({ email }: MyEventsProps) => {
   });
 
   return (
-    <div className="flex max-w-4xl flex-col gap-8 p-4">
-      <h1 className="py-2 text-4xl font-extrabold">Events</h1>
+    <div className="flex max-w-4xl flex-col gap-8 p-4 ">
+      <div className="flex items-center justify-between">
+        <h1 className="py-2 text-4xl font-extrabold">Events</h1>
+        <Button asChild variant="outline">
+          <Link href="/events/new">
+            <Plus />
+          </Link>
+        </Button>
+      </div>
 
       {events?.map((event) => (
         <EventRow event={event} key={`event-${event.eventId}`} />
       ))}
+
+      <Button asChild variant="outline">
+        <Link href="/events/new">New event</Link>
+      </Button>
     </div>
   );
 };
