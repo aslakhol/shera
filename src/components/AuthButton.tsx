@@ -20,15 +20,21 @@ export const AuthButton = () => {
     return <></>;
   }
 
+  if (session.status === "unauthenticated") {
+    return (
+      <Button asChild variant={"ghost"} className="text-lg">
+        <Link href={"/api/auth/signin"}>Sign in</Link>
+      </Button>
+    );
+  }
+
   return (
     <div className="flex items-center justify-center gap-2">
-      {session.status === "authenticated" && (
-        <span>
-          {session.data?.user.name?.split(" ")[0] ??
-            session.data?.user.email ??
-            "Signed in"}
-        </span>
-      )}
+      <span>
+        {session.data?.user.name?.split(" ")[0] ??
+          session.data?.user.email ??
+          "Signed in"}
+      </span>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-10 w-10 rounded-full">
@@ -44,11 +50,7 @@ export const AuthButton = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
-          {session.status === "authenticated" ? (
-            <SignedInContent session={session} />
-          ) : (
-            <SignedOutContent />
-          )}
+          <SignedInContent session={session} />
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -85,16 +87,6 @@ const SignedInContent = ({ session }: SignedInContentProps) => {
       <DropdownMenuSeparator />
       <Link href={"/api/auth/signout"}>
         <DropdownMenuItem>Sign out</DropdownMenuItem>
-      </Link>
-    </>
-  );
-};
-
-const SignedOutContent = () => {
-  return (
-    <>
-      <Link href={"/api/auth/signin"}>
-        <DropdownMenuItem>Sign In</DropdownMenuItem>
       </Link>
     </>
   );
