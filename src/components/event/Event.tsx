@@ -69,9 +69,7 @@ export const Event = ({ eventId }: Props) => {
         <Body description={event.description} />
 
         <GoogleCalendar event={event} />
-        <div>
-          <Posts eventId={eventId} />
-        </div>
+        <Posts eventId={eventId} />
       </div>
     </>
   );

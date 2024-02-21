@@ -10,8 +10,12 @@ const Posts = (props: PostsProps) => {
 
   return (
     <>
-      <NewPost eventId={eventId} />
-      <PostList eventId={eventId} />
+      <div className="flex flex-col gap-2">
+        <PostList eventId={eventId} />
+        <div>
+          <NewPost eventId={eventId} />
+        </div>
+      </div>
     </>
   );
 };

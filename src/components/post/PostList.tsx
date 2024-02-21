@@ -85,9 +85,11 @@ const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Trash />
-      </DialogTrigger>
+      <Button asChild variant={"ghost"}>
+        <DialogTrigger>
+          <Trash />
+        </DialogTrigger>
+      </Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>

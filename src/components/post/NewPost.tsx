@@ -58,7 +58,7 @@ const NewPost = (props: NewPostProps) => {
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <Button asChild>
+      <Button asChild variant={"outline"}>
         <DialogTrigger>Add a Post</DialogTrigger>
       </Button>
       <DialogContent>
