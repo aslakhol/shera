@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 type NewPostProps = { eventId: number };
 
@@ -76,7 +76,7 @@ const NewPost = (props: NewPostProps) => {
                   <FormItem>
                     <FormLabel>Message</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Textarea {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
