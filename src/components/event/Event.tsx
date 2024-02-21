@@ -65,10 +65,10 @@ export const Event = ({ eventId }: Props) => {
             </Link>
           )}
           <Invite event={event} />
+          <GoogleCalendar event={event} />
         </div>
         <Body description={event.description} />
 
-        <GoogleCalendar event={event} />
         <Posts eventId={eventId} />
       </div>
     </>

@@ -1,6 +1,8 @@
 import type { Events } from "@prisma/client";
 import { add } from "date-fns";
 import type { User } from "next-auth";
+import { Button } from "../ui/button";
+import { Calendar } from "lucide-react";
 
 type GoogleCalendarProps = {
   event: Events & {
@@ -33,9 +35,11 @@ const GoogleCalendar = (props: GoogleCalendarProps) => {
   const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${description}&location=${location}&dates=${time}&ctz=${timezone}`;
 
   return (
-    <a className="link" target="_blank" href={url} rel="noopener noreferrer">
-      Add to Google Calendar
-    </a>
+    <Button asChild variant={"outline"}>
+      <a className="link" target="_blank" href={url} rel="noopener noreferrer">
+        <Calendar />
+      </a>
+    </Button>
   );
 };
 
