@@ -10,6 +10,8 @@ import { LoggedInAttend } from "./LoggedInAttend";
 import Invite from "../invite/Invite";
 import { Button } from "../ui/button";
 import Posts from "../post/Posts";
+import { Crown, MapPin } from "lucide-react";
+import { WorkingClock } from "../WorkingClock";
 
 type Props = { eventId: number };
 
@@ -27,32 +29,50 @@ export const Event = ({ eventId }: Props) => {
 
   return (
     <>
-      <h2 className="text-2xl font-bold tracking-tight">{event.title}</h2>
-      <div className="info flex flex-col gap-2">
-        <span>When: {format(event.dateTime, "PP H:mm")}</span>
-        <span>Place: {event.place}</span>
-        <span>Host: {event.host.name ?? event.host.email}</span>
+      <div className="flex max-w-4xl flex-col gap-4 p-4">
+        <h2 className="text-2xl font-bold tracking-tight">{event.title}</h2>
+
+        <div className="text-lg ">
+          <div className="flex items-center gap-2">
+            <WorkingClock date={event.dateTime} size={16} />
+            <p>{format(event.dateTime, "EEEE, LLLL do, H:mm")}</p>
+          </div>
+          {event.place && (
+            <div className="flex items-center gap-2">
+              <MapPin size={16} />
+              <p>{event.place}</p>
+            </div>
+          )}
+          {event.hostId && (
+            <div className="flex items-center gap-2">
+              <Crown size={16} />
+              <p>{event.host.name ?? event.host.email}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-wrap justify-start gap-2">
+          <Attending eventId={event.eventId} />
+
+          {session?.user ? (
+            <LoggedInAttend eventId={event.eventId} />
+          ) : (
+            <Attend eventId={event.eventId} />
+          )}
+          {session?.user?.id === event.host.id && (
+            <Link href={`/events/${eventId}/edit`}>
+              <Button variant={"outline"}>Edit event</Button>
+            </Link>
+          )}
+          <Invite event={event} />
+        </div>
+        <Body description={event.description} />
+
+        <GoogleCalendar event={event} />
+        <div>
+          <Posts eventId={eventId} />
+        </div>
       </div>
-      <div className="flex flex-wrap justify-center gap-2">
-        <Attending eventId={event.eventId} />
-
-        {session?.user ? (
-          <LoggedInAttend eventId={event.eventId} />
-        ) : (
-          <Attend eventId={event.eventId} />
-        )}
-        {session?.user?.id === event.host.id && (
-          <Link href={`/events/${eventId}/edit`}>
-            <Button variant={"outline"}>Edit event</Button>
-          </Link>
-        )}
-        <Invite event={event} />
-      </div>
-      <Body description={event.description} />
-
-      <GoogleCalendar event={event} />
-
-      <Posts eventId={eventId} />
     </>
   );
 };
