@@ -17,6 +17,7 @@ import {
   Clock7,
   Clock8,
   Clock9,
+  Crown,
   MapPin,
   UserRound,
   UsersRound,
@@ -76,7 +77,7 @@ const EventRow = ({ event }: EventRowProps) => {
               )}
               {event.hostId && (
                 <div className="flex items-center gap-2">
-                  <UserRound size={16} />
+                  <Crown size={16} />
                   <p>{event.host.name ?? event.host.email}</p>
                 </div>
               )}
