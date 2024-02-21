@@ -3,25 +3,8 @@ import Link from "next/link";
 import { api } from "../../utils/api";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { format } from "date-fns";
-import {
-  Clock,
-  Clock1,
-  Clock10,
-  Clock11,
-  Clock12,
-  Clock2,
-  Clock3,
-  Clock4,
-  Clock5,
-  Clock6,
-  Clock7,
-  Clock8,
-  Clock9,
-  Crown,
-  MapPin,
-  UserRound,
-  UsersRound,
-} from "lucide-react";
+import { Crown, MapPin, UsersRound } from "lucide-react";
+import { WorkingClock } from "../WorkingClock";
 
 type MyEventsProps = { email: string };
 
@@ -60,7 +43,7 @@ const EventRow = ({ event }: EventRowProps) => {
             <CardTitle>{event.title}</CardTitle>
             <CardDescription>
               <div className="flex items-center gap-2">
-                <ClockIcon date={event.dateTime} size={16} />
+                <WorkingClock date={event.dateTime} size={16} />
                 <p>{format(event.dateTime, "H:mm")}</p>
               </div>
               {event.place && (
@@ -87,23 +70,4 @@ const EventRow = ({ event }: EventRowProps) => {
       </Link>
     </div>
   );
-};
-
-type ClockIconProps = { date: Date; size?: number };
-
-const ClockIcon = ({ date, size }: ClockIconProps) => {
-  const hour12 = Number(format(date, "H")) % 12;
-  if (hour12 === 0) return <Clock12 size={size} />;
-  if (hour12 === 1) return <Clock1 size={size} />;
-  if (hour12 === 2) return <Clock2 size={size} />;
-  if (hour12 === 3) return <Clock3 size={size} />;
-  if (hour12 === 4) return <Clock4 size={size} />;
-  if (hour12 === 5) return <Clock5 size={size} />;
-  if (hour12 === 6) return <Clock6 size={size} />;
-  if (hour12 === 7) return <Clock7 size={size} />;
-  if (hour12 === 8) return <Clock8 size={size} />;
-  if (hour12 === 9) return <Clock9 size={size} />;
-  if (hour12 === 10) return <Clock10 size={size} />;
-  if (hour12 === 11) return <Clock11 size={size} />;
-  return <Clock size={size} />;
 };
