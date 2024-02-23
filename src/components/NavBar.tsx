@@ -6,7 +6,7 @@ const NavBar = () => {
   return (
     <div className="w-100 flex items-center justify-between p-1">
       <Button asChild variant="ghost" className="text-lg">
-        <Link href="/">Shera</Link>
+        <Link href="/home">Shera</Link>
       </Button>
       <AuthButton />
     </div>
