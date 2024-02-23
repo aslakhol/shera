@@ -74,14 +74,14 @@ const SignedInContent = ({ session }: SignedInContentProps) => {
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <Link href="/profile">
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-        </Link>
         <Link href={"/events/new"}>
           <DropdownMenuItem>New Event</DropdownMenuItem>
         </Link>
         <Link href={"/events"}>
           <DropdownMenuItem>Events</DropdownMenuItem>
+        </Link>
+        <Link href="/profile">
+          <DropdownMenuItem>Profile</DropdownMenuItem>
         </Link>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
