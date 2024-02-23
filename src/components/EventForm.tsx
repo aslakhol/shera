@@ -72,7 +72,11 @@ export const EventForm = ({ event, onSubmit }: Props) => {
                         !field.value && "text-muted-foreground",
                       )}
                     >
-                      {field.value ? format(field.value, "PPP") : <span></span>}
+                      {field.value ? (
+                        format(field.value, "PPP HH:mm")
+                      ) : (
+                        <span></span>
+                      )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
                   </FormControl>
