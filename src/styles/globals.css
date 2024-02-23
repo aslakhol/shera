@@ -9,35 +9,35 @@
        URL: https://gradient.page */
     /* CSS: .bg-gradient { background: var(--gradient) } */
 
-    --gradient: #1d2b64;
-    --background: 242 97.75% 98.5%;
-    --foreground: 242 5.5% 1%;
+    --gradient: #414d0b;
+    --background: 75 98.75% 98.34%;
+    --foreground: 75 7.5% 0.68%;
 
-    --muted: 242 5.5% 92.5%;
-    --muted-foreground: 242 2.75% 42.5%;
+    --muted: 75 7.5% 91.7%;
+    --muted-foreground: 75 3.75% 41.7%;
 
-    --popover: 242 46% 92.5%;
-    --popover-foreground: 242 5.5% 1.25%;
+    --popover: 75 30% 91.7%;
+    --popover-foreground: 75 7.5% 0.8500000000000001%;
 
-    --card: 242 46% 92.5%;
-    --card-foreground: 242 5.5% 1.25%;
+    --card: 75 30% 91.7%;
+    --card-foreground: 75 7.5% 0.8500000000000001%;
 
-    --border: 242 10.5% 90%;
-    --input: 242 10.5% 90%;
+    --border: 75 12.5% 89.68%;
+    --input: 75 12.5% 89.68%;
 
-    --primary: 242 55% 25%;
-    --primary-foreground: 242 1.1% 92.5%;
+    --primary: 75 75% 17%;
+    --primary-foreground: 75 1.5% 91.7%;
 
-    --secondary: 242 2.75% 96.25%;
-    --secondary-foreground: 242 4.300000000000001% 12.5%;
+    --secondary: 75 3.75% 95.85%;
+    --secondary-foreground: 75 5.5% 11.7%;
 
-    --accent: 242 2.75% 96.25%;
-    --accent-foreground: 242 4.300000000000001% 12.5%;
+    --accent: 75 3.75% 95.85%;
+    --accent-foreground: 75 5.5% 11.7%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --ring: 242 55% 25%;
+    --ring: 75 75% 17%;
 
     --radius: 0.5rem;
   }
