@@ -9,6 +9,7 @@ import { createInnerTRPCContext } from "../../../server/api/trpc";
 import { appRouter } from "../../../server/api/root";
 import superjson from "superjson";
 import { type GetStaticPaths, type GetStaticProps } from "next";
+import { db } from "../../../server/db";
 
 const EventPage: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -40,14 +41,15 @@ EventPage.getLayout = function getLayout(page: ReactElement) {
 export default EventPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const eventsInFuture = await db.events.findMany({
+    where: { dateTime: { gte: new Date() } },
+    select: { eventId: true },
+  });
+
   return {
-    paths: [
-      {
-        params: {
-          eventId: "1",
-        },
-      },
-    ],
+    paths: eventsInFuture.map((event) => ({
+      params: { eventId: event.eventId.toString() },
+    })),
     fallback: "blocking",
   };
 };
