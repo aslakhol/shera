@@ -12,7 +12,7 @@ import { eventSchema, type EventSchemaType } from "../utils/formValidation";
 import { type Events } from "@prisma/client";
 import { Textarea } from "./ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { format } from "date-fns";
+import { format, roundToNearestMinutes } from "date-fns";
 import { cn } from "../utils/cn";
 import { Calendar } from "./ui/calendar";
 import { CalendarIcon } from "lucide-react";
@@ -30,7 +30,8 @@ export const EventForm = ({ event, onSubmit }: Props) => {
     defaultValues: {
       title: event?.title ?? "",
       description: event?.description ?? "",
-      dateTime: event?.dateTime,
+      dateTime:
+        event?.dateTime ?? roundToNearestMinutes(new Date(), { nearestTo: 30 }),
       place: event?.place ?? "",
     },
   });
