@@ -4,7 +4,7 @@ import { AuthButton } from "./AuthButton";
 
 const NavBar = () => {
   return (
-    <div className="w-100 flex items-center justify-between p-1">
+    <div className="flex items-center justify-between p-1">
       <Button asChild variant="ghost" className="text-lg">
         <Link href="/home">Shera</Link>
       </Button>
