@@ -30,7 +30,9 @@ export const Event = ({ eventId }: Props) => {
   return (
     <>
       <div className="flex max-w-4xl flex-col gap-4 p-4">
-        <h2 className="text-2xl font-bold tracking-tight">{event.title}</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-primary">
+          {event.title}
+        </h2>
 
         <div className="text-lg ">
           <div className="flex items-center gap-2">
