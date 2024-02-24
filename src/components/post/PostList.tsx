@@ -5,12 +5,15 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
 import { Trash } from "lucide-react";
 import { Button } from "../ui/button";
+import { Loading } from "../Loading";
+import { useState } from "react";
 
 type PostListProps = { eventId: number };
 
@@ -69,6 +72,7 @@ export const Post = (props: PostProps) => {
 type ConfirmDeleteProps = { post: Posts & { author: User; events: Events } };
 
 const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const utils = api.useUtils();
   const deletePostMutation = api.posts.deletePost.useMutation();
 
@@ -77,6 +81,7 @@ const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
       { postId: post.postId },
       {
         onSuccess: () => {
+          setDialogOpen(false);
           void utils.posts.posts.invalidate({ eventId: post.eventsId });
         },
       },
@@ -84,7 +89,7 @@ const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <Button asChild variant={"ghost"}>
         <DialogTrigger>
           <Trash />
@@ -96,10 +101,15 @@ const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
           <DialogDescription>
             Are you sure you want to delete post?
           </DialogDescription>
-
-          <Button variant="destructive" onClick={deletePost}>
-            Delete
-          </Button>
+          <DialogFooter>
+            <Button
+              variant="destructive"
+              onClick={deletePost}
+              disabled={deletePostMutation.isLoading}
+            >
+              {!deletePostMutation.isLoading ? "Delete" : <Loading />}
+            </Button>
+          </DialogFooter>
         </DialogHeader>
       </DialogContent>
     </Dialog>
