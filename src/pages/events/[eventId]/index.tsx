@@ -11,7 +11,6 @@ import superjson from "superjson";
 import { type GetStaticPaths, type GetStaticProps } from "next";
 import { db } from "../../../server/db";
 import { addDays } from "date-fns";
-import clsx from "clsx";
 
 const EventPage: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -76,6 +75,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
     props: {
       trpcState: helpers.dehydrate(),
     },
-    revalidate: 60 * 15,
+    revalidate: 60,
   };
 };
