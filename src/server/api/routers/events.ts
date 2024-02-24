@@ -124,6 +124,7 @@ export const eventsRouter = createTRPCRouter({
         where: { eventId },
         data: { attendees: { create: { ...attendee } } },
       });
+      await ctx.res?.revalidate(`/events/${eventId}`);
 
       return {
         event: eventInDb,
@@ -135,6 +136,7 @@ export const eventsRouter = createTRPCRouter({
       const attendee = await ctx.db.attendees.delete({
         where: { attendeeId: input.attendeeId },
       });
+      await ctx.res?.revalidate(`/events/${attendee.eventId}`);
 
       return {
         attendee,

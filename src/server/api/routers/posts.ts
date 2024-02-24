@@ -17,6 +17,7 @@ export const postsRouter = createTRPCRouter({
           author: { connect: { id: authorId } },
         },
       });
+      await ctx.res?.revalidate(`/events/${eventId}`);
 
       return postInDb;
     }),
@@ -40,7 +41,9 @@ export const postsRouter = createTRPCRouter({
         where: {
           postId: input.postId,
         },
+        include: { events: true },
       });
+      await ctx.res?.revalidate(`/events/${post.eventsId}`);
 
       return post;
     }),

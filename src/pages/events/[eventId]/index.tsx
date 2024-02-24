@@ -70,6 +70,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
   await helpers.events.event.prefetch({
     eventId: Number(context.params?.eventId),
   });
+  await helpers.events.attendees.prefetch({
+    eventId: Number(context.params?.eventId),
+  });
+  await helpers.posts.posts.prefetch({
+    eventId: Number(context.params?.eventId),
+  });
 
   return {
     props: {
