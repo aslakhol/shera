@@ -10,6 +10,8 @@ import { appRouter } from "../../../server/api/root";
 import superjson from "superjson";
 import { type GetStaticPaths, type GetStaticProps } from "next";
 import { db } from "../../../server/db";
+import { addDays } from "date-fns";
+import clsx from "clsx";
 
 const EventPage: NextPageWithLayout = () => {
   const { query } = useRouter();
@@ -41,13 +43,18 @@ EventPage.getLayout = function getLayout(page: ReactElement) {
 export default EventPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const eventsInFuture = await db.events.findMany({
-    where: { dateTime: { gte: new Date() } },
+  const eventsAfter7DaysAgo = await db.events.findMany({
+    where: { dateTime: { gte: addDays(new Date(), -7) } },
     select: { eventId: true },
   });
+  const allEvents = await db.events.findMany({
+    select: { eventId: true },
+  });
+  const eventsToRender =
+    allEvents.length > 200 ? eventsAfter7DaysAgo : allEvents;
 
   return {
-    paths: eventsInFuture.map((event) => ({
+    paths: eventsToRender.map((event) => ({
       params: { eventId: event.eventId.toString() },
     })),
     fallback: "blocking",
