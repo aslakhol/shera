@@ -59,24 +59,6 @@ export const eventsRouter = createTRPCRouter({
 
       return event;
     }),
-  eventsAttendedByUser: publicProcedure
-    .input(z.object({ userEmail: z.string().email() }))
-    .query(async ({ input, ctx }) => {
-      const eventsInDb = await ctx.db.events.findMany({
-        where: {
-          attendees: {
-            some: {
-              email: input.userEmail,
-            },
-          },
-        },
-        include: {
-          host: true,
-        },
-      });
-
-      return eventsInDb.sort((a, b) => compareDesc(a.dateTime, b.dateTime));
-    }),
   myEvents: publicProcedure
     .input(z.object({ userEmail: z.string().email() }))
     .query(async ({ input, ctx }) => {
@@ -94,22 +76,6 @@ export const eventsRouter = createTRPCRouter({
         include: {
           host: true,
           attendees: true,
-        },
-      });
-
-      return eventsInDb.sort((a, b) => compareDesc(a.dateTime, b.dateTime));
-    }),
-  eventsHostedByUser: publicProcedure
-    .input(z.object({ userEmail: z.string().email() }))
-    .query(async ({ input, ctx }) => {
-      const eventsInDb = await ctx.db.events.findMany({
-        where: {
-          host: {
-            email: input.userEmail,
-          },
-        },
-        include: {
-          host: true,
         },
       });
 
