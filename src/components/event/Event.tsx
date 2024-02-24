@@ -34,7 +34,7 @@ export const Event = ({ eventId }: Props) => {
 
   return (
     <>
-      <div className="flex max-w-4xl flex-col gap-4 p-4">
+      <div className="flex min-w-96 max-w-4xl flex-col gap-4 p-4">
         <h2 className="text-2xl font-bold tracking-tight text-primary">
           {event.title}
         </h2>
