@@ -84,7 +84,7 @@ const NewPost = (props: NewPostProps) => {
                 )}
               />
 
-              <Button type="submit">
+              <Button type="submit" disabled={postMutation.isLoading}>
                 {!postMutation.isLoading ? "Post" : <Loading />}
               </Button>
             </form>
