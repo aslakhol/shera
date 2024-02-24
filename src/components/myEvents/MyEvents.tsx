@@ -16,7 +16,7 @@ export const MyEvents = ({ email }: MyEventsProps) => {
   });
 
   return (
-    <div className="flex max-w-4xl flex-col gap-8 p-4">
+    <div className="flex min-w-96 max-w-4xl flex-col gap-8 p-4">
       <div className="flex items-center justify-between">
         <h1 className="py-2 text-4xl font-extrabold text-primary">Events</h1>
         <Button asChild variant="outline">
