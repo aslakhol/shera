@@ -55,7 +55,9 @@ const EventRow = ({ event }: EventRowProps) => {
       >
         <Card>
           <CardHeader className="py-5">
-            <CardTitle className="text-lg">{event.title}</CardTitle>
+            <CardTitle className="w-72 overflow-hidden text-ellipsis text-nowrap text-lg">
+              {event.title}
+            </CardTitle>
             <CardContent className="p-0 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <WorkingClock date={event.dateTime} size={16} />
@@ -76,7 +78,12 @@ const EventRow = ({ event }: EventRowProps) => {
               {event.hostId && (
                 <div className="flex items-center gap-2">
                   <Crown size={16} />
-                  <p>{event.host.name ?? event.host.email}</p>
+
+                  <div>
+                    <p className="w-72 overflow-hidden text-ellipsis text-nowrap">
+                      {event.host.name ?? event.host.email}
+                    </p>
+                  </div>
                 </div>
               )}
             </CardContent>
