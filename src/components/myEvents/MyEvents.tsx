@@ -6,11 +6,12 @@ import { format } from "date-fns";
 import { Crown, MapPin, Plus, UsersRound } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
 import { Button } from "../ui/button";
+import { Loading } from "../Loading";
 
 type MyEventsProps = { email: string };
 
 export const MyEvents = ({ email }: MyEventsProps) => {
-  const { data: events } = api.events.myEvents.useQuery({
+  const { data: events, isSuccess } = api.events.myEvents.useQuery({
     userEmail: email,
   });
 
@@ -24,6 +25,8 @@ export const MyEvents = ({ email }: MyEventsProps) => {
           </Link>
         </Button>
       </div>
+
+      {!isSuccess && <Loading />}
 
       {events?.map((event) => (
         <EventRow event={event} key={`event-${event.eventId}`} />

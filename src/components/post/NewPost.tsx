@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
+import { Loading } from "../Loading";
 
 type NewPostProps = { eventId: number };
 
@@ -84,7 +85,7 @@ const NewPost = (props: NewPostProps) => {
               />
 
               <Button type="submit">
-                {!postMutation.isLoading ? "Post" : "Loading..."}
+                {!postMutation.isLoading ? "Post" : <Loading />}
               </Button>
             </form>
           </Form>

@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { api } from "../../utils/api";
 import { Button } from "../ui/button";
+import { Loading } from "../Loading";
 
 type Props = { eventId: number };
 
@@ -39,7 +40,7 @@ export const LoggedInAttend = ({ eventId }: Props) => {
 
   return (
     <Button variant="outline" onClick={attend}>
-      {!attendMutation.isLoading ? "Attend?" : "Loading..."}
+      {!attendMutation.isLoading ? "Attend?" : <Loading />}
     </Button>
   );
 };

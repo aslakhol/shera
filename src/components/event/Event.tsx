@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import Posts from "../post/Posts";
 import { Crown, MapPin } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
+import { Loading } from "../Loading";
 
 type Props = { eventId: number };
 
@@ -20,7 +21,7 @@ export const Event = ({ eventId }: Props) => {
   const { data: session } = useSession();
 
   if (!isSuccess) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!event) {

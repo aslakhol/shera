@@ -4,6 +4,7 @@ import { type EventSchemaType } from "../../utils/formValidation";
 import { EventForm } from "../EventForm";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
+import { Loading } from "../Loading";
 
 type Props = { eventId: number };
 
@@ -32,7 +33,7 @@ export const EditEvent = ({ eventId }: Props) => {
   };
 
   if (eventQuery.status === "loading" || !eventQuery.data) {
-    return <>Loading...</>;
+    return <Loading />;
   }
 
   if (session.data?.user.id !== eventQuery.data.host.id) {

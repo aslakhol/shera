@@ -6,7 +6,11 @@ import { MainLayout } from "../../components/Layout";
 import { type ReactElement } from "react";
 
 const EventsPage: NextPageWithLayout = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return null;
+  }
 
   if (!session?.user.email) {
     return <>Could not find email on your user.</>;
