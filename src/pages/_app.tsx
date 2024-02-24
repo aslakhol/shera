@@ -1,57 +1,46 @@
-// src/pages/_app.tsx
-import { withTRPC } from "@trpc/next";
-import type { AppRouter } from "../server/router";
-import type { AppType } from "next/dist/shared/lib/utils";
-import superjson from "superjson";
+import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import "../styles/globals.css";
-import NavBar from "../features/navbar/Components/NavBar";
-import Footer from "../features/footer/compontents/Footer";
+import { type AppProps } from "next/app";
 
-const MyApp: AppType = ({
+import { api } from "~/utils/api";
+
+import "~/styles/globals.css";
+import { type ReactElement, type ReactNode } from "react";
+import { type NextPage } from "next";
+import { MainLayout } from "../components/Layout";
+import Head from "next/head";
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps<{ session: Session | null }> & {
+  Component: NextPageWithLayout;
+};
+
+const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
-}) => {
+}: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout ?? getDefaultLayout;
+
   return (
     <SessionProvider session={session}>
-      <NavBar />
-      <div className="min-h-screen-content">
-        <Component {...pageProps} />
-      </div>
-      <Footer />
+      {getLayout(<Component {...pageProps} />)}
     </SessionProvider>
   );
 };
 
-const getBaseUrl = () => {
-  if (typeof window !== "undefined") {
-    return "";
-  }
-  if (process.browser) return ""; // Browser should use current path
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
+export default api.withTRPC(MyApp);
 
-  return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
-};
-
-export default withTRPC<AppRouter>({
-  config({ ctx }) {
-    /**
-     * If you want to use SSR, you need to use the server's full URL
-     * @link https://trpc.io/docs/ssr
-     */
-    const url = `${getBaseUrl()}/api/trpc`;
-
-    return {
-      url,
-      transformer: superjson,
-      /**
-       * @link https://react-query.tanstack.com/reference/QueryClient
-       */
-      // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
-    };
-  },
-  /**
-   * @link https://trpc.io/docs/ssr
-   */
-  ssr: false,
-})(MyApp);
+const getDefaultLayout = (page: ReactElement) => (
+  <>
+    <Head>
+      <title>Shera</title>
+      <meta name="description" content="Shera - Where great events take off" />
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
+    <MainLayout>{page}</MainLayout>
+  </>
+);

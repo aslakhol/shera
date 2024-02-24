@@ -1,18 +1,33 @@
-import NewEvent from "@/features/eventForm/components/NewEvent";
-import { NextPage } from "next";
 import Head from "next/head";
+import { CreateEvent } from "../../components/event/CreateEvent";
+import { type NextPageWithLayout } from "../_app";
+import { type ReactElement } from "react";
+import { MainLayout } from "../../components/Layout";
 
-const NewEventPage: NextPage = () => {
+const CreateEventPage: NextPageWithLayout = () => {
   return (
-    <>
-      <Head>
-        <title>New event</title>
-        <meta name="description" content="Page for creating new events" />
-      </Head>
-
-      <NewEvent />
-    </>
+    <main className="flex flex-grow flex-col items-center">
+      <div className="flex max-w-4xl flex-col gap-4 p-4">
+        <h2 className="text-2xl font-bold tracking-tight text-primary">
+          Create an event
+        </h2>
+        <CreateEvent />
+      </div>
+    </main>
   );
 };
 
-export default NewEventPage;
+CreateEventPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <MainLayout>
+      <Head>
+        <title>New event | Shera</title>
+        <meta name="description" content="Create event page for Shera" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      {page}
+    </MainLayout>
+  );
+};
+
+export default CreateEventPage;

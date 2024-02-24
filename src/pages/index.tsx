@@ -1,17 +1,17 @@
-import Welcome from "@/features/welcome/components/Welcome";
-import type { NextPage } from "next";
-import Head from "next/head";
+import { useSession } from "next-auth/react";
+import { Welcome } from "../components/welcome/Welcome";
+import { type NextPageWithLayout } from "./_app";
+import { useRouter } from "next/router";
 
-const Home: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>Shera</title>
-        <meta name="description" content="Welcome page for Shera" />
-      </Head>
-      <Welcome />
-    </>
-  );
+const Home: NextPageWithLayout = () => {
+  const session = useSession();
+  const router = useRouter();
+
+  if (session.status === "authenticated") {
+    void router.push("/events");
+  }
+
+  return <Welcome />;
 };
 
 export default Home;

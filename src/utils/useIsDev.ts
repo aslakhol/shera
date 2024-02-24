@@ -6,6 +6,6 @@ export const useIsDev = () => {
   const approvedDevs = ["aslakhol@gmail.com"];
 
   return (
-    (session?.user?.email && approvedDevs.includes(session.user.email)) || false
+    (session?.user?.email && approvedDevs.includes(session.user.email)) ?? false
   );
 };

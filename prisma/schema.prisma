@@ -5,21 +5,26 @@ generator client {
     provider = "prisma-client-js"
 }
 
+// datasource db {
+//     provider = "sqlite"
+//     url      = env("DATABASE_URL")
+// }
+
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
-// Datasource for local development without connecting to supabase.
-// comment out the datasource section above and uncomment this one to use it.
-//
-// datasource db {
-//     provider = "sqlite"
-//     url      = "file:./db.sqlite"
-// }
+model Post {
+    id        Int      @id @default(autoincrement())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-model Example {
-    id String @id @default(cuid())
+    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdById String
+
+    @@index([name])
 }
 
 model Events {
@@ -54,22 +59,21 @@ model Attendees {
     @@unique([name, eventId])
 }
 
-// Neccessary for Next auth
+// Necessary for Next auth
 model Account {
-    id                       String  @id @default(cuid())
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String?
-    refresh_token_expires_in Int?
-    access_token             String?
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String?
-    session_state            String?
-    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? // @db.Text
+    access_token      String? // @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? // @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
@@ -90,6 +94,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    posts         Post[]
     Events        Events[]
     Posts         Posts[]
 }

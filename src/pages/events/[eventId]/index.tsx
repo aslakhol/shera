@@ -1,31 +1,34 @@
-import { NextPage } from "next";
 import Head from "next/head";
+import { Event } from "../../../components/event/Event";
 import { useRouter } from "next/router";
-import Event from "@/features/event/components/Event";
-import { zStringToNumber } from "@/utils/zStringToNumber";
+import { type NextPageWithLayout } from "../../_app";
+import { type ReactElement } from "react";
+import { MainLayout } from "../../../components/Layout";
 
-const EventPage: NextPage = () => {
-  const { eventId } = useRouter().query;
+const EventPage: NextPageWithLayout = () => {
+  const { query } = useRouter();
 
-  if (!eventId) {
-    return <div>Event not found</div>;
-  }
-
-  const id = zStringToNumber.parse(eventId);
-
-  if (!id) {
+  if (!query.eventId || !Number(query.eventId)) {
     return <div>Event not found</div>;
   }
 
   return (
-    <>
-      <Head>
-        <title>Event</title>
-        <meta name="description" content="Page for an event" />
-      </Head>
+    <main className="flex flex-grow flex-col items-center">
+      <Event eventId={Number(query.eventId)} />
+    </main>
+  );
+};
 
-      <Event eventId={id} />
-    </>
+EventPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <MainLayout>
+      <Head>
+        <title>Event | Shera</title>
+        <meta name="description" content="Event page for Shera" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      {page}
+    </MainLayout>
   );
 };
 

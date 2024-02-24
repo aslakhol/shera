@@ -2,6 +2,125 @@
 @tailwind components;
 @tailwind utilities;
 
-.min-h-screen-content {
-  min-height: calc(100vh - 4rem);
+@layer base {
+  :root {
+    /* Name: custom color palette
+       Author: Ilias Ism
+       URL: https://gradient.page */
+    /* CSS: .bg-gradient { background: var(--gradient) } */
+
+    --gradient: #1d2b64;
+    --background: 242 97.75% 98.5%;
+    --foreground: 242 5.5% 1%;
+
+    --muted: 242 5.5% 92.5%;
+    --muted-foreground: 242 2.75% 42.5%;
+
+    --popover: 242 46% 92.5%;
+    --popover-foreground: 242 5.5% 1.25%;
+
+    --card: 242 46% 92.5%;
+    --card-foreground: 242 5.5% 1.25%;
+
+    --border: 242 10.5% 90%;
+    --input: 242 10.5% 90%;
+
+    --primary: 242 55% 25%;
+    --primary-foreground: 242 1.1% 92.5%;
+
+    --secondary: 242 2.75% 96.25%;
+    --secondary-foreground: 242 4.300000000000001% 12.5%;
+
+    --accent: 242 2.75% 96.25%;
+    --accent-foreground: 242 4.300000000000001% 12.5%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --ring: 242 55% 25%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* CSS: .bg-gradient { background: var(--gradient) } */
+    --gradient: linear-gradient(to top left, #77a1d3, #79cbca, #e684ae);
+
+    --background: 226 33.15% 5.2%;
+    --foreground: 226 5.1% 98.25%;
+
+    --muted: 226 26.52% 22.75%;
+    --muted-foreground: 226 5.1% 56.5%;
+
+    --popover: 226 54.8% 8.450000000000001%;
+    --popover-foreground: 226 5.1% 98.25%;
+
+    --card: 226 54.8% 8.450000000000001%;
+    --card-foreground: 226 5.1% 98.25%;
+
+    --border: 226 26.52% 22.75%;
+    --input: 226 26.52% 22.75%;
+
+    --primary: 226 51% 65%;
+    --primary-foreground: 226 5.1% 6.5%;
+
+    --secondary: 226 26.52% 22.75%;
+    --secondary-foreground: 226 5.1% 98.25%;
+
+    --accent: 226 26.52% 22.75%;
+    --accent-foreground: 226 5.1% 98.25%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 226 5.1% 98.25%;
+
+    --ring: 226 51% 65%;
+
+    --radius: 0.5rem;
+  }
+
+  .other-dark {
+    /* CSS: .bg-gradient { background: var(--gradient) } */
+    --gradient: linear-gradient(to top left, #9796f0, #fbc7d4);
+
+    --background: 256 48.75% 6.08%;
+    --foreground: 256 7.5% 98.8%;
+
+    --muted: 256 36% 21.28%;
+    --muted-foreground: 256 7.5% 57.6%;
+
+    --popover: 256 53% 13.68%;
+    --popover-foreground: 256 7.5% 98.8%;
+
+    --card: 256 53% 13.68%;
+    --card-foreground: 256 7.5% 98.8%;
+
+    --border: 256 36% 21.28%;
+    --input: 256 36% 21.28%;
+
+    --primary: 256 75% 76%;
+    --primary-foreground: 256 7.5% 7.6%;
+
+    --secondary: 256 36% 21.28%;
+    --secondary-foreground: 256 7.5% 98.8%;
+
+    --accent: 256 36% 21.28%;
+    --accent-foreground: 256 7.5% 98.8%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 256 7.5% 98.8%;
+
+    --ring: 256 75% 76%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  .text-gradient {
+    @apply bg-gradient bg-cover bg-clip-text text-transparent;
+  }
 }
