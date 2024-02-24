@@ -7,12 +7,16 @@ import Attending from "./Attending";
 import Link from "next/link";
 import { Attend } from "./Attend";
 import { LoggedInAttend } from "./LoggedInAttend";
-import Invite from "../invite/Invite";
 import { Button } from "../ui/button";
 import Posts from "../post/Posts";
 import { Crown, MapPin } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
 import { Loading } from "../Loading";
+
+import dynamic from "next/dynamic";
+const Invite = dynamic(() => import("../invite/Invite"), {
+  ssr: false,
+});
 
 type Props = { eventId: number };
 
