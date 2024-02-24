@@ -1,7 +1,13 @@
 import { type Attendees, type Events, type User } from "@prisma/client";
 import Link from "next/link";
 import { api } from "../../utils/api";
-import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { format } from "date-fns";
 import { Crown, MapPin, Plus, UsersRound } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
@@ -56,7 +62,7 @@ const EventRow = ({ event }: EventRowProps) => {
         <Card>
           <CardHeader className="py-5">
             <CardTitle className="text-lg">{event.title}</CardTitle>
-            <CardDescription>
+            <CardContent className="p-0 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <WorkingClock date={event.dateTime} size={16} />
                 <p>{format(event.dateTime, "H:mm")}</p>
@@ -79,7 +85,7 @@ const EventRow = ({ event }: EventRowProps) => {
                   <p>{event.host.name ?? event.host.email}</p>
                 </div>
               )}
-            </CardDescription>
+            </CardContent>
           </CardHeader>
         </Card>
       </Link>
