@@ -11,8 +11,12 @@ const ProfilePage: NextPageWithLayout = () => {
 
   return (
     <main className="flex flex-grow flex-col items-center">
-      <h2 className="text-2xl font-bold tracking-tight">Profile</h2>
-      {user && <ProfileForm user={user} />}
+      <div>
+        <h2 className="pb-4 text-2xl font-bold tracking-tight text-primary">
+          Profile
+        </h2>
+        {user && <ProfileForm user={user} />}
+      </div>
     </main>
   );
 };
