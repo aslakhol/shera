@@ -63,7 +63,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (context) => {
   const helpers = createServerSideHelpers({
     router: appRouter,
-    ctx: createInnerTRPCContext({ session: null }),
+    ctx: createInnerTRPCContext({ session: null, res: null }),
     transformer: superjson,
   });
 

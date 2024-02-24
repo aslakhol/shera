@@ -26,6 +26,7 @@ import { db } from "~/server/db";
 
 interface CreateContextOptions {
   session: Session | null;
+  res: CreateNextContextOptions["res"] | null;
 }
 
 /**
@@ -42,6 +43,7 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     db,
+    res: opts.res,
   };
 };
 
@@ -59,6 +61,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
 
   return createInnerTRPCContext({
     session,
+    res,
   });
 };
 

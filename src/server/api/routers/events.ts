@@ -30,6 +30,9 @@ export const eventsRouter = createTRPCRouter({
         where: { eventId },
         data: { ...event },
       });
+
+      await ctx.res?.revalidate(`/events/${eventId}`);
+
       return {
         event: eventInDb,
       };
