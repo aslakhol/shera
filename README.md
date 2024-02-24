@@ -1,28 +1,23 @@
-# Create T3 App
+Shera
+Shera is a tool for managing events without being tied to one social network.
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Getting it running
+The only annoying thing to set up is database access, there are two options.
 
-## What's next? How do I make an app with this?
+Our database is currently hosted in supabase. If you want to connect to the live "prod" db talk to Aslak to get the env file with a connection string.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+Alternative two (the prefered alternative) is using a local sqlite instance. In prisma/schema.prisma there are instructions for swapping to the local db.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+When db is set up it's just npm run dev
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+PS: The sqlite db might not be updated at all times, if this is the case run a migration after starting to use it (see below).
 
-## Learn More
+Migrations
+When making changes to the prisma schema we need to make migrations.
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+For local db we can just use npx prisma db push
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+When hitting the live database we use npx prisma migrate dev --name name-of-migration
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Neat stuff
+npx prisma studio gives you a neat studio to see the data in the db.
