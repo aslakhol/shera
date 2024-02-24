@@ -4,7 +4,7 @@ export const Welcome = () => {
   return (
     <>
       <main className="flex flex-grow flex-col items-center justify-center text-primary">
-        <div className="flex max-w-lg flex-col gap-8">
+        <div className="flex max-w-lg flex-col gap-8 p-4">
           <h1 className=" scroll-m-20  text-8xl font-extrabold tracking-tight ">
             Shera
           </h1>
