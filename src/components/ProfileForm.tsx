@@ -78,9 +78,7 @@ export const ProfileForm = ({ user }: Props) => {
               <FormControl>
                 <Input placeholder="email@example.com" {...field} />
               </FormControl>
-              <FormDescription>
-                Your default name when attending events.
-              </FormDescription>
+              <FormDescription>Your email.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
