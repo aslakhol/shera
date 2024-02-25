@@ -1,4 +1,4 @@
-import { type Events, type Posts, type User } from "@prisma/client";
+import { type Event, type Post as PostType, type User } from "@prisma/client";
 import { api } from "../../utils/api";
 import { useSession } from "next-auth/react";
 import {
@@ -35,7 +35,7 @@ const PostList = ({ eventId }: PostListProps) => {
 
 export default PostList;
 
-type PostProps = { post: Posts & { author: User; events: Events } };
+type PostProps = { post: PostType & { author: User; event: Event } };
 
 export const Post = (props: PostProps) => {
   const { post } = props;
@@ -43,7 +43,7 @@ export const Post = (props: PostProps) => {
 
   const canDeletePost =
     session?.user.id === post.authorId ||
-    session?.user.id === post.events.hostId;
+    session?.user.id === post.event.hostId;
 
   return (
     <div key={post.postId} className="w-full rounded border p-4">
@@ -69,7 +69,7 @@ export const Post = (props: PostProps) => {
   );
 };
 
-type ConfirmDeleteProps = { post: Posts & { author: User; events: Events } };
+type ConfirmDeleteProps = { post: PostType & { author: User; event: Event } };
 
 const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -82,7 +82,7 @@ const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
       {
         onSuccess: () => {
           setDialogOpen(false);
-          void utils.posts.posts.invalidate({ eventId: post.eventsId });
+          void utils.posts.posts.invalidate({ eventId: post.eventId });
         },
       },
     );

@@ -10,10 +10,10 @@ export const postsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { eventId, authorId, ...post } = input;
 
-      const postInDb = await ctx.db.posts.create({
+      const postInDb = await ctx.db.post.create({
         data: {
           ...post,
-          events: { connect: { eventId } },
+          event: { connect: { eventId } },
           author: { connect: { id: authorId } },
         },
       });
@@ -24,11 +24,11 @@ export const postsRouter = createTRPCRouter({
   posts: publicProcedure
     .input(z.object({ eventId: z.number() }))
     .query(async ({ ctx, input }) => {
-      const posts = await ctx.db.posts.findMany({
+      const posts = await ctx.db.post.findMany({
         where: {
-          eventsId: input.eventId,
+          eventId: input.eventId,
         },
-        include: { author: true, events: true },
+        include: { author: true, event: true },
       });
 
       return posts.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
@@ -37,13 +37,13 @@ export const postsRouter = createTRPCRouter({
   deletePost: publicProcedure
     .input(z.object({ postId: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      const post = await ctx.db.posts.delete({
+      const post = await ctx.db.post.delete({
         where: {
           postId: input.postId,
         },
-        include: { events: true },
+        include: { event: true },
       });
-      await ctx.res?.revalidate(`/events/${post.eventsId}`);
+      await ctx.res?.revalidate(`/events/${post.eventId}`);
 
       return post;
     }),

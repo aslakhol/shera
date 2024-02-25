@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -11,69 +8,58 @@ generator client {
 // }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+}
+
+model Event {
+    eventId     Int        @id @default(autoincrement())
+    description String
+    title       String
+    place       String?
+    hostId      String
+    dateTime    DateTime
+    attendees   Attendee[]
+    host        User       @relation(fields: [hostId], references: [id])
+    posts       Post[]
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
-}
-
-model Events {
-    eventId     Int         @id @default(autoincrement())
-    description String
-    title       String
-    dateTime    DateTime
-    place       String?
-    host        User        @relation(fields: [hostId], references: [id])
-    hostId      String
-    attendees   Attendees[]
-    posts       Posts[]
-}
-
-model Posts {
     postId    Int      @id @default(autoincrement())
+    authorId  String
+    eventId   Int
+    createdAt DateTime @default(now())
     message   String
     author    User     @relation(fields: [authorId], references: [id])
-    authorId  String
-    events    Events   @relation(fields: [eventsId], references: [eventId])
-    eventsId  Int
-    createdAt DateTime @default(now())
+    event     Event    @relation(fields: [eventId], references: [eventId])
 }
 
-model Attendees {
+model Attendee {
     attendeeId String  @id @default(cuid())
     name       String
     email      String?
-    Events     Events  @relation(fields: [eventId], references: [eventId])
     eventId    Int
+    event      Event   @relation(fields: [eventId], references: [eventId])
 
     @@unique([name, eventId])
 }
 
-// Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? // @db.Text
-    access_token      String? // @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? // @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id                       String  @id @default(cuid())
+    userId                   String
+    type                     String
+    provider                 String
+    providerAccountId        String
+    refresh_token            String?
+    access_token             String?
+    expires_at               Int?
+    token_type               String?
+    scope                    String?
+    id_token                 String?
+    session_state            String?
+    refresh_token_expires_in Int?
+    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
@@ -93,10 +79,9 @@ model User {
     emailVerified DateTime?
     image         String?
     accounts      Account[]
-    sessions      Session[]
+    events        Event[]
     posts         Post[]
-    Events        Events[]
-    Posts         Posts[]
+    sessions      Session[]
 }
 
 model VerificationToken {
