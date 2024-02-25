@@ -14,14 +14,14 @@ datasource db {
 }
 
 model Events {
-    eventId     Int         @id @default(autoincrement())
+    eventId     Int        @id @default(autoincrement())
     description String
     title       String
     place       String?
     hostId      String
     dateTime    DateTime
-    attendees   Attendees[]
-    host        User        @relation(fields: [hostId], references: [id])
+    attendees   Attendee[]
+    host        User       @relation(fields: [hostId], references: [id])
     posts       Posts[]
 }
 
@@ -35,7 +35,7 @@ model Posts {
     events    Events   @relation(fields: [eventsId], references: [eventId])
 }
 
-model Attendees {
+model Attendee {
     attendeeId String  @id @default(cuid())
     name       String
     email      String?

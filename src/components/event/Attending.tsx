@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { api } from "../../utils/api";
-import { type Attendees } from "@prisma/client";
+import { type Attendee } from "@prisma/client";
 import {
   Dialog,
   DialogContent,
@@ -42,7 +42,7 @@ const Attending = ({ eventId }: Props) => {
 
 export default Attending;
 
-type AttendeeProps = { eventId: number; attendee: Attendees };
+type AttendeeProps = { eventId: number; attendee: Attendee };
 
 const Attendee = (props: AttendeeProps) => {
   const { eventId, attendee } = props;

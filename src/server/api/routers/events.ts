@@ -99,7 +99,7 @@ export const eventsRouter = createTRPCRouter({
   unattend: publicProcedure
     .input(z.object({ attendeeId: z.string().cuid() }))
     .mutation(async ({ input, ctx }) => {
-      const attendee = await ctx.db.attendees.delete({
+      const attendee = await ctx.db.attendee.delete({
         where: { attendeeId: input.attendeeId },
       });
       await ctx.res?.revalidate(`/events/${attendee.eventId}`);
@@ -111,7 +111,7 @@ export const eventsRouter = createTRPCRouter({
   attendees: publicProcedure
     .input(z.object({ eventId: z.number() }))
     .query(async ({ input, ctx }) => {
-      const attendees = await ctx.db.attendees.findMany({
+      const attendees = await ctx.db.attendee.findMany({
         where: { eventId: input.eventId },
       });
 
