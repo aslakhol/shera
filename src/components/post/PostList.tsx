@@ -35,7 +35,7 @@ const PostList = ({ eventId }: PostListProps) => {
 
 export default PostList;
 
-type PostProps = { post: PostType & { author: User; events: Event } };
+type PostProps = { post: PostType & { author: User; event: Event } };
 
 export const Post = (props: PostProps) => {
   const { post } = props;
@@ -43,7 +43,7 @@ export const Post = (props: PostProps) => {
 
   const canDeletePost =
     session?.user.id === post.authorId ||
-    session?.user.id === post.events.hostId;
+    session?.user.id === post.event.hostId;
 
   return (
     <div key={post.postId} className="w-full rounded border p-4">
@@ -69,7 +69,7 @@ export const Post = (props: PostProps) => {
   );
 };
 
-type ConfirmDeleteProps = { post: PostType & { author: User; events: Event } };
+type ConfirmDeleteProps = { post: PostType & { author: User; event: Event } };
 
 const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -82,7 +82,7 @@ const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
       {
         onSuccess: () => {
           setDialogOpen(false);
-          void utils.posts.posts.invalidate({ eventId: post.eventsId });
+          void utils.posts.posts.invalidate({ eventId: post.eventId });
         },
       },
     );

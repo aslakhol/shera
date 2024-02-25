@@ -13,7 +13,7 @@ export const postsRouter = createTRPCRouter({
       const postInDb = await ctx.db.post.create({
         data: {
           ...post,
-          events: { connect: { eventId } },
+          event: { connect: { eventId } },
           author: { connect: { id: authorId } },
         },
       });
@@ -26,9 +26,9 @@ export const postsRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const posts = await ctx.db.post.findMany({
         where: {
-          eventsId: input.eventId,
+          eventId: input.eventId,
         },
-        include: { author: true, events: true },
+        include: { author: true, event: true },
       });
 
       return posts.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
@@ -41,9 +41,9 @@ export const postsRouter = createTRPCRouter({
         where: {
           postId: input.postId,
         },
-        include: { events: true },
+        include: { event: true },
       });
-      await ctx.res?.revalidate(`/events/${post.eventsId}`);
+      await ctx.res?.revalidate(`/events/${post.eventId}`);
 
       return post;
     }),
