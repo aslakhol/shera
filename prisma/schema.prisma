@@ -22,10 +22,10 @@ model Events {
     dateTime    DateTime
     attendees   Attendee[]
     host        User       @relation(fields: [hostId], references: [id])
-    posts       Posts[]
+    posts       Post[]
 }
 
-model Posts {
+model Post {
     postId    Int      @id @default(autoincrement())
     authorId  String
     eventsId  Int
@@ -80,7 +80,7 @@ model User {
     image         String?
     accounts      Account[]
     Events        Events[]
-    Posts         Posts[]
+    Posts         Post[]
     sessions      Session[]
 }
 

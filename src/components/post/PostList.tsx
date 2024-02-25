@@ -1,4 +1,4 @@
-import { type Events, type Posts, type User } from "@prisma/client";
+import { type Events, type Post as PostType, type User } from "@prisma/client";
 import { api } from "../../utils/api";
 import { useSession } from "next-auth/react";
 import {
@@ -35,7 +35,7 @@ const PostList = ({ eventId }: PostListProps) => {
 
 export default PostList;
 
-type PostProps = { post: Posts & { author: User; events: Events } };
+type PostProps = { post: PostType & { author: User; events: Events } };
 
 export const Post = (props: PostProps) => {
   const { post } = props;
@@ -69,7 +69,7 @@ export const Post = (props: PostProps) => {
   );
 };
 
-type ConfirmDeleteProps = { post: Posts & { author: User; events: Events } };
+type ConfirmDeleteProps = { post: PostType & { author: User; events: Events } };
 
 const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
