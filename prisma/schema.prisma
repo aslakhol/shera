@@ -91,7 +91,3 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
-
-model Example {
-    id String @id
-}
