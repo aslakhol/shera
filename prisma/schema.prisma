@@ -8,28 +8,18 @@ generator client {
 // }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
-}
-
-model Post {
-    id          Int      @id @default(autoincrement())
-    name        String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    createdById String
-    createdBy   User     @relation(fields: [createdById], references: [id])
-
-    @@index([name])
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
 }
 
 model Events {
     eventId     Int         @id @default(autoincrement())
     description String
     title       String
-    dateTime    DateTime
     place       String?
     hostId      String
+    dateTime    DateTime
     attendees   Attendees[]
     host        User        @relation(fields: [hostId], references: [id])
     posts       Posts[]
@@ -37,12 +27,12 @@ model Events {
 
 model Posts {
     postId    Int      @id @default(autoincrement())
-    message   String
     authorId  String
     eventsId  Int
     createdAt DateTime @default(now())
-    events    Events   @relation(fields: [eventsId], references: [eventId])
+    message   String
     author    User     @relation(fields: [authorId], references: [id])
+    events    Events   @relation(fields: [eventsId], references: [eventId])
 }
 
 model Attendees {
@@ -56,19 +46,20 @@ model Attendees {
 }
 
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String?
-    access_token      String?
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String?
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id                       String  @id @default(cuid())
+    userId                   String
+    type                     String
+    provider                 String
+    providerAccountId        String
+    refresh_token            String?
+    access_token             String?
+    expires_at               Int?
+    token_type               String?
+    scope                    String?
+    id_token                 String?
+    session_state            String?
+    refresh_token_expires_in Int?
+    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
@@ -89,7 +80,6 @@ model User {
     image         String?
     accounts      Account[]
     Events        Events[]
-    posts         Post[]
     Posts         Posts[]
     sessions      Session[]
 }
@@ -100,4 +90,8 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Example {
+    id String @id
 }
