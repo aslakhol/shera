@@ -10,7 +10,7 @@ export const eventsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { userId, ...event } = input;
 
-      const eventInDb = await ctx.db.events.create({
+      const eventInDb = await ctx.db.event.create({
         data: {
           ...event,
           host: { connect: { id: userId } },
@@ -26,7 +26,7 @@ export const eventsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { eventId, ...event } = input;
 
-      const eventInDb = await ctx.db.events.update({
+      const eventInDb = await ctx.db.event.update({
         where: { eventId },
         data: { ...event },
       });
@@ -38,12 +38,12 @@ export const eventsRouter = createTRPCRouter({
       };
     }),
   events: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.events.findMany();
+    return await ctx.db.event.findMany();
   }),
   event: publicProcedure
     .input(z.object({ eventId: z.number() }))
     .query(async ({ input, ctx }) => {
-      const event = await ctx.db.events.findFirst({
+      const event = await ctx.db.event.findFirst({
         where: {
           eventId: input.eventId,
         },
@@ -62,14 +62,14 @@ export const eventsRouter = createTRPCRouter({
   myEvents: publicProcedure
     .input(z.object({ userEmail: z.string().email() }))
     .query(async ({ input, ctx }) => {
-      const attends: Prisma.EventsWhereInput = {
+      const attends: Prisma.EventWhereInput = {
         attendees: { some: { email: input.userEmail } },
       };
-      const hosts: Prisma.EventsWhereInput = {
+      const hosts: Prisma.EventWhereInput = {
         host: { email: input.userEmail },
       };
 
-      const eventsInDb = await ctx.db.events.findMany({
+      const eventsInDb = await ctx.db.event.findMany({
         where: {
           OR: [hosts, attends],
         },
@@ -86,7 +86,7 @@ export const eventsRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const { eventId, ...attendee } = input;
 
-      const eventInDb = await ctx.db.events.update({
+      const eventInDb = await ctx.db.event.update({
         where: { eventId },
         data: { attendees: { create: { ...attendee } } },
       });

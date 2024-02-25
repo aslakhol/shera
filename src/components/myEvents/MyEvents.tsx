@@ -1,4 +1,4 @@
-import { type Attendee, type Events, type User } from "@prisma/client";
+import { type Attendee, type Event, type User } from "@prisma/client";
 import Link from "next/link";
 import { api } from "../../utils/api";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -39,7 +39,7 @@ export const MyEvents = ({ email }: MyEventsProps) => {
   );
 };
 
-type EventRowProps = { event: Events & { host: User; attendees: Attendee[] } };
+type EventRowProps = { event: Event & { host: User; attendees: Attendee[] } };
 
 const EventRow = ({ event }: EventRowProps) => {
   return (

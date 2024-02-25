@@ -13,7 +13,7 @@ datasource db {
     directUrl = env("DIRECT_URL")
 }
 
-model Events {
+model Event {
     eventId     Int        @id @default(autoincrement())
     description String
     title       String
@@ -32,7 +32,7 @@ model Post {
     createdAt DateTime @default(now())
     message   String
     author    User     @relation(fields: [authorId], references: [id])
-    events    Events   @relation(fields: [eventsId], references: [eventId])
+    events    Event    @relation(fields: [eventsId], references: [eventId])
 }
 
 model Attendee {
@@ -40,7 +40,7 @@ model Attendee {
     name       String
     email      String?
     eventId    Int
-    Events     Events  @relation(fields: [eventId], references: [eventId])
+    Events     Event   @relation(fields: [eventId], references: [eventId])
 
     @@unique([name, eventId])
 }
@@ -79,7 +79,7 @@ model User {
     emailVerified DateTime?
     image         String?
     accounts      Account[]
-    Events        Events[]
+    Events        Event[]
     Posts         Post[]
     sessions      Session[]
 }

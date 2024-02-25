@@ -1,9 +1,9 @@
-import { type Events, type User } from "@prisma/client";
+import { type Event, type User } from "@prisma/client";
 import NoWebShare from "./NoWebShare";
 import WebShare from "./WebShare";
 
 type InviteProps = {
-  event: Events & {
+  event: Event & {
     host: User;
   };
 };

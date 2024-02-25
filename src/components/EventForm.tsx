@@ -9,7 +9,7 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { eventSchema, type EventSchemaType } from "../utils/formValidation";
-import { type Events } from "@prisma/client";
+import { type Event } from "@prisma/client";
 import { Textarea } from "./ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { format, roundToNearestMinutes } from "date-fns";
@@ -20,7 +20,7 @@ import { useZodForm } from "../utils/zod";
 import { TimePicker } from "./ui/timepicker/time-picker";
 
 type Props = {
-  event?: Events;
+  event?: Event;
   onSubmit: (values: EventSchemaType) => void;
 };
 

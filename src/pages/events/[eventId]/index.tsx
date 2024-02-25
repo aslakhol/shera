@@ -42,11 +42,11 @@ EventPage.getLayout = function getLayout(page: ReactElement) {
 export default EventPage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const eventsAfter7DaysAgo = await db.events.findMany({
+  const eventsAfter7DaysAgo = await db.event.findMany({
     where: { dateTime: { gte: addDays(new Date(), -7) } },
     select: { eventId: true },
   });
-  const allEvents = await db.events.findMany({
+  const allEvents = await db.event.findMany({
     select: { eventId: true },
   });
   const eventsToRender =
