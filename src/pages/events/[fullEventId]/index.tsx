@@ -75,14 +75,20 @@ export const getStaticProps: GetStaticProps = async (context) => {
     transformer: superjson,
   });
 
+  const fullEventId =
+    typeof context.params?.fullEventId === "string"
+      ? context.params.fullEventId
+      : "";
+  const eventId = Number(fullEventId.split("-").at(-1));
+
   await helpers.events.event.prefetch({
-    eventId: Number(context.params?.eventId),
+    eventId,
   });
   await helpers.events.attendees.prefetch({
-    eventId: Number(context.params?.eventId),
+    eventId,
   });
   await helpers.posts.posts.prefetch({
-    eventId: Number(context.params?.eventId),
+    eventId,
   });
 
   return {
