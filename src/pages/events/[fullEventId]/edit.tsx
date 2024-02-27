@@ -7,13 +7,21 @@ import { MainLayout } from "../../../components/Layout";
 
 const EditEventPage: NextPageWithLayout = () => {
   const { query } = useRouter();
+  const fullEventId = query.fullEventId;
 
-  if (!query.eventId || !Number(query.eventId)) {
+  if (typeof fullEventId !== "string") {
     return <div>Event not found</div>;
   }
+
+  const eventId = fullEventId.split("-").at(-1);
+
+  if (!Number(eventId)) {
+    return <div>Event not found</div>;
+  }
+
   return (
     <main className="flex flex-grow flex-col items-center">
-      <EditEvent eventId={Number(query.eventId)} />
+      <EditEvent eventId={Number(eventId)} />
     </main>
   );
 };

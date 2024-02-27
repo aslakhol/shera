@@ -11,10 +11,10 @@ import superjson from "superjson";
 import { type GetStaticPaths, type GetStaticProps } from "next";
 import { db } from "../../../server/db";
 import { addDays } from "date-fns";
+import { fullEventId } from "../../../utils/event";
 
 const EventPage: NextPageWithLayout = () => {
   const { query } = useRouter();
-
   const fullEventId = query.fullEventId;
 
   if (typeof fullEventId !== "string") {
