@@ -52,17 +52,17 @@ export default EventPage;
 export const getStaticPaths: GetStaticPaths = async () => {
   const eventsAfter7DaysAgo = await db.event.findMany({
     where: { dateTime: { gte: addDays(new Date(), -7) } },
-    select: { eventId: true },
+    select: { eventId: true, title: true },
   });
   const allEvents = await db.event.findMany({
-    select: { eventId: true },
+    select: { eventId: true, title: true },
   });
   const eventsToRender =
     allEvents.length > 200 ? eventsAfter7DaysAgo : allEvents;
 
   return {
     paths: eventsToRender.map((event) => ({
-      params: { fullEventId: event.eventId.toString() },
+      params: { fullEventId: fullEventId(event) },
     })),
     fallback: "blocking",
   };
