@@ -15,13 +15,21 @@ import { addDays } from "date-fns";
 const EventPage: NextPageWithLayout = () => {
   const { query } = useRouter();
 
-  if (!query.eventId || !Number(query.eventId)) {
+  const fullEventId = query.fullEventId;
+
+  if (typeof fullEventId !== "string") {
+    return <div>Event not found</div>;
+  }
+
+  const eventId = fullEventId.split("-").at(-1);
+
+  if (!Number(eventId)) {
     return <div>Event not found</div>;
   }
 
   return (
     <main className="flex flex-grow flex-col items-center">
-      <Event eventId={Number(query.eventId)} />
+      <Event eventId={Number(eventId)} />
     </main>
   );
 };
@@ -54,7 +62,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths: eventsToRender.map((event) => ({
-      params: { eventId: event.eventId.toString() },
+      params: { fullEventId: event.eventId.toString() },
     })),
     fallback: "blocking",
   };
