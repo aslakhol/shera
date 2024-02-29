@@ -118,4 +118,20 @@ export const eventsRouter = createTRPCRouter({
 
       return attendees;
     }),
+  assignPublicId: publicProcedure.mutation(async ({ ctx }) => {
+    const eventsToUpdate = await ctx.db.event.findMany({
+      where: { publicId: null },
+    });
+
+    if (eventsToUpdate.length === 0) {
+      throw new Error("No events to update");
+    }
+
+    const updatedFirstEvent = await ctx.db.event.update({
+      where: { eventId: eventsToUpdate[0]!.eventId },
+      data: { publicId: ctx.nanoId() },
+    });
+
+    return updatedFirstEvent;
+  }),
 });
