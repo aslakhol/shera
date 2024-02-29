@@ -1,11 +1,14 @@
 import { useSession } from "next-auth/react";
 
+const approvedDevs = ["aslakhol@gmail.com"];
+
 export const useIsDev = () => {
   const { data: session } = useSession();
 
-  const approvedDevs = ["aslakhol@gmail.com"];
+  const isDev =
+    session?.user?.email && approvedDevs.includes(session.user.email)
+      ? true
+      : false;
 
-  return (
-    (session?.user?.email && approvedDevs.includes(session.user.email)) ?? false
-  );
+  return isDev;
 };
