@@ -13,6 +13,7 @@ export const eventsRouter = createTRPCRouter({
       const eventInDb = await ctx.db.event.create({
         data: {
           ...event,
+          publicId: ctx.nanoId(),
           host: { connect: { id: userId } },
         },
       });
