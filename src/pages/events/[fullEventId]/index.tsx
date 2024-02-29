@@ -11,17 +11,25 @@ import superjson from "superjson";
 import { type GetStaticPaths, type GetStaticProps } from "next";
 import { db } from "../../../server/db";
 import { addDays } from "date-fns";
+import { fullEventId } from "../../../utils/event";
 
 const EventPage: NextPageWithLayout = () => {
   const { query } = useRouter();
+  const fullEventId = query.fullEventId;
 
-  if (!query.eventId || !Number(query.eventId)) {
+  if (typeof fullEventId !== "string") {
+    return <div>Event not found</div>;
+  }
+
+  const eventId = fullEventId.split("-").at(-1);
+
+  if (!Number(eventId)) {
     return <div>Event not found</div>;
   }
 
   return (
     <main className="flex flex-grow flex-col items-center">
-      <Event eventId={Number(query.eventId)} />
+      <Event eventId={Number(eventId)} />
     </main>
   );
 };
@@ -44,17 +52,17 @@ export default EventPage;
 export const getStaticPaths: GetStaticPaths = async () => {
   const eventsAfter7DaysAgo = await db.event.findMany({
     where: { dateTime: { gte: addDays(new Date(), -7) } },
-    select: { eventId: true },
+    select: { eventId: true, title: true },
   });
   const allEvents = await db.event.findMany({
-    select: { eventId: true },
+    select: { eventId: true, title: true },
   });
   const eventsToRender =
     allEvents.length > 200 ? eventsAfter7DaysAgo : allEvents;
 
   return {
     paths: eventsToRender.map((event) => ({
-      params: { eventId: event.eventId.toString() },
+      params: { fullEventId: fullEventId(event) },
     })),
     fallback: "blocking",
   };
@@ -67,14 +75,20 @@ export const getStaticProps: GetStaticProps = async (context) => {
     transformer: superjson,
   });
 
+  const fullEventId =
+    typeof context.params?.fullEventId === "string"
+      ? context.params.fullEventId
+      : "";
+  const eventId = Number(fullEventId.split("-").at(-1));
+
   await helpers.events.event.prefetch({
-    eventId: Number(context.params?.eventId),
+    eventId,
   });
   await helpers.events.attendees.prefetch({
-    eventId: Number(context.params?.eventId),
+    eventId,
   });
   await helpers.posts.posts.prefetch({
-    eventId: Number(context.params?.eventId),
+    eventId,
   });
 
   return {

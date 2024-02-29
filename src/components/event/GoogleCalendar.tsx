@@ -3,6 +3,7 @@ import { add } from "date-fns";
 import type { User } from "next-auth";
 import { Button } from "../ui/button";
 import { Calendar } from "lucide-react";
+import { fullEventId } from "../../utils/event";
 
 type GoogleCalendarProps = {
   event: Event & {
@@ -14,7 +15,7 @@ const GoogleCalendar = (props: GoogleCalendarProps) => {
   const { event } = props;
 
   const title = event.title;
-  const sheraLink = `https://shera.no/events/${event.eventId}`;
+  const sheraLink = `https://shera.no/events/${fullEventId(event)}`;
 
   const description = `${sheraLink}%0A%0A${event.description.replaceAll(
     "\n",

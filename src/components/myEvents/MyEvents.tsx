@@ -7,6 +7,7 @@ import { Crown, MapPin, Plus, UsersRound } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
 import { Button } from "../ui/button";
 import { Loading } from "../Loading";
+import { fullEventId } from "../../utils/event";
 
 type MyEventsProps = { email: string };
 
@@ -50,7 +51,7 @@ const EventRow = ({ event }: EventRowProps) => {
       </div>
 
       <Link
-        href={`/events/${event.eventId}`}
+        href={`/events/${fullEventId(event)}`}
         className="w-full hover:shadow-xl"
       >
         <Card>

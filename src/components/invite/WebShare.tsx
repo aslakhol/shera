@@ -2,6 +2,7 @@ import { type Event } from "@prisma/client";
 import { type User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { Button } from "../ui/button";
+import { fullEventId } from "../../utils/event";
 
 type WebShareProps = {
   event: Event & {
@@ -21,7 +22,7 @@ const WebShare = ({ event }: WebShareProps) => {
       .share({
         title: "You've been invited to an event!",
         text: text,
-        url: `https://shera.no/events/${event.eventId}`,
+        url: `https://shera.no/events/${fullEventId(event)}`,
       })
       .then(() => console.log("Successful share"))
       .catch((error) => console.log("Error sharing", error));

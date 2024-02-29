@@ -4,6 +4,7 @@ import { type EventSchemaType } from "../../utils/formValidation";
 import { EventForm } from "../EventForm";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
+import { fullEventId } from "../../utils/event";
 
 export const CreateEvent = () => {
   const session = useSession();
@@ -11,7 +12,7 @@ export const CreateEvent = () => {
   const createEventMutation = api.events.createEvent.useMutation({
     onSuccess: (response) => {
       toast.success(`${response.event.title} created!`);
-      void router.push(`/events/${response.event.eventId}`);
+      void router.push(`/events/${fullEventId(response.event)}`);
     },
     onError: (error) => {
       toast.error(error.message);
