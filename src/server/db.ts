@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { customAlphabet } from "nanoid";
 
 import { env } from "~/env";
 
@@ -14,3 +15,7 @@ export const db =
   });
 
 if (env.NODE_ENV !== "production") globalForPrisma.prisma = db;
+
+const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+export const nanoId = customAlphabet(alphabet, 8);

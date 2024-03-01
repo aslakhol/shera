@@ -28,7 +28,7 @@ EventsPage.getLayout = function getLayout(page: ReactElement) {
     <MainLayout>
       <Head>
         <title>Events | Shera</title>
-        <meta name="description" content="Create event page for Shera" />
+        <meta name="description" content="My events page for Shera" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {page}
