@@ -15,7 +15,7 @@ const EditEventPage: NextPageWithLayout = () => {
 
   const publicId = fullEventId.split("-").at(-1);
 
-  if (publicId) {
+  if (!publicId) {
     return <div>Event not found</div>;
   }
 
