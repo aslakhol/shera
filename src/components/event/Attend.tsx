@@ -23,9 +23,9 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 
-type Props = { eventId: number };
+type Props = { publicId: string };
 
-export const Attend = ({ eventId }: Props) => {
+export const Attend = ({ publicId }: Props) => {
   const utils = api.useUtils();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -39,12 +39,12 @@ export const Attend = ({ eventId }: Props) => {
     attendMutation.mutate(
       {
         ...values,
-        eventId,
+        publicId,
       },
       {
         onSuccess: () => {
           form.reset();
-          void utils.events.attendees.invalidate({ eventId });
+          void utils.events.attendees.invalidate({ publicId });
           setDialogOpen(false);
         },
       },

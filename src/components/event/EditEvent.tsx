@@ -7,13 +7,13 @@ import { useRouter } from "next/router";
 import { Loading } from "../Loading";
 import { fullEventId } from "../../utils/event";
 
-type Props = { eventId: number };
+type Props = { publicId: string };
 
-export const EditEvent = ({ eventId }: Props) => {
+export const EditEvent = ({ publicId }: Props) => {
   const session = useSession();
   const router = useRouter();
   const eventQuery = api.events.event.useQuery({
-    eventId,
+    publicId,
   });
   const updateEventMutation = api.events.updateEvent.useMutation({
     onSuccess: (response) => {
@@ -30,7 +30,7 @@ export const EditEvent = ({ eventId }: Props) => {
       return;
     }
 
-    updateEventMutation.mutate({ eventId, ...values });
+    updateEventMutation.mutate({ publicId, ...values });
   };
 
   if (eventQuery.status === "loading" || !eventQuery.data) {

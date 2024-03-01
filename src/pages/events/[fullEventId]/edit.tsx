@@ -13,15 +13,15 @@ const EditEventPage: NextPageWithLayout = () => {
     return <div>Event not found</div>;
   }
 
-  const eventId = fullEventId.split("-").at(-1);
+  const publicId = fullEventId.split("-").at(-1);
 
-  if (!Number(eventId)) {
+  if (publicId) {
     return <div>Event not found</div>;
   }
 
   return (
     <main className="flex flex-grow flex-col items-center">
-      <EditEvent eventId={Number(eventId)} />
+      <EditEvent publicId={publicId} />
     </main>
   );
 };

@@ -1,5 +1,5 @@
-export const fullEventId = (event: { eventId: number; title: string }) => {
-  return `${slugifyEvent(event)}-${event.eventId}`;
+export const fullEventId = (event: { publicId: string; title: string }) => {
+  return `${slugifyEvent(event)}-${event.publicId}`;
 };
 
 const slugStringMaxLength = 35;

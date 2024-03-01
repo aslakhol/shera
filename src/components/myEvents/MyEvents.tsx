@@ -30,7 +30,7 @@ export const MyEvents = ({ email }: MyEventsProps) => {
       {!isSuccess && <Loading />}
 
       {events?.map((event) => (
-        <EventRow event={event} key={`event-${event.eventId}`} />
+        <EventRow event={event} key={`event-${event.publicId}`} />
       ))}
 
       <Button asChild variant="outline">

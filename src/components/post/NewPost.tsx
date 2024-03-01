@@ -22,10 +22,10 @@ import {
 import { Textarea } from "../ui/textarea";
 import { Loading } from "../Loading";
 
-type NewPostProps = { eventId: number };
+type NewPostProps = { publicId: string };
 
 const NewPost = (props: NewPostProps) => {
-  const { eventId } = props;
+  const { publicId } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { data: session } = useSession();
@@ -45,12 +45,12 @@ const NewPost = (props: NewPostProps) => {
       {
         ...values,
         authorId: session.user.id,
-        eventId: eventId,
+        publicId: publicId,
       },
       {
         onSuccess: () => {
           form.reset();
-          void utils.posts.posts.invalidate({ eventId: eventId });
+          void utils.posts.posts.invalidate({ publicId: publicId });
           setDialogOpen(false);
         },
       },
