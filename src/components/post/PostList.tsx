@@ -15,10 +15,10 @@ import { Button } from "../ui/button";
 import { Loading } from "../Loading";
 import { useState } from "react";
 
-type PostListProps = { eventId: number };
+type PostListProps = { publicId: string };
 
-const PostList = ({ eventId }: PostListProps) => {
-  const { data: posts, isSuccess } = api.posts.posts.useQuery({ eventId });
+const PostList = ({ publicId }: PostListProps) => {
+  const { data: posts, isSuccess } = api.posts.posts.useQuery({ publicId });
 
   if (!isSuccess) {
     return <></>;
@@ -82,7 +82,7 @@ const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
       {
         onSuccess: () => {
           setDialogOpen(false);
-          void utils.posts.posts.invalidate({ eventId: post.eventId });
+          void utils.posts.posts.invalidate({ publicId: post.event.publicId });
         },
       },
     );

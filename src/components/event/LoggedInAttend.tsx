@@ -3,12 +3,12 @@ import { api } from "../../utils/api";
 import { Button } from "../ui/button";
 import { Loading } from "../Loading";
 
-type Props = { eventId: number };
+type Props = { publicId: string };
 
-export const LoggedInAttend = ({ eventId }: Props) => {
+export const LoggedInAttend = ({ publicId }: Props) => {
   const utils = api.useUtils();
   const { data: session } = useSession();
-  const { data: attendees } = api.events.attendees.useQuery({ eventId });
+  const { data: attendees } = api.events.attendees.useQuery({ publicId });
   const attendMutation = api.events.attend.useMutation();
 
   const attend = () => {
@@ -20,11 +20,11 @@ export const LoggedInAttend = ({ eventId }: Props) => {
       {
         email: session.user.email,
         name: session.user.name ?? session.user.email,
-        eventId,
+        publicId,
       },
       {
         onSuccess: () => {
-          void utils.events.attendees.invalidate({ eventId });
+          void utils.events.attendees.invalidate({ publicId });
         },
       },
     );

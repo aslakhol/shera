@@ -18,10 +18,10 @@ const Invite = dynamic(() => import("../invite/Invite"), {
   ssr: false,
 });
 
-type Props = { eventId: number };
+type Props = { publicId: string };
 
-export const Event = ({ eventId }: Props) => {
-  const { data: event, isSuccess } = api.events.event.useQuery({ eventId });
+export const Event = ({ publicId }: Props) => {
+  const { data: event, isSuccess } = api.events.event.useQuery({ publicId });
   const { data: session } = useSession();
 
   if (!isSuccess) {
@@ -29,7 +29,7 @@ export const Event = ({ eventId }: Props) => {
   }
 
   if (!event) {
-    return <div>Event {eventId} not found</div>;
+    return <div>Event {publicId} not found</div>;
   }
 
   return (
@@ -59,15 +59,15 @@ export const Event = ({ eventId }: Props) => {
         </div>
 
         <div className="flex flex-wrap justify-start gap-2">
-          <Attending eventId={event.eventId} />
+          <Attending publicId={event.publicId} />
 
           {session?.user ? (
-            <LoggedInAttend eventId={event.eventId} />
+            <LoggedInAttend publicId={event.publicId} />
           ) : (
-            <Attend eventId={event.eventId} />
+            <Attend publicId={event.publicId} />
           )}
           {session?.user?.id === event.host.id && (
-            <Link href={`/events/${eventId}/edit`}>
+            <Link href={`/events/${publicId}/edit`}>
               <Button variant={"outline"}>Edit event</Button>
             </Link>
           )}
@@ -76,7 +76,7 @@ export const Event = ({ eventId }: Props) => {
         </div>
         <Body description={event.description} />
 
-        <Posts eventId={eventId} />
+        <Posts publicId={publicId} />
       </div>
     </>
   );

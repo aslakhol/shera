@@ -1,32 +1,46 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { postSchema } from "../../../utils/formValidation";
+import { fullEventId } from "../../../utils/event";
 
 export const postsRouter = createTRPCRouter({
   post: publicProcedure
     .input(
-      postSchema.extend({ authorId: z.string().cuid(), eventId: z.number() }),
+      postSchema.extend({ authorId: z.string().cuid(), publicId: z.string() }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { eventId, authorId, ...post } = input;
+      const { publicId, authorId, ...post } = input;
 
       const postInDb = await ctx.db.post.create({
         data: {
           ...post,
-          event: { connect: { eventId } },
+          event: { connect: { publicId } },
           author: { connect: { id: authorId } },
         },
+        include: { event: true },
       });
-      await ctx.res?.revalidate(`/events/${eventId}`);
+
+      const path = fullEventId(postInDb.event);
+      await ctx.res?.revalidate(`/events/${path}`);
 
       return postInDb;
     }),
   posts: publicProcedure
-    .input(z.object({ eventId: z.number() }))
+    .input(z.object({ publicId: z.string() }))
     .query(async ({ ctx, input }) => {
+      const event = await ctx.db.event.findFirst({
+        where: {
+          publicId: input.publicId,
+        },
+      });
+
+      if (!event) {
+        throw new Error("Event not found");
+      }
+
       const posts = await ctx.db.post.findMany({
         where: {
-          eventId: input.eventId,
+          eventId: event.eventId,
         },
         include: { author: true, event: true },
       });
@@ -43,7 +57,8 @@ export const postsRouter = createTRPCRouter({
         },
         include: { event: true },
       });
-      await ctx.res?.revalidate(`/events/${post.eventId}`);
+      const path = fullEventId(post.event);
+      await ctx.res?.revalidate(`/events/${path}`);
 
       return post;
     }),

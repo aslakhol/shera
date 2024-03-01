@@ -21,15 +21,15 @@ const EventPage: NextPageWithLayout = () => {
     return <div>Event not found</div>;
   }
 
-  const eventId = fullEventId.split("-").at(-1);
+  const publicId = fullEventId.split("-").at(-1);
 
-  if (!Number(eventId)) {
+  if (!publicId) {
     return <div>Event not found</div>;
   }
 
   return (
     <main className="flex flex-grow flex-col items-center">
-      <Event eventId={Number(eventId)} />
+      <Event publicId={publicId} />
     </main>
   );
 };
@@ -52,10 +52,10 @@ export default EventPage;
 export const getStaticPaths: GetStaticPaths = async () => {
   const eventsAfter7DaysAgo = await db.event.findMany({
     where: { dateTime: { gte: addDays(new Date(), -7) } },
-    select: { eventId: true, title: true },
+    select: { publicId: true, title: true },
   });
   const allEvents = await db.event.findMany({
-    select: { eventId: true, title: true },
+    select: { publicId: true, title: true },
   });
   const eventsToRender =
     allEvents.length > 200 ? eventsAfter7DaysAgo : allEvents;
@@ -79,16 +79,16 @@ export const getStaticProps: GetStaticProps = async (context) => {
     typeof context.params?.fullEventId === "string"
       ? context.params.fullEventId
       : "";
-  const eventId = Number(fullEventId.split("-").at(-1));
+  const publicId = fullEventId.split("-").at(-1)!;
 
   await helpers.events.event.prefetch({
-    eventId,
+    publicId,
   });
   await helpers.events.attendees.prefetch({
-    eventId,
+    publicId,
   });
   await helpers.posts.posts.prefetch({
-    eventId,
+    publicId,
   });
 
   return {

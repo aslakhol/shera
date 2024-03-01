@@ -2,18 +2,18 @@ import NewPost from "./NewPost";
 import PostList from "./PostList";
 
 type PostsProps = {
-  eventId: number;
+  publicId: string;
 };
 
 const Posts = (props: PostsProps) => {
-  const { eventId } = props;
+  const { publicId } = props;
 
   return (
     <>
       <div className="flex flex-col gap-2">
-        <PostList eventId={eventId} />
+        <PostList publicId={publicId} />
         <div>
-          <NewPost eventId={eventId} />
+          <NewPost publicId={publicId} />
         </div>
       </div>
     </>

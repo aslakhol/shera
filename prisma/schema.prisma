@@ -15,7 +15,7 @@ datasource db {
 
 model Event {
     eventId     Int        @id @default(autoincrement())
-    publicId    String?    @unique
+    publicId    String     @unique
     description String
     title       String
     place       String?

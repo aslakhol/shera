@@ -3,6 +3,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { compareDesc } from "date-fns";
 import { attendEventSchema, eventSchema } from "../../../utils/formValidation";
 import { type Prisma } from "@prisma/client";
+import { fullEventId } from "../../../utils/event";
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
@@ -23,16 +24,17 @@ export const eventsRouter = createTRPCRouter({
       };
     }),
   updateEvent: publicProcedure
-    .input(eventSchema.extend({ eventId: z.number() }))
+    .input(eventSchema.extend({ publicId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const { eventId, ...event } = input;
+      const { publicId, ...event } = input;
 
       const eventInDb = await ctx.db.event.update({
-        where: { eventId },
+        where: { publicId },
         data: { ...event },
       });
 
-      await ctx.res?.revalidate(`/events/${eventId}`);
+      const path = fullEventId(eventInDb);
+      await ctx.res?.revalidate(`/events/${path}`);
 
       return {
         event: eventInDb,
@@ -42,11 +44,11 @@ export const eventsRouter = createTRPCRouter({
     return await ctx.db.event.findMany();
   }),
   event: publicProcedure
-    .input(z.object({ eventId: z.number() }))
+    .input(z.object({ publicId: z.string() }))
     .query(async ({ input, ctx }) => {
       const event = await ctx.db.event.findFirst({
         where: {
-          eventId: input.eventId,
+          publicId: input.publicId,
         },
         include: { host: true },
       });
@@ -83,15 +85,17 @@ export const eventsRouter = createTRPCRouter({
       return eventsInDb.sort((a, b) => compareDesc(a.dateTime, b.dateTime));
     }),
   attend: publicProcedure
-    .input(attendEventSchema.extend({ eventId: z.number() }))
+    .input(attendEventSchema.extend({ publicId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const { eventId, ...attendee } = input;
+      const { publicId, ...attendee } = input;
 
       const eventInDb = await ctx.db.event.update({
-        where: { eventId },
+        where: { publicId },
         data: { attendees: { create: { ...attendee } } },
       });
-      await ctx.res?.revalidate(`/events/${eventId}`);
+
+      const path = fullEventId(eventInDb);
+      await ctx.res?.revalidate(`/events/${path}`);
 
       return {
         event: eventInDb,
@@ -102,36 +106,32 @@ export const eventsRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const attendee = await ctx.db.attendee.delete({
         where: { attendeeId: input.attendeeId },
+        include: { event: true },
       });
-      await ctx.res?.revalidate(`/events/${attendee.eventId}`);
+      const path = fullEventId(attendee.event);
+      await ctx.res?.revalidate(`/events/${path}`);
 
       return {
         attendee,
       };
     }),
   attendees: publicProcedure
-    .input(z.object({ eventId: z.number() }))
+    .input(z.object({ publicId: z.string() }))
     .query(async ({ input, ctx }) => {
+      const event = await ctx.db.event.findFirst({
+        where: {
+          publicId: input.publicId,
+        },
+      });
+
+      if (!event) {
+        throw new Error("Event not found");
+      }
+
       const attendees = await ctx.db.attendee.findMany({
-        where: { eventId: input.eventId },
+        where: { eventId: event.eventId },
       });
 
       return attendees;
     }),
-  assignPublicId: publicProcedure.mutation(async ({ ctx }) => {
-    const eventsToUpdate = await ctx.db.event.findMany({
-      where: { publicId: null },
-    });
-
-    if (eventsToUpdate.length === 0) {
-      throw new Error("No events to update");
-    }
-
-    const updatedFirstEvent = await ctx.db.event.update({
-      where: { eventId: eventsToUpdate[0]!.eventId },
-      data: { publicId: ctx.nanoId() },
-    });
-
-    return updatedFirstEvent;
-  }),
 });

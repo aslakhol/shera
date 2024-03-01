@@ -11,11 +11,11 @@ import {
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
 
-type Props = { eventId: number };
+type Props = { publicId: string };
 
-const Attending = ({ eventId }: Props) => {
+const Attending = ({ publicId }: Props) => {
   const { data: attendees, isSuccess } = api.events.attendees.useQuery({
-    eventId,
+    publicId,
   });
 
   return (
@@ -31,7 +31,7 @@ const Attending = ({ eventId }: Props) => {
           attendees.map((attendee) => (
             <Attendee
               key={attendee.attendeeId}
-              eventId={eventId}
+              publicId={publicId}
               attendee={attendee}
             />
           ))}
@@ -42,10 +42,10 @@ const Attending = ({ eventId }: Props) => {
 
 export default Attending;
 
-type AttendeeProps = { eventId: number; attendee: Attendee };
+type AttendeeProps = { publicId: string; attendee: Attendee };
 
 const Attendee = (props: AttendeeProps) => {
-  const { eventId, attendee } = props;
+  const { publicId, attendee } = props;
   const utils = api.useUtils();
   const { data: session } = useSession();
   const unattendMutation = api.events.unattend.useMutation();
@@ -57,7 +57,7 @@ const Attendee = (props: AttendeeProps) => {
       { attendeeId: attendee.attendeeId },
       {
         onSuccess: () => {
-          void utils.events.attendees.invalidate({ eventId });
+          void utils.events.attendees.invalidate({ publicId });
         },
       },
     );
