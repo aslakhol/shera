@@ -7,6 +7,15 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  redirects: async () => {
+    return [
+      {
+        source: "/events/71",
+        destination: "/events/big-sig-p-jordal-terrasse-sgouwqfp",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default config;
