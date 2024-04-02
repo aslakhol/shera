@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { Loading } from "../Loading";
 
 type Props = { publicId: string };
 
@@ -92,7 +93,9 @@ export const Attend = ({ publicId }: Props) => {
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={attendMutation.isLoading}>
+              {!attendMutation.isLoading ? "Submit" : <Loading />}
+            </Button>
           </form>
         </Form>
       </DialogContent>
