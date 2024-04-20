@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  database:
+    image: "postgres:alpine"
+    restart: always
+    volumes:
+      - ./resources/postgres:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=shera
+      - POSTGRES_USER=shera
+      - POSTGRES_PASSWORD=shera
+    ports:
+      - "5433:5432"
