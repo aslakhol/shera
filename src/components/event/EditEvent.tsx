@@ -41,5 +41,11 @@ export const EditEvent = ({ publicId }: Props) => {
     return <>No access to edit event</>;
   }
 
-  return <EventForm onSubmit={createEvent} event={eventQuery.data} />;
+  return (
+    <EventForm
+      onSubmit={createEvent}
+      event={eventQuery.data}
+      mutationIsIdle={updateEventMutation.isIdle}
+    />
+  );
 };

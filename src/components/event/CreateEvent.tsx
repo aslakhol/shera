@@ -27,5 +27,10 @@ export const CreateEvent = () => {
     createEventMutation.mutate({ userId: session.data.user.id, ...values });
   };
 
-  return <EventForm onSubmit={createEvent} />;
+  return (
+    <EventForm
+      onSubmit={createEvent}
+      mutationIsIdle={createEventMutation.isIdle}
+    />
+  );
 };
