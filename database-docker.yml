@@ -5,7 +5,7 @@ services:
     image: "postgres:alpine"
     restart: always
     volumes:
-      - ./resources/postgres:/var/lib/postgresql/data/
+      - "./resources/postgres:/docker-entrypoint-initdb.d"
     environment:
       - POSTGRES_DB=shera
       - POSTGRES_USER=shera
