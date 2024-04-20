@@ -99,7 +99,7 @@ export const ProfileForm = ({ user }: Props) => {
         />
         <Button
           type="submit"
-          disabled={!form.formState.isDirty || updateProfileMutation.isLoading}
+          disabled={!form.formState.isDirty || !updateProfileMutation.isIdle}
         >
           Submit
         </Button>

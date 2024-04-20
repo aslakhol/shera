@@ -40,7 +40,7 @@ export const LoggedInAttend = ({ publicId }: Props) => {
 
   return (
     <Button variant="outline" onClick={attend}>
-      {!attendMutation.isLoading ? "Attend?" : <Loading />}
+      {attendMutation.isIdle ? "Attend?" : <Loading />}
     </Button>
   );
 };

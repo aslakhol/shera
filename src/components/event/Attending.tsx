@@ -10,6 +10,7 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
+import { Loading } from "../Loading";
 
 type Props = { publicId: string };
 

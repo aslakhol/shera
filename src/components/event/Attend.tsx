@@ -93,8 +93,8 @@ export const Attend = ({ publicId }: Props) => {
               )}
             />
 
-            <Button type="submit" disabled={attendMutation.isLoading}>
-              {!attendMutation.isLoading ? "Submit" : <Loading />}
+            <Button type="submit" disabled={!attendMutation.isIdle}>
+              {attendMutation.isIdle ? "Submit" : <Loading />}
             </Button>
           </form>
         </Form>

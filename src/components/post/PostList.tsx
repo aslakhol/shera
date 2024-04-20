@@ -105,9 +105,9 @@ const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
             <Button
               variant="destructive"
               onClick={deletePost}
-              disabled={deletePostMutation.isLoading}
+              disabled={!deletePostMutation.isIdle}
             >
-              {!deletePostMutation.isLoading ? "Delete" : <Loading />}
+              {deletePostMutation.isIdle ? "Delete" : <Loading />}
             </Button>
           </DialogFooter>
         </DialogHeader>
