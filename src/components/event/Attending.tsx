@@ -46,12 +46,26 @@ type AttendeeProps = { publicId: string; attendee: Attendee };
 
 const Attendee = (props: AttendeeProps) => {
   const { publicId, attendee } = props;
-  const utils = api.useUtils();
   const { data: session } = useSession();
-  const unattendMutation = api.events.unattend.useMutation();
 
   const isMe = attendee.email === session?.user.email;
 
+  return (
+    <li className={`flex gap-2`}>
+      <span className={isMe ? "underline" : ""}>{attendee.name}</span>
+      {isMe && <Unattend publicId={publicId} attendee={attendee} />}
+    </li>
+  );
+};
+
+type UnattendProps = {
+  publicId: string;
+  attendee: Attendee;
+};
+
+const Unattend = ({ publicId, attendee }: UnattendProps) => {
+  const utils = api.useUtils();
+  const unattendMutation = api.events.unattend.useMutation();
   const unattend = () => {
     unattendMutation.mutate(
       { attendeeId: attendee.attendeeId },
@@ -63,10 +77,9 @@ const Attendee = (props: AttendeeProps) => {
     );
   };
 
-  return (
-    <li className={`flex gap-2`}>
-      <span className={isMe ? "underline" : ""}>{attendee.name}</span>
-      {isMe && <X onClick={unattend} className="underline" />}
-    </li>
-  );
+  if (unattendMutation.isIdle) {
+    return <Loading />;
+  }
+
+  return <X onClick={unattend} className="underline" />;
 };
