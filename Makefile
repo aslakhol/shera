@@ -6,4 +6,4 @@ db\:fix:
 	@sleep 4;
 	#@echo "Populating seed data..."
 	# when I make a seed script
-	@echo "Local databases wiped and ready. Restart yarn dev if running..."
+	@echo "Local databases wiped and ready. Restart npm run dev if running..."
