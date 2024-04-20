@@ -4,6 +4,6 @@ db\:fix:
 	docker compose -f database-docker.yml up --build -d;
 	@echo "Waiting for databases to boot..."
 	@sleep 4;
-	#@echo "Populating seed data..."
-	# when I make a seed script
+	@echo "Populating seed data..."
+	npm run db:reset --force;
 	@echo "Local databases wiped and ready. Restart npm run dev if running..."
