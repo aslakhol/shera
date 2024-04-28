@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { compareDesc } from "date-fns";
-import { attendEventSchema, eventSchema } from "../../../utils/formValidation";
+import {
+  attendEventSchema,
+  eventSchema,
+  loggedInAttendEventSchema,
+} from "../../../utils/formValidation";
 import { type Prisma } from "@prisma/client";
 import { fullEventId } from "../../../utils/event";
 
@@ -93,6 +97,31 @@ export const eventsRouter = createTRPCRouter({
         where: { publicId },
         data: { attendees: { create: { ...attendee } } },
       });
+
+      const path = fullEventId(eventInDb);
+      await ctx.res?.revalidate(`/events/${path}`);
+
+      return {
+        event: eventInDb,
+      };
+    }),
+  loggedInAttend: publicProcedure
+    .input(
+      loggedInAttendEventSchema.extend({
+        publicId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { publicId, ...attendee } = input;
+
+      console.log(attendee, "attendee");
+
+      const eventInDb = await ctx.db.event.update({
+        where: { publicId },
+        data: { attendees: { create: { ...attendee } } },
+      });
+
+      console.log(eventInDb, "eventInDb");
 
       const path = fullEventId(eventInDb);
       await ctx.res?.revalidate(`/events/${path}`);

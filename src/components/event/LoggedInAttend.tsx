@@ -9,17 +9,18 @@ export const LoggedInAttend = ({ publicId }: Props) => {
   const utils = api.useUtils();
   const { data: session } = useSession();
   const { data: attendees } = api.events.attendees.useQuery({ publicId });
-  const attendMutation = api.events.attend.useMutation();
+  const loggedInAttendMutation = api.events.loggedInAttend.useMutation();
 
   const attend = () => {
     if (!session?.user || !session.user.email) {
       return;
     }
 
-    attendMutation.mutate(
+    loggedInAttendMutation.mutate(
       {
         email: session.user.email,
         name: session.user.name ?? session.user.email,
+        userId: session.user.id,
         publicId,
       },
       {
@@ -40,7 +41,7 @@ export const LoggedInAttend = ({ publicId }: Props) => {
 
   return (
     <Button variant="outline" onClick={attend}>
-      {attendMutation.isIdle ? "Attend?" : <Loading />}
+      {loggedInAttendMutation.isIdle ? "Attend?" : <Loading />}
     </Button>
   );
 };
