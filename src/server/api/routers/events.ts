@@ -114,14 +114,10 @@ export const eventsRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const { publicId, ...attendee } = input;
 
-      console.log(attendee, "attendee");
-
       const eventInDb = await ctx.db.event.update({
         where: { publicId },
         data: { attendees: { create: { ...attendee } } },
       });
-
-      console.log(eventInDb, "eventInDb");
 
       const path = fullEventId(eventInDb);
       await ctx.res?.revalidate(`/events/${path}`);
