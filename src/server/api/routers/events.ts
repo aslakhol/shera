@@ -126,9 +126,50 @@ export const eventsRouter = createTRPCRouter({
         event: eventInDb,
       };
     }),
+  reattend: publicProcedure
+    .input(z.object({ attendeeId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const { attendeeId } = input;
+
+      const attendeeInDb = await ctx.db.attendee.update({
+        where: { attendeeId },
+        data: { status: "GOING" },
+        include: { event: true },
+      });
+
+      const path = fullEventId(attendeeInDb.event);
+      await ctx.res?.revalidate(`/events/${path}`);
+
+      return {
+        attendee: attendeeInDb,
+      };
+    }),
   unattend: publicProcedure
     .input(z.object({ attendeeId: z.string().cuid() }))
     .mutation(async ({ input, ctx }) => {
+      const attendeeInDb = await ctx.db.attendee.findFirst({
+        where: { attendeeId: input.attendeeId },
+      });
+
+      if (!attendeeInDb) {
+        throw new Error("Attendee not found");
+      }
+
+      if (attendeeInDb.userId) {
+        const updatedAttendee = await ctx.db.attendee.update({
+          where: { attendeeId: input.attendeeId },
+          data: { status: "NOT_GOING" },
+          include: { event: true },
+        });
+
+        const path = fullEventId(updatedAttendee.event);
+        await ctx.res?.revalidate(`/events/${path}`);
+
+        return {
+          attendee: updatedAttendee,
+        };
+      }
+
       const attendee = await ctx.db.attendee.delete({
         where: { attendeeId: input.attendeeId },
         include: { event: true },

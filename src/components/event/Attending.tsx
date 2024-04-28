@@ -9,8 +9,9 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { X } from "lucide-react";
+import { Redo, X } from "lucide-react";
 import { Loading } from "../Loading";
+import { cn } from "../../utils/cn";
 
 type Props = { publicId: string };
 
@@ -49,12 +50,27 @@ const Attendee = (props: AttendeeProps) => {
   const { publicId, attendee } = props;
   const { data: session } = useSession();
 
-  const isMe = attendee.email === session?.user.email;
+  const isMe =
+    attendee.email === session?.user.email ||
+    attendee.userId === session?.user.id;
 
   return (
     <li className={`flex gap-2`}>
-      <span className={isMe ? "underline" : ""}>{attendee.name}</span>
-      {isMe && <Unattend publicId={publicId} attendee={attendee} />}
+      <span
+        className={cn(
+          isMe && "underline",
+          attendee.status === "NOT_GOING" &&
+            "text-muted-foreground line-through",
+        )}
+      >
+        {attendee.name} {attendee.status === "NOT_GOING" && "(not going)"}
+      </span>
+      {isMe && attendee.status !== "NOT_GOING" && (
+        <Unattend publicId={publicId} attendee={attendee} />
+      )}
+      {isMe && attendee.status === "NOT_GOING" && (
+        <Reattend publicId={publicId} attendee={attendee} />
+      )}
     </li>
   );
 };
@@ -78,9 +94,38 @@ const Unattend = ({ publicId, attendee }: UnattendProps) => {
     );
   };
 
-  if (unattendMutation.isIdle) {
+  if (!unattendMutation.isIdle) {
     return <Loading />;
   }
 
-  return <X onClick={unattend} className="underline" />;
+  return <X onClick={unattend} className="pointer underline" />;
+};
+
+type ReattendProps = {
+  publicId: string;
+  attendee: Attendee;
+};
+
+const Reattend = ({ publicId, attendee }: ReattendProps) => {
+  const utils = api.useUtils();
+  const reattendMutation = api.events.reattend.useMutation();
+
+  const reattend = () => {
+    reattendMutation.mutate(
+      {
+        attendeeId: attendee.attendeeId,
+      },
+      {
+        onSuccess: () => {
+          void utils.events.attendees.invalidate({ publicId });
+        },
+      },
+    );
+  };
+
+  if (!reattendMutation.isIdle) {
+    return <Loading />;
+  }
+
+  return <Redo onClick={reattend} className="pointer underline" />;
 };
