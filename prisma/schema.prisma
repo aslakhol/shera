@@ -38,8 +38,11 @@ model Attendee {
     eventId    Int
     event      Event           @relation(fields: [eventId], references: [eventId])
     status     AttendingStatus @default(UNKNOWN)
+    userId     String?
+    user       User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([name, eventId])
+    @@unique([eventId, userId])
 }
 
 enum AttendingStatus {
@@ -77,15 +80,16 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String     @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?    @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     events        Event[]
     posts         Post[]
     sessions      Session[]
+    Attendee      Attendee[]
 }
 
 model VerificationToken {
