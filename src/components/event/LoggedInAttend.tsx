@@ -33,7 +33,7 @@ export const LoggedInAttend = ({ publicId }: Props) => {
   };
 
   const isAlreadyAttending = attendees?.some(
-    (a) => a.email === session?.user?.email,
+    (a) => a.email === session?.user?.email || a.userId === session?.user?.id,
   );
 
   if (isAlreadyAttending) {
