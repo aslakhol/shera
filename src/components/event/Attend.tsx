@@ -40,6 +40,7 @@ export const Attend = ({ publicId }: Props) => {
     attendMutation.mutate(
       {
         ...values,
+        status: "GOING",
         publicId,
       },
       {
