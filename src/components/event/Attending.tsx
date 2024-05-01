@@ -23,7 +23,9 @@ const Attending = ({ publicId }: Props) => {
   return (
     <Dialog>
       <Button asChild variant="outline">
-        <DialogTrigger>{attendees?.length ?? 0} going</DialogTrigger>
+        <DialogTrigger>
+          {attendees?.filter((a) => a.status === "GOING")?.length ?? 0} going
+        </DialogTrigger>
       </Button>
       <DialogContent>
         <DialogHeader>
