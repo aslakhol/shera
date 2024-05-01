@@ -7,9 +7,9 @@ type Props = { children: React.ReactNode };
 export const MainLayout = ({ children }: Props) => {
   return (
     <>
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col items-center">
         <NavBar />
-        {children}
+        <div className="md:w-[640px]">{children}</div>
         <Toaster />
       </div>
       <Footer />
