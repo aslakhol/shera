@@ -6,6 +6,7 @@ import { type User, type Event } from "@prisma/client";
 import { api } from "../../utils/api";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -28,13 +29,62 @@ export const NewAttend = ({ session, event }: Props) => {
     <Card>
       <CardContent className="p-2">
         <div className="flex items-center gap-2">
-          <Button type="submit" variant="outline" className="w-full">
-            Going?
-          </Button>
+          <Attend session={session} event={event} />
           <Attendants event={event} />
         </div>
       </CardContent>
     </Card>
+  );
+};
+
+type AttendProps = { session: Session; event: Event & { host: User } };
+
+const Attend = ({ session, event }: AttendProps) => {
+  const updateAttendance = async (status: "GOING" | "NOT_GOING" | "MAYBE") => {
+    console.log(status, event.publicId, session.user.id);
+    setTimeout(() => console.log("hello"), 2000);
+  };
+
+  return (
+    <Dialog>
+      <Button asChild variant="outline">
+        <DialogTrigger className="w-full">Going?</DialogTrigger>
+      </Button>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you going to {event.title}?:</DialogTitle>
+        </DialogHeader>
+        <div className="flex flex-col gap-2">
+          <DialogClose asChild>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => updateAttendance("GOING")}
+            >
+              Going
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => updateAttendance("MAYBE")}
+            >
+              Maybe
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => updateAttendance("NOT_GOING")}
+            >
+              Not going
+            </Button>
+          </DialogClose>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
