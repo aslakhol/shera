@@ -14,6 +14,8 @@ import { WorkingClock } from "../WorkingClock";
 import { Loading } from "../Loading";
 
 import dynamic from "next/dynamic";
+import { NewAttend } from "./NewAttend";
+
 const Invite = dynamic(() => import("../invite/Invite"), {
   ssr: false,
 });
@@ -57,6 +59,7 @@ export const Event = ({ publicId }: Props) => {
             </div>
           )}
         </div>
+        <NewAttend session={session} event={event} />
 
         <div className="flex flex-wrap justify-start gap-2">
           <Attending publicId={event.publicId} />
