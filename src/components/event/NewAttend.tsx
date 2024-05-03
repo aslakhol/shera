@@ -40,9 +40,22 @@ export const NewAttend = ({ session, event }: Props) => {
 type AttendProps = { session: Session; event: Event & { host: User } };
 
 const Attend = ({ session, event }: AttendProps) => {
+  const updateAttendanceMutation = api.events.updateAttendance.useMutation();
+  const utils = api.useUtils();
+
   const updateAttendance = async (status: "GOING" | "NOT_GOING" | "MAYBE") => {
-    console.log(status, event.publicId, session.user.id);
-    setTimeout(() => console.log("hello"), 2000);
+    updateAttendanceMutation.mutate(
+      {
+        publicId: event.publicId,
+        userId: session.user.id,
+        status,
+      },
+      {
+        onSuccess: () => {
+          void utils.events.attendees.invalidate({ publicId: event.publicId });
+        },
+      },
+    );
   };
 
   return (

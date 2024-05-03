@@ -88,6 +88,54 @@ export const eventsRouter = createTRPCRouter({
 
       return eventsInDb.sort((a, b) => compareDesc(a.dateTime, b.dateTime));
     }),
+  updateAttendance: publicProcedure
+    .input(
+      z.object({
+        publicId: z.string(),
+        userId: z.string().cuid(),
+        status: z.enum(["GOING", "NOT_GOING", "MAYBE"]),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { publicId, status } = input;
+
+      const event = await ctx.db.event.findFirst({
+        where: { publicId },
+      });
+
+      if (!event) {
+        throw new Error("Event not found");
+      }
+
+      const user = await ctx.db.user.findFirst({
+        where: { id: input.userId },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const attendee = await ctx.db.attendee.upsert({
+        where: { eventId_userId: { eventId: event.eventId, userId: user.id } },
+        create: {
+          eventId: event.eventId,
+          userId: user.id,
+          name: user.name ?? user.email ?? "Unknown",
+          email: user.email,
+          status,
+        },
+        update: {
+          status,
+          name: user.name ?? user.email ?? "Unknown",
+          email: user.email,
+        },
+      });
+
+      const path = fullEventId(event);
+      await ctx.res?.revalidate(`/events/${path}`);
+
+      return attendee;
+    }),
   attend: publicProcedure
     .input(attendEventSchema.extend({ publicId: z.string() }))
     .mutation(async ({ input, ctx }) => {
