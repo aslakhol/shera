@@ -41,7 +41,6 @@ model Attendee {
     userId     String?
     user       User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([name, eventId])
     @@unique([eventId, userId])
 }
 
