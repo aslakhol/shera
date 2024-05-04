@@ -58,7 +58,7 @@ type AttendProps = {
 
 const Attend = ({ session, event, currentAttendee }: AttendProps) => {
   const [name, setName] = useState(
-    currentAttendee?.name ?? session.user.name ?? "",
+    currentAttendee?.name ?? session.user.name ?? session.user.email ?? "",
   );
   const updateAttendanceMutation = api.events.updateAttendance.useMutation();
   const utils = api.useUtils();

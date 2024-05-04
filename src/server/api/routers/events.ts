@@ -133,7 +133,7 @@ export const eventsRouter = createTRPCRouter({
       });
 
       const shouldUpdateUserName =
-        name && (!user.name || user.name.includes("@"));
+        name && !name.includes("@") && (!user.name || user.name.includes("@"));
       if (shouldUpdateUserName) {
         await ctx.db.user.update({
           where: { id: user.id },
