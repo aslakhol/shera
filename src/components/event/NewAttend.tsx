@@ -2,7 +2,7 @@ import { type Session } from "next-auth";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 
-import { type User, type Event } from "@prisma/client";
+import { type User, type Event, type Attendee } from "@prisma/client";
 import { api } from "../../utils/api";
 import {
   Dialog,
@@ -65,7 +65,9 @@ const Attend = ({ session, event }: AttendProps) => {
       </Button>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you going to {event.title}?:</DialogTitle>
+          <DialogTitle className="text-primary">
+            Are you going to {event.title}?:
+          </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-2">
           <DialogClose asChild>
@@ -107,6 +109,11 @@ const Attendants = ({ event }: AttendantsProps) => {
   const { data: attendees, isSuccess } = api.events.attendees.useQuery({
     publicId: event.publicId,
   });
+
+  const going = attendees?.filter((a) => a.status === "GOING") ?? [];
+  const maybe = attendees?.filter((a) => a.status === "MAYBE") ?? [];
+  const notGoing = attendees?.filter((a) => a.status === "NOT_GOING") ?? [];
+
   return (
     <Dialog>
       <Button asChild variant="outline">
@@ -116,15 +123,35 @@ const Attendants = ({ event }: AttendantsProps) => {
       </Button>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Attendees:</DialogTitle>
+          <DialogTitle className="text-primary">Attendees:</DialogTitle>
         </DialogHeader>
-        {isSuccess &&
-          attendees.map((attendee) => (
-            <p key={attendee.attendeeId}>
-              {attendee.name} {attendee.status === "NOT_GOING" && "(not going)"}
-            </p>
-          ))}
+        {isSuccess && (
+          <div>
+            <AttendingSection section="Going" attendants={going} />
+            <AttendingSection section="Maybe" attendants={maybe} />
+            <AttendingSection section="Not going" attendants={notGoing} />
+          </div>
+        )}
       </DialogContent>
     </Dialog>
+  );
+};
+
+type AttendingSectionProps = {
+  section: "Going" | "Maybe" | "Not going";
+  attendants: Attendee[];
+};
+
+const AttendingSection = ({ section, attendants }: AttendingSectionProps) => {
+  if (!attendants.length) {
+    return null;
+  }
+  return (
+    <div>
+      <p className="text-xs font-semibold  text-primary">{section}</p>
+      {attendants.map((attendant) => (
+        <p key={attendant.attendeeId}>{attendant.name}</p>
+      ))}
+    </div>
   );
 };
