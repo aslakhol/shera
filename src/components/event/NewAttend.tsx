@@ -15,6 +15,7 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
+import { cn } from "../../utils/cn";
 
 type Props = {
   session: Session | null;
@@ -81,7 +82,9 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
   return (
     <Dialog>
       <Button asChild variant="outline">
-        <DialogTrigger className="w-full">Going?</DialogTrigger>
+        <DialogTrigger className="w-full">
+          {attendanceStatusString(currentAttendee?.status)}
+        </DialogTrigger>
       </Button>
       <DialogContent>
         <DialogHeader>
@@ -104,7 +107,10 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
           <DialogClose asChild>
             <Button
               variant="outline"
-              className="w-full"
+              className={cn(
+                "w-full",
+                currentAttendee?.status === "GOING" && "bg-primary/20",
+              )}
               onClick={() => updateAttendance("GOING")}
             >
               Going
@@ -113,7 +119,10 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
           <DialogClose asChild>
             <Button
               variant="outline"
-              className="w-full"
+              className={cn(
+                "w-full",
+                currentAttendee?.status === "MAYBE" && "bg-primary/20",
+              )}
               onClick={() => updateAttendance("MAYBE")}
             >
               Maybe
@@ -122,7 +131,10 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
           <DialogClose asChild>
             <Button
               variant="outline"
-              className="w-full"
+              className={cn(
+                "w-full",
+                currentAttendee?.status === "NOT_GOING" && "bg-primary/20",
+              )}
               onClick={() => updateAttendance("NOT_GOING")}
             >
               Not going
@@ -185,4 +197,19 @@ const AttendingSection = ({ section, attendants }: AttendingSectionProps) => {
       ))}
     </div>
   );
+};
+
+const attendanceStatusString = (
+  status?: "GOING" | "NOT_GOING" | "MAYBE" | "UNKNOWN",
+) => {
+  if (status === "NOT_GOING") {
+    return "Not going";
+  }
+  if (status === "MAYBE") {
+    return "Maybe";
+  }
+  if (status === "GOING") {
+    return "Going";
+  }
+  return "Going?";
 };
