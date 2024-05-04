@@ -12,6 +12,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { useState } from "react";
 
 type Props = {
   session: Session | null;
@@ -21,6 +24,11 @@ type Props = {
 };
 
 export const NewAttend = ({ session, event }: Props) => {
+  const { data: attendees } = api.events.attendees.useQuery({
+    publicId: event.publicId,
+  });
+  const currentAttendee = attendees?.find((a) => a.userId === session?.user.id);
+
   if (!session) {
     return null;
   }
@@ -29,7 +37,11 @@ export const NewAttend = ({ session, event }: Props) => {
     <Card>
       <CardContent className="p-2">
         <div className="flex items-center gap-2">
-          <Attend session={session} event={event} />
+          <Attend
+            session={session}
+            event={event}
+            currentAttendee={currentAttendee}
+          />
           <Attendants event={event} />
         </div>
       </CardContent>
@@ -37,9 +49,16 @@ export const NewAttend = ({ session, event }: Props) => {
   );
 };
 
-type AttendProps = { session: Session; event: Event & { host: User } };
+type AttendProps = {
+  session: Session;
+  event: Event & { host: User };
+  currentAttendee?: Attendee;
+};
 
-const Attend = ({ session, event }: AttendProps) => {
+const Attend = ({ session, event, currentAttendee }: AttendProps) => {
+  const [name, setName] = useState(
+    currentAttendee?.name ?? session.user.name ?? "",
+  );
   const updateAttendanceMutation = api.events.updateAttendance.useMutation();
   const utils = api.useUtils();
 
@@ -49,6 +68,7 @@ const Attend = ({ session, event }: AttendProps) => {
         publicId: event.publicId,
         userId: session.user.id,
         status,
+        name: name ?? undefined,
       },
       {
         onSuccess: () => {
@@ -70,6 +90,17 @@ const Attend = ({ session, event }: AttendProps) => {
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-2">
+          <div className="grid w-full  gap-1.5">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              type="name"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+            />
+          </div>
+
           <DialogClose asChild>
             <Button
               variant="outline"

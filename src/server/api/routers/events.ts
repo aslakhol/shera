@@ -94,10 +94,11 @@ export const eventsRouter = createTRPCRouter({
         publicId: z.string(),
         userId: z.string().cuid(),
         status: z.enum(["GOING", "NOT_GOING", "MAYBE"]),
+        name: z.string().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { publicId, status } = input;
+      const { publicId, status, name } = input;
 
       const event = await ctx.db.event.findFirst({
         where: { publicId },
@@ -112,7 +113,7 @@ export const eventsRouter = createTRPCRouter({
       });
 
       if (!user) {
-        throw new Error("User not found");
+        throw new Error("User not found, are you logged in?");
       }
 
       const attendee = await ctx.db.attendee.upsert({
@@ -120,13 +121,13 @@ export const eventsRouter = createTRPCRouter({
         create: {
           eventId: event.eventId,
           userId: user.id,
-          name: user.name ?? user.email ?? "Unknown",
+          name: name ?? user.name ?? "Unknown",
           email: user.email,
           status,
         },
         update: {
           status,
-          name: user.name ?? user.email ?? "Unknown",
+          name: name ?? user.name ?? "Unknown",
           email: user.email,
         },
       });
