@@ -132,6 +132,15 @@ export const eventsRouter = createTRPCRouter({
         },
       });
 
+      const shouldUpdateUserName =
+        name && (!user.name || user.name.includes("@"));
+      if (shouldUpdateUserName) {
+        await ctx.db.user.update({
+          where: { id: user.id },
+          data: { name: name },
+        });
+      }
+
       const path = fullEventId(event);
       await ctx.res?.revalidate(`/events/${path}`);
 
