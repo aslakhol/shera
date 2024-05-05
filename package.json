@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "next build",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:reset": "npx --yes -p dotenv-cli dotenv -c development -- prisma migrate reset",
@@ -46,7 +47,8 @@
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "prisma": "^5.6.0"
   },
   "devDependencies": {
     "@types/eslint": "^8.44.7",
@@ -61,7 +63,6 @@
     "postcss": "^8.4.31",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
-    "prisma": "^5.6.0",
     "tailwindcss": "^3.3.5",
     "typescript": "^5.1.6"
   },
