@@ -35,52 +35,50 @@ export const Event = ({ publicId }: Props) => {
   }
 
   return (
-    <>
-      <div className="flex flex-col gap-4 p-4">
-        <h2 className="text-2xl font-bold tracking-tight text-primary">
-          {event.title}
-        </h2>
+    <div className="flex flex-col gap-4 p-4">
+      <h2 className="text-2xl font-bold tracking-tight text-primary">
+        {event.title}
+      </h2>
 
-        <div className="text-lg ">
+      <div className="text-lg ">
+        <div className="flex items-center gap-2">
+          <WorkingClock date={event.dateTime} size={16} />
+          <p>{format(event.dateTime, "EEEE, LLLL do, H:mm")}</p>
+        </div>
+        {event.place && (
           <div className="flex items-center gap-2">
-            <WorkingClock date={event.dateTime} size={16} />
-            <p>{format(event.dateTime, "EEEE, LLLL do, H:mm")}</p>
+            <MapPin size={16} />
+            <p>{event.place}</p>
           </div>
-          {event.place && (
-            <div className="flex items-center gap-2">
-              <MapPin size={16} />
-              <p>{event.place}</p>
-            </div>
-          )}
-          {event.hostId && (
-            <div className="flex items-center gap-2">
-              <Crown size={16} />
-              <p>{event.host.name ?? event.host.email}</p>
-            </div>
-          )}
-        </div>
-        <NewAttend session={session} event={event} />
-
-        <div className="flex flex-wrap justify-start gap-2">
-          <Attending publicId={event.publicId} />
-
-          {session?.user ? (
-            <LoggedInAttend publicId={event.publicId} />
-          ) : (
-            <Attend publicId={event.publicId} />
-          )}
-          {session?.user?.id === event.host.id && (
-            <Link href={`/events/${publicId}/edit`}>
-              <Button variant={"outline"}>Edit event</Button>
-            </Link>
-          )}
-          <Invite event={event} />
-          <GoogleCalendar event={event} />
-        </div>
-        <Body description={event.description} />
-
-        <Posts publicId={publicId} />
+        )}
+        {event.hostId && (
+          <div className="flex items-center gap-2">
+            <Crown size={16} />
+            <p>{event.host.name ?? event.host.email}</p>
+          </div>
+        )}
       </div>
-    </>
+      <NewAttend session={session} event={event} />
+
+      <div className="flex flex-wrap justify-start gap-2">
+        <Attending publicId={event.publicId} />
+
+        {session?.user ? (
+          <LoggedInAttend publicId={event.publicId} />
+        ) : (
+          <Attend publicId={event.publicId} />
+        )}
+        {session?.user?.id === event.host.id && (
+          <Link href={`/events/${publicId}/edit`}>
+            <Button variant={"outline"}>Edit event</Button>
+          </Link>
+        )}
+        <Invite event={event} />
+        <GoogleCalendar event={event} />
+      </div>
+      <Body description={event.description} />
+
+      <Posts publicId={publicId} />
+    </div>
   );
 };
