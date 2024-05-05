@@ -4,7 +4,6 @@ import { Body } from "./Body";
 import GoogleCalendar from "./GoogleCalendar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Button } from "../ui/button";
 import Posts from "../post/Posts";
 import { Crown, MapPin, Pencil } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
