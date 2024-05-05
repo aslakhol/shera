@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import Posts from "../post/Posts";
-import { Crown, MapPin } from "lucide-react";
+import { Crown, MapPin, Pencil } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
 import { Loading } from "../Loading";
 
@@ -54,19 +54,22 @@ export const Event = ({ publicId }: Props) => {
             <p>{event.host.name ?? event.host.email}</p>
           </div>
         )}
+        {session?.user?.id === event.host.id && (
+          <div className="flex items-center gap-2">
+            <Pencil size={16} />
+            <Link href={`/events/${publicId}/edit`}>
+              <p className="underline">Edit event</p>
+            </Link>
+          </div>
+        )}
       </div>
       <Attendance event={event} />
 
+      <Body description={event.description} />
       <div className="flex flex-wrap justify-start gap-2">
-        {session?.user?.id === event.host.id && (
-          <Link href={`/events/${publicId}/edit`}>
-            <Button variant={"outline"}>Edit event</Button>
-          </Link>
-        )}
         <Invite event={event} />
         <GoogleCalendar event={event} />
       </div>
-      <Body description={event.description} />
 
       <Posts publicId={publicId} />
     </div>
