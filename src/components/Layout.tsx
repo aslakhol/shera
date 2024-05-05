@@ -9,7 +9,7 @@ export const MainLayout = ({ children }: Props) => {
     <>
       <div className="flex min-h-screen flex-col items-center">
         <NavBar />
-        <div className="md:w-[640px]">{children}</div>
+        <div className="w-full sm:w-[640px]">{children}</div>
         <Toaster />
       </div>
       <Footer />

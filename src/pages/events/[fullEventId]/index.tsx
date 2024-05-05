@@ -27,11 +27,7 @@ const EventPage: NextPageWithLayout = () => {
     return <div>Event not found</div>;
   }
 
-  return (
-    <main className="flex flex-grow flex-col items-center">
-      <Event publicId={publicId} />
-    </main>
-  );
+  return <Event publicId={publicId} />;
 };
 
 EventPage.getLayout = function getLayout(page: ReactElement) {
