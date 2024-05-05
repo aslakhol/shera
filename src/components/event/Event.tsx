@@ -3,10 +3,7 @@ import { api } from "../../utils/api";
 import { Body } from "./Body";
 import GoogleCalendar from "./GoogleCalendar";
 import { useSession } from "next-auth/react";
-import Attending from "./Attending";
 import Link from "next/link";
-import { Attend } from "./Attend";
-import { LoggedInAttend } from "./LoggedInAttend";
 import { Button } from "../ui/button";
 import Posts from "../post/Posts";
 import { Crown, MapPin } from "lucide-react";
@@ -14,7 +11,7 @@ import { WorkingClock } from "../WorkingClock";
 import { Loading } from "../Loading";
 
 import dynamic from "next/dynamic";
-import { NewAttend } from "./NewAttend";
+import { Attendance } from "./Attendance";
 
 const Invite = dynamic(() => import("../invite/Invite"), {
   ssr: false,
@@ -58,16 +55,9 @@ export const Event = ({ publicId }: Props) => {
           </div>
         )}
       </div>
-      <NewAttend session={session} event={event} />
+      <Attendance session={session} event={event} />
 
       <div className="flex flex-wrap justify-start gap-2">
-        <Attending publicId={event.publicId} />
-
-        {session?.user ? (
-          <LoggedInAttend publicId={event.publicId} />
-        ) : (
-          <Attend publicId={event.publicId} />
-        )}
         {session?.user?.id === event.host.id && (
           <Link href={`/events/${publicId}/edit`}>
             <Button variant={"outline"}>Edit event</Button>

@@ -25,7 +25,7 @@ type Props = {
   };
 };
 
-export const NewAttend = ({ session, event }: Props) => {
+export const Attendance = ({ session, event }: Props) => {
   const { data: attendees } = api.events.attendees.useQuery({
     publicId: event.publicId,
   });
