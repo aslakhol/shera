@@ -55,7 +55,7 @@ export const Event = ({ publicId }: Props) => {
           </div>
         )}
       </div>
-      <Attendance session={session} event={event} />
+      <Attendance event={event} />
 
       <div className="flex flex-wrap justify-start gap-2">
         {session?.user?.id === event.host.id && (

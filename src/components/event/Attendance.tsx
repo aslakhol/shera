@@ -17,33 +17,20 @@ import { Label } from "../ui/label";
 import { useState } from "react";
 import { cn } from "../../utils/cn";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 type Props = {
-  session: Session | null;
   event: Event & {
     host: User;
   };
 };
 
-export const Attendance = ({ session, event }: Props) => {
-  const { data: attendees } = api.events.attendees.useQuery({
-    publicId: event.publicId,
-  });
-  const currentAttendee = attendees?.find((a) => a.userId === session?.user.id);
-
+export const Attendance = ({ event }: Props) => {
   return (
     <Card>
       <CardContent className="p-2">
         <div className="flex items-center gap-2">
-          {!!session ? (
-            <Attend
-              session={session}
-              event={event}
-              currentAttendee={currentAttendee}
-            />
-          ) : (
-            <SignIn />
-          )}
+          <AttendButton event={event} />
           <Attendants event={event} />
         </div>
       </CardContent>
@@ -51,7 +38,36 @@ export const Attendance = ({ session, event }: Props) => {
   );
 };
 
-const SignIn = () => {
+type AttendButtonProps = {
+  event: Event & {
+    host: User;
+  };
+};
+
+const AttendButton = ({ event }: AttendButtonProps) => {
+  const session = useSession();
+  const { data: attendees, isSuccess } = api.events.attendees.useQuery({
+    publicId: event.publicId,
+  });
+
+  if (session.status === "loading" || !isSuccess) {
+    return <Button variant={"outline"} className="w-full"></Button>;
+  }
+
+  if (session.status === "authenticated") {
+    const currentAttendee = attendees?.find(
+      (a) => a.userId === session.data.user.id,
+    );
+
+    return (
+      <Attend
+        session={session.data}
+        event={event}
+        currentAttendee={currentAttendee}
+      />
+    );
+  }
+
   return (
     <Button asChild variant={"outline"} className="w-full">
       <Link href={"/api/auth/signin"}>Sign in to attend</Link>
