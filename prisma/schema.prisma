@@ -37,7 +37,7 @@ model Attendee {
     email      String?
     eventId    Int
     event      Event           @relation(fields: [eventId], references: [eventId])
-    status     AttendingStatus @default(UNKNOWN)
+    status     AttendingStatus @default(GOING)
     userId     String?
     user       User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
