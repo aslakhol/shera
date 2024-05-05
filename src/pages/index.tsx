@@ -8,7 +8,7 @@ const Home: NextPageWithLayout = () => {
   const router = useRouter();
 
   if (session.status === "authenticated") {
-    void router.push("/events");
+    void router.replace("/events");
   }
 
   return <Welcome />;

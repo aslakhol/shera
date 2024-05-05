@@ -9,6 +9,11 @@ export const attendEventSchema = z.object({
     .min(1, "Must contain at least 1 character")
     .max(100, "Must contain less than 100 characters"),
   email: asOptionalField(z.string().email()),
+  status: z.enum(["GOING", "NOT_GOING", "MAYBE", "UNKNOWN"]),
+});
+
+export const loggedInAttendEventSchema = attendEventSchema.extend({
+  userId: z.string().cuid(),
 });
 
 export type PostSchemaType = z.infer<typeof postSchema>;

@@ -2,11 +2,6 @@ generator client {
     provider = "prisma-client-js"
 }
 
-// datasource db {
-//     provider = "sqlite"
-//     url      = env("DATABASE_URL")
-// }
-
 datasource db {
     provider  = "postgresql"
     url       = env("DATABASE_URL")
@@ -37,13 +32,23 @@ model Post {
 }
 
 model Attendee {
-    attendeeId String  @id @default(cuid())
+    attendeeId String          @id @default(cuid())
     name       String
     email      String?
     eventId    Int
-    event      Event   @relation(fields: [eventId], references: [eventId])
+    event      Event           @relation(fields: [eventId], references: [eventId])
+    status     AttendingStatus @default(GOING)
+    userId     String?
+    user       User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([name, eventId])
+    @@unique([eventId, userId])
+}
+
+enum AttendingStatus {
+    GOING
+    NOT_GOING
+    MAYBE
+    UNKNOWN
 }
 
 model Account {
@@ -74,15 +79,16 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String     @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?    @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     events        Event[]
     posts         Post[]
     sessions      Session[]
+    Attendee      Attendee[]
 }
 
 model VerificationToken {

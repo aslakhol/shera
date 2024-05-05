@@ -1,7 +1,7 @@
 const PrivacyPolicy = () => {
   return (
     <div className="flex justify-center">
-      <div className="flex w-8/12 flex-col justify-center gap-3 pb-8 pt-2 md:w-1/2">
+      <div className="flex  flex-col justify-center gap-3 px-4 pb-8 pt-2">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           Shera Privacy Policy
         </h1>
