@@ -16,6 +16,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
 import { cn } from "../../utils/cn";
+import Link from "next/link";
 
 type Props = {
   session: Session | null;
@@ -30,23 +31,31 @@ export const NewAttend = ({ session, event }: Props) => {
   });
   const currentAttendee = attendees?.find((a) => a.userId === session?.user.id);
 
-  if (!session) {
-    return null;
-  }
-
   return (
     <Card>
       <CardContent className="p-2">
         <div className="flex items-center gap-2">
-          <Attend
-            session={session}
-            event={event}
-            currentAttendee={currentAttendee}
-          />
+          {!!session ? (
+            <Attend
+              session={session}
+              event={event}
+              currentAttendee={currentAttendee}
+            />
+          ) : (
+            <SignIn />
+          )}
           <Attendants event={event} />
         </div>
       </CardContent>
     </Card>
+  );
+};
+
+const SignIn = () => {
+  return (
+    <Button asChild variant={"outline"} className="w-full">
+      <Link href={"/api/auth/signin"}>Sign in to attend</Link>
+    </Button>
   );
 };
 
