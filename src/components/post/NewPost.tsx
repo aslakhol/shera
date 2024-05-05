@@ -64,7 +64,7 @@ const NewPost = (props: NewPostProps) => {
       </Button>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add a Post</DialogTitle>
+          <DialogTitle>Post a Post</DialogTitle>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
