@@ -57,23 +57,20 @@ export const eventsRouter = createTRPCRouter({
         include: { host: true },
       });
 
-      // if (!event) {
-      //   throw new trpc.TRPCError({
-      //     code: "NOT_FOUND",
-      //     message: `No event found with id ${input.eventId}`,
-      //   });
-      // }
+      if (!event) {
+        throw new Error("Event not found");
+      }
 
       return event;
     }),
   myEvents: publicProcedure
-    .input(z.object({ userEmail: z.string().email() }))
+    .input(z.object({ userId: z.string() }))
     .query(async ({ input, ctx }) => {
       const attends: Prisma.EventWhereInput = {
-        attendees: { some: { email: input.userEmail } },
+        attendees: { some: { userId: input.userId } },
       };
       const hosts: Prisma.EventWhereInput = {
-        host: { email: input.userEmail },
+        host: { id: input.userId },
       };
 
       const eventsInDb = await ctx.db.event.findMany({

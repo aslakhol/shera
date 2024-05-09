@@ -8,13 +8,18 @@ import { WorkingClock } from "../WorkingClock";
 import { Button } from "../ui/button";
 import { Loading } from "../Loading";
 import { fullEventId } from "../../utils/event";
+import { useSession } from "next-auth/react";
 
-type MyEventsProps = { email: string };
-
-export const MyEvents = ({ email }: MyEventsProps) => {
-  const { data: events, isSuccess } = api.events.myEvents.useQuery({
-    userEmail: email,
-  });
+export const MyEvents = () => {
+  const session = useSession();
+  const { data: events, isSuccess } = api.events.myEvents.useQuery(
+    {
+      userId: session.data?.user.id ?? "",
+    },
+    {
+      enabled: !!session.data?.user.id,
+    },
+  );
 
   return (
     <div className="flex flex-col gap-8 p-4">
@@ -27,7 +32,13 @@ export const MyEvents = ({ email }: MyEventsProps) => {
         </Button>
       </div>
 
-      {!isSuccess && (
+      {session.status === "unauthenticated" && (
+        <div className="flex w-full justify-center">
+          <p>You need to be logged in to view your events</p>
+        </div>
+      )}
+
+      {(!isSuccess || session.status === "loading") && (
         <div className="flex w-full justify-center">
           <Loading />
         </div>
