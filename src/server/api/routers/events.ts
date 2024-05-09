@@ -64,13 +64,13 @@ export const eventsRouter = createTRPCRouter({
       return event;
     }),
   myEvents: publicProcedure
-    .input(z.object({ userEmail: z.string().email() }))
+    .input(z.object({ userId: z.string() }))
     .query(async ({ input, ctx }) => {
       const attends: Prisma.EventWhereInput = {
-        attendees: { some: { email: input.userEmail } },
+        attendees: { some: { userId: input.userId } },
       };
       const hosts: Prisma.EventWhereInput = {
-        host: { email: input.userEmail },
+        host: { id: input.userId },
       };
 
       const eventsInDb = await ctx.db.event.findMany({
