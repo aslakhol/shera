@@ -10,14 +10,12 @@ const ProfilePage: NextPageWithLayout = () => {
   const user = session.data?.user;
 
   return (
-    <main className="flex flex-grow flex-col items-center">
-      <div>
-        <h2 className="pb-4 text-2xl font-bold tracking-tight text-primary">
-          Profile
-        </h2>
-        {user && <ProfileForm user={user} />}
-      </div>
-    </main>
+    <div className="flex flex-col gap-4 p-4">
+      <h2 className="pb-4 text-2xl font-bold tracking-tight text-primary">
+        Profile
+      </h2>
+      {user && <ProfileForm user={user} />}
+    </div>
   );
 };
 
