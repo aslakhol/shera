@@ -17,7 +17,7 @@ export const AuthButton = () => {
   const session = useSession();
 
   if (session.status === "loading") {
-    return <></>;
+    return <div className=" h-10 w-10  rounded-full bg-muted"></div>;
   }
 
   if (session.status === "unauthenticated") {
