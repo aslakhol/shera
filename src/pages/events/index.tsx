@@ -16,11 +16,7 @@ const EventsPage: NextPageWithLayout = () => {
     return <>Could not find email on your user.</>;
   }
 
-  return (
-    <main className="flex flex-grow flex-col items-center">
-      <MyEvents email={session.user.email} />
-    </main>
-  );
+  return <MyEvents email={session.user.email} />;
 };
 
 EventsPage.getLayout = function getLayout(page: ReactElement) {

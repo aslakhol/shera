@@ -27,15 +27,21 @@ export const MyEvents = ({ email }: MyEventsProps) => {
         </Button>
       </div>
 
-      {!isSuccess && <Loading />}
+      {!isSuccess && (
+        <div className="flex w-full justify-center">
+          <Loading />
+        </div>
+      )}
 
       {events?.map((event) => (
         <EventRow event={event} key={`event-${event.publicId}`} />
       ))}
 
-      <Button asChild variant="outline">
-        <Link href="/events/new">New event</Link>
-      </Button>
+      {isSuccess && (
+        <Button asChild variant="outline">
+          <Link href="/events/new">New event</Link>
+        </Button>
+      )}
     </div>
   );
 };
