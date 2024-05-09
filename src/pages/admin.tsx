@@ -9,14 +9,12 @@ const AdminPage: NextPageWithLayout = () => {
   const isDev = useIsDev();
 
   return (
-    <main className="flex flex-grow flex-col items-center">
-      <div>
-        <h2 className="pb-4 text-2xl font-bold tracking-tight text-primary">
-          Admin
-        </h2>
-        {isDev ? <Admin /> : <p>You are not authorized to view this page</p>}
-      </div>
-    </main>
+    <div className="p-4">
+      <h2 className="pb-4 text-2xl font-bold tracking-tight text-primary">
+        Admin
+      </h2>
+      {isDev ? <Admin /> : <p>You are not authorized to view this page</p>}
+    </div>
   );
 };
 
