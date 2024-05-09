@@ -9,11 +9,11 @@ import { Button } from "../ui/button";
 import { Loading } from "../Loading";
 import { fullEventId } from "../../utils/event";
 
-type MyEventsProps = { email: string };
+type MyEventsProps = { userId: string };
 
-export const MyEvents = ({ email }: MyEventsProps) => {
+export const MyEvents = ({ userId }: MyEventsProps) => {
   const { data: events, isSuccess } = api.events.myEvents.useQuery({
-    userEmail: email,
+    userId: userId,
   });
 
   return (

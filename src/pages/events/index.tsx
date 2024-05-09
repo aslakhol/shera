@@ -6,17 +6,17 @@ import { MainLayout } from "../../components/Layout";
 import { type ReactElement } from "react";
 
 const EventsPage: NextPageWithLayout = () => {
-  const { data: session, status } = useSession();
+  const session = useSession();
 
-  if (status === "loading") {
+  if (session.status === "unauthenticated") {
+    return <p>You need to be logged in to view your events</p>;
+  }
+
+  if (session.status !== "authenticated") {
     return null;
   }
 
-  if (!session?.user.email) {
-    return <>Could not find email on your user.</>;
-  }
-
-  return <MyEvents email={session.user.email} />;
+  return <MyEvents userId={session.data.user.id} />;
 };
 
 EventsPage.getLayout = function getLayout(page: ReactElement) {
