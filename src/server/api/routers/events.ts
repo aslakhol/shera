@@ -57,12 +57,9 @@ export const eventsRouter = createTRPCRouter({
         include: { host: true },
       });
 
-      // if (!event) {
-      //   throw new trpc.TRPCError({
-      //     code: "NOT_FOUND",
-      //     message: `No event found with id ${input.eventId}`,
-      //   });
-      // }
+      if (!event) {
+        throw new Error("Event not found");
+      }
 
       return event;
     }),
