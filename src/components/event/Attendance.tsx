@@ -17,7 +17,6 @@ import { useState } from "react";
 import { cn } from "../../utils/cn";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Loading } from "../Loading";
 
 type Props = {
   event: Event & {
