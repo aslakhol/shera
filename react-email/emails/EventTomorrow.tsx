@@ -36,12 +36,13 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
                 {event.title} starting tomorrow
               </Text>
               <Text className="text-[#525f7f]">
-                Head over to Shera to see the event details, or to unattend to
-                unsubscribe from future emails.
+                Head over to Shera to see the event details. If you'd rather not
+                receive any future emails from this event you can unattend on
+                event page.
               </Text>
               <Section className="flex w-full justify-center">
                 <Button
-                  className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-[#1f1d63] px-12 text-sm font-medium text-[#fff] ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                  className="whitespace-nowrap rounded-md bg-[#1f1d63] px-12 py-2 text-sm font-medium text-[#fff] ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                   href={`${baseUrl}/events/${fullEventId(event)}`}
                 >
                   See event
@@ -60,8 +61,9 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
                   className="text-[#8898aa] underline"
                   href={`${baseUrl}/events/new`}
                 >
-                  Shera.
+                  Shera
                 </Link>
+                .
               </Text>
             </Section>
           </Container>
