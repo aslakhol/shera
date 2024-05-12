@@ -15,12 +15,10 @@ import {
 import * as React from "react";
 import { fullEventId } from "../src/utils/event";
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
+const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
 
-const imgUrl = baseUrl
-  ? `${baseUrl}/favicon.ico`
+const imgUrl = baseUrl.startsWith("localhost")
+  ? `localhost:3001/favicon.ico`
   : `${baseUrl}/static/favicon.ico`;
 
 type EventTomorrowProps = {
@@ -28,7 +26,6 @@ type EventTomorrowProps = {
 };
 
 export const EventTomorrow = ({ event }: EventTomorrowProps) => {
-  console.log(imgUrl, "imgUrl");
   return (
     <Html>
       <Head />

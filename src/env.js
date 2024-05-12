@@ -25,6 +25,7 @@ export const env = createEnv({
     ),
     SENDGRID_API_KEY: z.string(),
     EMAIL_FROM: z.string().email(),
+    BASE_URL: z.string().url(),
   },
 
   /**
@@ -48,6 +49,7 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
     EMAIL_FROM: process.env.EMAIL_FROM,
+    BASE_URL: process.env.BASE_URL,
     // DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
     // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
   },
