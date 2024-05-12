@@ -6,7 +6,6 @@ import { type User, type Event, type Attendee } from "@prisma/client";
 import { api } from "../../utils/api";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -18,6 +17,7 @@ import { useState } from "react";
 import { cn } from "../../utils/cn";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { Loading } from "../Loading";
 
 type Props = {
   event: Event & {
@@ -46,16 +46,16 @@ type AttendButtonProps = {
 
 const AttendButton = ({ event }: AttendButtonProps) => {
   const session = useSession();
-  const { data: attendees, isSuccess } = api.events.attendees.useQuery({
+  const attendeesQuery = api.events.attendees.useQuery({
     publicId: event.publicId,
   });
 
-  if (session.status === "loading" || !isSuccess) {
+  if (session.status === "loading") {
     return <Button variant={"outline"} className="w-full"></Button>;
   }
 
   if (session.status === "authenticated") {
-    const currentAttendee = attendees?.find(
+    const currentAttendee = attendeesQuery.data?.find(
       (a) => a.userId === session.data.user.id,
     );
 
@@ -82,30 +82,31 @@ type AttendProps = {
 };
 
 const Attend = ({ session, event, currentAttendee }: AttendProps) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState(
     currentAttendee?.name ?? session.user.name ?? session.user.email ?? "",
   );
-  const updateAttendanceMutation = api.events.updateAttendance.useMutation();
+  const updateAttendanceMutation = api.events.updateAttendance.useMutation({
+    onSuccess: async () => {
+      return await utils.events.attendees.refetch({
+        publicId: event.publicId,
+      });
+    },
+  });
   const utils = api.useUtils();
 
   const updateAttendance = async (status: "GOING" | "NOT_GOING" | "MAYBE") => {
-    updateAttendanceMutation.mutate(
-      {
-        publicId: event.publicId,
-        userId: session.user.id,
-        status,
-        name: name ?? undefined,
-      },
-      {
-        onSuccess: () => {
-          void utils.events.attendees.invalidate({ publicId: event.publicId });
-        },
-      },
-    );
+    await updateAttendanceMutation.mutateAsync({
+      publicId: event.publicId,
+      userId: session.user.id,
+      status,
+      name: name ?? undefined,
+    });
+    setDialogOpen(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <Button asChild variant="outline">
         <DialogTrigger className="w-full">
           {attendanceStatusString(currentAttendee?.status)}
@@ -129,42 +130,39 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
             />
           </div>
 
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full",
-                currentAttendee?.status === "GOING" && "bg-primary/20",
-              )}
-              onClick={() => updateAttendance("GOING")}
-            >
-              Going
-            </Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full",
-                currentAttendee?.status === "MAYBE" && "bg-primary/20",
-              )}
-              onClick={() => updateAttendance("MAYBE")}
-            >
-              Maybe
-            </Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full",
-                currentAttendee?.status === "NOT_GOING" && "bg-primary/20",
-              )}
-              onClick={() => updateAttendance("NOT_GOING")}
-            >
-              Not going
-            </Button>
-          </DialogClose>
+          <Button
+            disabled={updateAttendanceMutation.isLoading}
+            variant="outline"
+            className={cn(
+              "w-full",
+              currentAttendee?.status === "GOING" && "bg-primary/20",
+            )}
+            onClick={() => updateAttendance("GOING")}
+          >
+            Going
+          </Button>
+          <Button
+            disabled={updateAttendanceMutation.isLoading}
+            variant="outline"
+            className={cn(
+              "w-full",
+              currentAttendee?.status === "MAYBE" && "bg-primary/20",
+            )}
+            onClick={() => updateAttendance("MAYBE")}
+          >
+            Maybe
+          </Button>
+          <Button
+            disabled={updateAttendanceMutation.isLoading}
+            variant="outline"
+            className={cn(
+              "w-full",
+              currentAttendee?.status === "NOT_GOING" && "bg-primary/20",
+            )}
+            onClick={() => updateAttendance("NOT_GOING")}
+          >
+            Not going
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
