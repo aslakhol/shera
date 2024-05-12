@@ -5,6 +5,8 @@ import sgEmail from "@sendgrid/mail";
 import { env } from "../../../env";
 import { type Attendee, type Event, type User } from "@prisma/client";
 import { fullEventId } from "../../../utils/event";
+import { render } from "@react-email/render";
+import EventTomorrow from "../../../../react-email/emails/EventTomorrow";
 
 sgEmail.setApiKey(env.SENDGRID_API_KEY);
 
@@ -78,12 +80,13 @@ const getReminderEmail = (
   });
 
   const eventUrl = `https://shera.no/events/${fullEventId(event)}`;
+  const html = render(<EventTomorrow event={event} />);
 
   return {
     to: attendeeEmails,
     from: env.EMAIL_FROM,
     subject: `Reminder: ${event.title} is happening tomorrow!`,
     text: `${event.title} is starting tomorrow at ${startTime}! Head over to ${eventUrl} to see if there is any more information.`,
-    html: `<p>${event.title} is starting tomorrow at ${startTime}!</p> <p>Head over to <a href="${eventUrl}">Shera</a> to see if there is any more information.</p>`,
+    html,
   };
 };
