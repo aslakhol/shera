@@ -6,7 +6,7 @@ import { env } from "../../../env";
 import { type Attendee, type Event, type User } from "@prisma/client";
 import { fullEventId } from "../../../utils/event";
 import { render } from "@react-email/render";
-import EventTomorrow from "../../../../react-email/emails/EventTomorrow";
+import EventTomorrow from "../../../../emails/EventTomorrow";
 
 sgEmail.setApiKey(env.SENDGRID_API_KEY);
 

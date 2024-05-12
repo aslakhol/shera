@@ -13,21 +13,26 @@ import {
   Text,
 } from "@react-email/components";
 import * as React from "react";
-import { fullEventId } from "../../src/utils/event";
+import { fullEventId } from "../src/utils/event";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "";
+
+const imgUrl = baseUrl
+  ? `${baseUrl}/favicon.ico`
+  : `${baseUrl}/static/favicon.ico`;
 
 type EventTomorrowProps = {
   event: { title: string; dateTime: Date; publicId: string };
 };
 
 export const EventTomorrow = ({ event }: EventTomorrowProps) => {
+  console.log(imgUrl, "imgUrl");
   return (
     <Html>
       <Head />
-      <Preview> {event.title} starting tomorrow</Preview>
+      <Preview>{event.title} starting tomorrow</Preview>
       <Tailwind>
         <Body className="bg-[#f6f9fc] font-sans">
           <Container className="mx-auto mt-0 px-0 pb-12 pt-5">
@@ -49,12 +54,7 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
                 </Button>
               </Section>
               <Hr className="mx-0 my-5 w-full border border-solid border-[#e6ebf1]" />
-              <Img
-                src={`${baseUrl}/static/favicon.ico`}
-                width="35"
-                height="35"
-                alt="Shera logo"
-              />
+              <Img src={imgUrl} width="35" height="35" alt="Shera logo" />
               <Text className="text-sm text-[#8898aa]">
                 Host your next event with{" "}
                 <Link
