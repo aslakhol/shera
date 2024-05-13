@@ -21,10 +21,13 @@ export default async function handler(
   res: NextApiResponse<ResponseData | { message: string; error: unknown }>,
 ) {
   try {
-    if (req.query.key !== env.CRON_KEY) {
-      return res.end(404);
+    const authHeader = req.headers.authorization;
+    if (
+      !env.CRON_SECRET ||
+      authHeader !== `Bearer ${process.env.CRON_SECRET}`
+    ) {
+      return res.end(401);
     }
-
     const tomorrowStart = startOfTomorrow();
     const tomorrowEnd = endOfTomorrow();
 
@@ -65,7 +68,7 @@ export default async function handler(
 
     await sgEmail.send(summaryMessage);
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Event reminders sent",
       summary: summaryMessage.text,
       reminderCount,
