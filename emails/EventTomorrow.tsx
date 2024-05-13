@@ -51,7 +51,6 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
                 </Button>
               </Section>
               <Hr className="mx-0 my-5 w-full border border-solid border-[#e6ebf1]" />
-              <Img src={imgUrl} width="35" height="35" alt="Shera logo" />
               <Text className="text-sm text-[#8898aa]">
                 Host your next event with{" "}
                 <Link
