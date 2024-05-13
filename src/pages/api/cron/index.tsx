@@ -21,6 +21,10 @@ export default async function handler(
   res: NextApiResponse<ResponseData | { message: string; error: unknown }>,
 ) {
   try {
+    if (req.query.key !== env.CRON_KEY) {
+      return res.end(404);
+    }
+
     const tomorrowStart = startOfTomorrow();
     const tomorrowEnd = endOfTomorrow();
 
