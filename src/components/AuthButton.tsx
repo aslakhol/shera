@@ -30,11 +30,9 @@ export const AuthButton = () => {
 
   return (
     <div className="flex items-center justify-center gap-2">
-      <span>
-        {session.data?.user.name?.split(" ")[0] ??
-          session.data?.user.email ??
-          "Signed in"}
-      </span>
+      <Link href={"/profile"} className="hover:underline">
+        {session.data?.user.name ?? "No name :("}
+      </Link>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-10 w-10 rounded-full">
