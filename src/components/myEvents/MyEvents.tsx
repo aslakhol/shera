@@ -90,7 +90,10 @@ const EventRow = ({ event }: EventRowProps) => {
               {!!event.attendees.length && (
                 <div className="flex items-center gap-2">
                   <UsersRound size={16} />
-                  <p>{event.attendees.length} attendees</p>
+                  <p>
+                    {event.attendees.filter((a) => a.status === "GOING").length}{" "}
+                    attendees
+                  </p>
                 </div>
               )}
               {event.hostId && (
