@@ -5,7 +5,6 @@ import {
   Head,
   Hr,
   Html,
-  Img,
   Link,
   Preview,
   Section,
@@ -16,10 +15,6 @@ import * as React from "react";
 import { fullEventId } from "../src/utils/event";
 
 const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
-
-const imgUrl = baseUrl.startsWith("localhost")
-  ? `localhost:3001/favicon.ico`
-  : `${baseUrl}/static/favicon.ico`;
 
 type EventTomorrowProps = {
   event: { title: string; dateTime: Date; publicId: string };
