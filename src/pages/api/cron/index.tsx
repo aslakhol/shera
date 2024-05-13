@@ -18,7 +18,7 @@ type ResponseData = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData | { message: string; error: unknown }>,
+  res: NextApiResponse,
 ) {
   try {
     if (req.query.key !== env.CRON_KEY) {
@@ -42,6 +42,9 @@ export default async function handler(
       .reduce((a, b) => a + b, 0);
 
     const reminderEmailsPerEvent = events.map((e) => getReminderEmail(e));
+
+    res.status(200).json({ reminderCount, reminderEmailsPerEvent, events });
+    return;
 
     await Promise.all(
       reminderEmailsPerEvent.map((eventEmail) =>
