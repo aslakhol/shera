@@ -18,50 +18,63 @@ type ResponseData = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
+  res: NextApiResponse<ResponseData | { message: string; error: unknown }>,
 ) {
-  const tomorrowStart = startOfTomorrow();
-  const tomorrowEnd = endOfTomorrow();
+  try {
+    if (req.query.key !== env.CRON_KEY) {
+      return res.end(404);
+    }
 
-  const events = await db.event.findMany({
-    where: { dateTime: { gte: tomorrowStart, lte: tomorrowEnd } },
-    include: { attendees: { where: { email: { not: null } } }, host: true },
-  });
-  const reminderCount = events
-    .map(
-      (e) =>
-        e.attendees.filter((a) => a.status === "GOING" || a.status === "MAYBE")
-          .length,
-    )
-    .reduce((a, b) => a + b, 0);
+    const tomorrowStart = startOfTomorrow();
+    const tomorrowEnd = endOfTomorrow();
 
-  const reminderEmailsPerEvent = events.map((e) => getReminderEmail(e));
+    const events = await db.event.findMany({
+      where: { dateTime: { gte: tomorrowStart, lte: tomorrowEnd } },
+      include: { attendees: { where: { email: { not: null } } }, host: true },
+    });
+    const reminderCount = events
+      .map(
+        (e) =>
+          e.attendees.filter(
+            (a) => a.status === "GOING" || a.status === "MAYBE",
+          ).length,
+      )
+      .reduce((a, b) => a + b, 0);
 
-  await Promise.all(
-    reminderEmailsPerEvent.map((eventEmail) =>
-      sgEmail.sendMultiple(eventEmail),
-    ),
-  );
+    const reminderEmailsPerEvent = events.map((e) => getReminderEmail(e));
 
-  const summaryMessage = {
-    to: "aslak@shera.no",
-    from: env.EMAIL_FROM,
-    subject: "Email reminders sent from Shera",
-    text: `Sent email reminders for the following events: ${events.map((e) => `${e.title}: ${e.attendees.map((a) => a.email).join(",")}`).join("\n\n ")} \n\n Total reminders sent: ${reminderCount}`,
-    html: `<p>Sent email reminders for the following events:</p>
-      <ul>
-        ${events.map((e) => `<li>${e.title}: ${e.attendees.map((a) => a.email).join(",")}</li>`).join()}
-      </ul>
-      <p>Total reminders sent: ${reminderCount}</p>`,
-  };
+    await Promise.all(
+      reminderEmailsPerEvent.map((eventEmail) =>
+        sgEmail.sendMultiple(eventEmail),
+      ),
+    );
 
-  await sgEmail.send(summaryMessage);
+    const summaryMessage = {
+      to: "aslak@shera.no",
+      from: env.EMAIL_FROM,
+      subject: "Email reminders sent from Shera",
+      text: `Sent email reminders for the following events: ${events.map((e) => `${e.title}: ${e.attendees.map((a) => a.email).join(",")}`).join("\n\n ")} \n\n Total reminders sent: ${reminderCount}`,
+      html: `<p>Sent email reminders for the following events:</p>
+    <ul>
+    ${events.map((e) => `<li>${e.title}: ${e.attendees.map((a) => a.email).join(",")}</li>`).join()}
+    </ul>
+    <p>Total reminders sent: ${reminderCount}</p>`,
+    };
 
-  res.status(200).json({
-    message: "Event reminders sent",
-    summary: summaryMessage.text,
-    reminderCount,
-  });
+    await sgEmail.send(summaryMessage);
+
+    res.status(200).json({
+      message: "Event reminders sent",
+      summary: summaryMessage.text,
+      reminderCount,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Error sending email reminders",
+      error,
+    });
+  }
 }
 
 const getReminderEmail = (
