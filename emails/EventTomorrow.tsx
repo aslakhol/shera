@@ -38,9 +38,9 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
                 {event.title} starting tomorrow
               </Text>
               <Text className="text-[#525f7f]">
-                Head over to Shera to see the event details. If you'd rather not
-                receive any future emails from this event you can unattend on
-                event page.
+                Head over to Shera to see the event details. If you&apos;d
+                rather not receive any future emails from this event you can
+                unattend on event page.
               </Text>
               <Section className="flex w-full justify-center">
                 <Button
