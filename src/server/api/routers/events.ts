@@ -11,15 +11,29 @@ import { fullEventId } from "../../../utils/event";
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
-    .input(eventSchema.extend({ userId: z.string() }))
+    .input(
+      eventSchema.extend({
+        userId: z.string(),
+        hostName: z.string().optional(),
+        hostEmail: z.string().optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
-      const { userId, ...event } = input;
+      const { userId, hostName, hostEmail, ...event } = input;
 
       const eventInDb = await ctx.db.event.create({
         data: {
           ...event,
           publicId: ctx.nanoId(),
           host: { connect: { id: userId } },
+          attendees: {
+            create: {
+              name: hostName ?? "Host",
+              email: hostEmail,
+              status: "GOING",
+              userId: userId,
+            },
+          },
         },
       });
 
