@@ -29,6 +29,7 @@
     "@sendgrid/mail": "^8.1.3",
     "@t3-oss/env-nextjs": "^0.7.1",
     "@tanstack/react-query": "^4.36.1",
+    "@tanstack/react-table": "^8.17.3",
     "@trpc/client": "^10.43.6",
     "@trpc/next": "^10.43.6",
     "@trpc/react-query": "^10.43.6",

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { type NextPageWithLayout } from "./_app";
-import { MainLayout } from "../components/Layout";
+import { AdminLayout, MainLayout } from "../components/Layout";
 import { type ReactElement } from "react";
 import { useIsDev } from "../utils/useIsDev";
 import { Admin } from "../components/admin/Admin";
@@ -20,14 +20,14 @@ const AdminPage: NextPageWithLayout = () => {
 
 AdminPage.getLayout = function getLayout(page: ReactElement) {
   return (
-    <MainLayout>
+    <AdminLayout>
       <Head>
         <title>Admin | Shera</title>
         <meta name="description" content="Admin page for Shera" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {page}
-    </MainLayout>
+    </AdminLayout>
   );
 };
 
