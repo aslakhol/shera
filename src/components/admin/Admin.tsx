@@ -1,3 +1,5 @@
+import { Events } from "./events/Events";
+
 export const Admin = () => {
-  return <div>No cool toys here yet</div>;
+  return <Events />;
 };
