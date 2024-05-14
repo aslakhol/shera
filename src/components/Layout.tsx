@@ -16,3 +16,16 @@ export const MainLayout = ({ children }: Props) => {
     </>
   );
 };
+
+export const AdminLayout = ({ children }: Props) => {
+  return (
+    <>
+      <div className="flex min-h-screen flex-col items-center">
+        <NavBar />
+        <div className="w-full">{children}</div>
+        <Toaster />
+      </div>
+      <Footer />
+    </>
+  );
+};

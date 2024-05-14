@@ -59,7 +59,9 @@ export const eventsRouter = createTRPCRouter({
       };
     }),
   events: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.event.findMany();
+    return await ctx.db.event.findMany({
+      include: { host: true, attendees: true },
+    });
   }),
   event: publicProcedure
     .input(z.object({ publicId: z.string() }))

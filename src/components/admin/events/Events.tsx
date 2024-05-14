@@ -7,9 +7,5 @@ export const Events = () => {
 
   console.log(events, "events");
 
-  return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={events.data ?? []} />
-    </div>
-  );
+  return <DataTable columns={columns} data={events.data ?? []} />;
 };
