@@ -44,6 +44,14 @@ export default async function handler(
       )
       .reduce((a, b) => a + b, 0);
 
+    if (reminderCount <= 0) {
+      return res.status(200).json({
+        message: "No events to send reminders for",
+        summary: "",
+        reminderCount,
+      });
+    }
+
     const reminderEmailsPerEvent = events
       .map((e) => getReminderEmail(e))
       .filter((eventEmail) => eventEmail.to.length > 0);
