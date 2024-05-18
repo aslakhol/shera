@@ -18,7 +18,6 @@ import {
 } from "../../ui/table";
 import { useState } from "react";
 import { Button } from "../../ui/button";
-import { isFuture } from "date-fns";
 import { Eye, EyeOff } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
@@ -51,44 +50,10 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center gap-4 py-4">
-        <Button
-          variant={"outline"}
-          onClick={() => {
-            const newValue =
-              table.getColumn("dateTime")?.getFilterValue() === "hide-future"
-                ? ""
-                : "hide-future";
-
-            return table.getColumn("dateTime")?.setFilterValue(newValue);
-          }}
-        >
-          Future events
-          {table.getColumn("dateTime")?.getFilterValue() === "hide-future" ? (
-            <EyeOff className="ml-2 h-4 w-4" />
-          ) : (
-            <Eye className="ml-2 h-4 w-4" />
-          )}
-        </Button>
-        <Button
-          variant={"outline"}
-          onClick={() => {
-            const newValue =
-              table.getColumn("dateTime")?.getFilterValue() === "hide-past"
-                ? ""
-                : "hide-past";
-
-            return table.getColumn("dateTime")?.setFilterValue(newValue);
-          }}
-        >
-          Past events
-          {table.getColumn("dateTime")?.getFilterValue() === "hide-past" ? (
-            <EyeOff className="ml-2 h-4 w-4" />
-          ) : (
-            <Eye className="ml-2 h-4 w-4" />
-          )}
-        </Button>
-      </div>
+      <DateFilterButtons
+        filterValue={table.getColumn("dateTime")?.getFilterValue()}
+        setFilterValue={table.getColumn("dateTime")?.setFilterValue}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -142,3 +107,51 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
+
+type DateFilterButtonsProps = {
+  filterValue: unknown;
+  setFilterValue?: (updater: unknown) => void;
+};
+
+const DateFilterButtons = ({
+  filterValue,
+  setFilterValue,
+}: DateFilterButtonsProps) => {
+  if (!setFilterValue) {
+    return null;
+  }
+  return (
+    <div className="flex items-center gap-4 py-4">
+      <Button
+        variant={"outline"}
+        onClick={() => {
+          const newValue = filterValue === "hide-future" ? "" : "hide-future";
+
+          return setFilterValue(newValue);
+        }}
+      >
+        Future events
+        {filterValue === "hide-future" ? (
+          <EyeOff className="ml-2 h-4 w-4" />
+        ) : (
+          <Eye className="ml-2 h-4 w-4" />
+        )}
+      </Button>
+      <Button
+        variant={"outline"}
+        onClick={() => {
+          const newValue = filterValue === "hide-past" ? "" : "hide-past";
+
+          return setFilterValue(newValue);
+        }}
+      >
+        Past events
+        {filterValue === "hide-past" ? (
+          <EyeOff className="ml-2 h-4 w-4" />
+        ) : (
+          <Eye className="ml-2 h-4 w-4" />
+        )}
+      </Button>
+    </div>
+  );
+};
