@@ -16,44 +16,48 @@ export const columns: ColumnDef<
   },
   {
     accessorKey: "title",
-    header: () => <Header headerTitle="Title" />,
+    header: ({ column }) => <SortHeader headerTitle="Title" column={column} />,
     cell: (info) => info.getValue(),
   },
   {
     accessorKey: "host.name",
-    header: "Host",
+    header: ({ column }) => <SortHeader headerTitle="Host" column={column} />,
     cell: (info) => info.getValue(),
   },
   {
     accessorKey: "place",
-    header: "Place",
+    header: ({ column }) => <SortHeader headerTitle="Place" column={column} />,
   },
   {
     accessorKey: "attendees.length",
-    header: "Attendees",
+    header: ({ column }) => (
+      <SortHeader headerTitle="Attendees" column={column} />
+    ),
     accessorFn: (row) => row.attendees.length,
   },
   {
     accessorKey: "attendees.status.going",
-    header: "Going",
+    header: ({ column }) => <SortHeader headerTitle="Going" column={column} />,
     accessorFn: (row) =>
       row.attendees.filter((a) => a.status === "GOING").length,
   },
   {
     accessorKey: "attendees.status.notGoing",
-    header: "Not going",
+    header: ({ column }) => (
+      <SortHeader headerTitle="Not going" column={column} />
+    ),
     accessorFn: (row) =>
       row.attendees.filter((a) => a.status === "NOT_GOING").length,
   },
   {
     accessorKey: "attendees.status.maybe",
-    header: "Maybe",
+    header: ({ column }) => <SortHeader headerTitle="Maybe" column={column} />,
     accessorFn: (row) =>
       row.attendees.filter((a) => a.status === "MAYBE").length,
   },
   {
     accessorKey: "publicId",
-    header: "Link",
+    header: () => <Header headerTitle="Link" />,
     accessorFn: (row) => row,
     cell: (info) => {
       const event = info.getValue<
