@@ -3,14 +3,26 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import Link from "next/link";
 import { fullEventId } from "../../../utils/event";
-import { ExternalLink } from "lucide-react";
+import { ArrowUpDown, ExternalLink } from "lucide-react";
+import { Button } from "../../ui/button";
 
 export const columns: ColumnDef<
   Event & { host: User; attendees: Attendee[] }
 >[] = [
   {
     accessorKey: "dateTime",
-    header: "Date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+
     accessorFn: (row) => format(row.dateTime, "LLLL do, H:mm"),
   },
   {
