@@ -3,7 +3,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import Link from "next/link";
 import { fullEventId } from "../../../utils/event";
-import { ArrowUpDown, ExternalLink } from "lucide-react";
+import { ArrowDown, ArrowUp, ExternalLink } from "lucide-react";
 import { Button } from "../../ui/button";
 
 export const columns: ColumnDef<
@@ -18,7 +18,12 @@ export const columns: ColumnDef<
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          {column.getIsSorted() === "asc" && (
+            <ArrowUp className="ml-2 h-4 w-4" />
+          )}
+          {column.getIsSorted() === "desc" && (
+            <ArrowDown className="ml-2 h-4 w-4" />
+          )}
         </Button>
       );
     },
