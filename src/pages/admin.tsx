@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { type NextPageWithLayout } from "./_app";
-import { AdminLayout, MainLayout } from "../components/Layout";
+import { AdminLayout } from "../components/Layout";
 import { type ReactElement } from "react";
 import { useIsDev } from "../utils/useIsDev";
 import { Admin } from "../components/admin/Admin";
