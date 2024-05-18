@@ -16,7 +16,7 @@ export const columns: ColumnDef<
   },
   {
     accessorKey: "title",
-    header: "Title",
+    header: () => <Header headerTitle="Title" />,
     cell: (info) => info.getValue(),
   },
   {
@@ -86,4 +86,12 @@ const SortHeader = ({ headerTitle, column }: SortHeaderProps) => {
       )}
     </Button>
   );
+};
+
+type HeaderProps = {
+  headerTitle: string;
+};
+
+const Header = ({ headerTitle }: HeaderProps) => {
+  return <div className="px-4">{headerTitle}</div>;
 };
