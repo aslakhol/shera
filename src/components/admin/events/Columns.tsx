@@ -9,23 +9,23 @@ export const columns: ColumnDef<
   Event & { host: User; attendees: Attendee[] }
 >[] = [
   {
-    accessorKey: "title",
-    header: "Title",
-    cell: (info) => info.getValue(),
-  },
-  {
     accessorKey: "dateTime",
     header: "Date",
     accessorFn: (row) => format(row.dateTime, "LLLL do, H:mm"),
   },
   {
-    accessorKey: "place",
-    header: "Place",
+    accessorKey: "title",
+    header: "Title",
+    cell: (info) => info.getValue(),
   },
   {
     accessorKey: "host.name",
     header: "Host",
     cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: "place",
+    header: "Place",
   },
   {
     accessorKey: "attendees.length",
