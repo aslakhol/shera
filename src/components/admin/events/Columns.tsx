@@ -1,6 +1,6 @@
 import { type Attendee, type User, type Event } from "@prisma/client";
 import { type Column, type ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import { format, isFuture, isPast } from "date-fns";
 import Link from "next/link";
 import { fullEventId } from "../../../utils/event";
 import { ArrowDown, ArrowUp, ExternalLink } from "lucide-react";
@@ -13,6 +13,20 @@ export const columns: ColumnDef<
     accessorKey: "dateTime",
     header: ({ column }) => <SortHeader headerTitle="Date" column={column} />,
     accessorFn: (row) => format(row.dateTime, "LLLL do, H:mm"),
+    filterFn: (row, _, filterValue) => {
+      const date = row.original.dateTime;
+      if (!date || !filterValue) {
+        return true;
+      }
+
+      if (filterValue === "hide-future") {
+        return !isFuture(date);
+      }
+      if (filterValue === "hide-past") {
+        return !isPast(date);
+      }
+      return true;
+    },
   },
   {
     accessorKey: "title",
