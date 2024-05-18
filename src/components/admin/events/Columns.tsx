@@ -1,58 +1,77 @@
 import { type Attendee, type User, type Event } from "@prisma/client";
-import { type ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import { type Column, type ColumnDef } from "@tanstack/react-table";
+import { format, isFuture, isPast } from "date-fns";
 import Link from "next/link";
 import { fullEventId } from "../../../utils/event";
-import { ExternalLink } from "lucide-react";
+import { ArrowDown, ArrowUp, ExternalLink } from "lucide-react";
+import { Button } from "../../ui/button";
 
 export const columns: ColumnDef<
   Event & { host: User; attendees: Attendee[] }
 >[] = [
   {
-    accessorKey: "title",
-    header: "Title",
-    cell: (info) => info.getValue(),
-  },
-  {
     accessorKey: "dateTime",
-    header: "Date",
+    header: ({ column }) => <SortHeader headerTitle="Date" column={column} />,
     accessorFn: (row) => format(row.dateTime, "LLLL do, H:mm"),
+    filterFn: (row, _, filterValue) => {
+      const date = row.original.dateTime;
+      if (!date || !filterValue) {
+        return true;
+      }
+
+      if (filterValue === "hide-future") {
+        return !isFuture(date);
+      }
+      if (filterValue === "hide-past") {
+        return !isPast(date);
+      }
+      return true;
+    },
   },
   {
-    accessorKey: "place",
-    header: "Place",
+    accessorKey: "title",
+    header: ({ column }) => <SortHeader headerTitle="Title" column={column} />,
+    cell: (info) => info.getValue(),
   },
   {
     accessorKey: "host.name",
-    header: "Host",
+    header: ({ column }) => <SortHeader headerTitle="Host" column={column} />,
     cell: (info) => info.getValue(),
   },
   {
+    accessorKey: "place",
+    header: ({ column }) => <SortHeader headerTitle="Place" column={column} />,
+  },
+  {
     accessorKey: "attendees.length",
-    header: "Attendees",
+    header: ({ column }) => (
+      <SortHeader headerTitle="Attendees" column={column} />
+    ),
     accessorFn: (row) => row.attendees.length,
   },
   {
     accessorKey: "attendees.status.going",
-    header: "Going",
+    header: ({ column }) => <SortHeader headerTitle="Going" column={column} />,
     accessorFn: (row) =>
       row.attendees.filter((a) => a.status === "GOING").length,
   },
   {
     accessorKey: "attendees.status.notGoing",
-    header: "Not going",
+    header: ({ column }) => (
+      <SortHeader headerTitle="Not going" column={column} />
+    ),
     accessorFn: (row) =>
       row.attendees.filter((a) => a.status === "NOT_GOING").length,
   },
   {
     accessorKey: "attendees.status.maybe",
-    header: "Maybe",
+    header: ({ column }) => <SortHeader headerTitle="Maybe" column={column} />,
     accessorFn: (row) =>
       row.attendees.filter((a) => a.status === "MAYBE").length,
   },
   {
     accessorKey: "publicId",
-    header: "Link",
+    header: () => <Header headerTitle="Link" />,
     accessorFn: (row) => row,
     cell: (info) => {
       const event = info.getValue<
@@ -66,3 +85,31 @@ export const columns: ColumnDef<
     },
   },
 ];
+
+type SortHeaderProps = {
+  headerTitle: string;
+  column: Column<Event & { host: User; attendees: Attendee[] }>;
+};
+
+const SortHeader = ({ headerTitle, column }: SortHeaderProps) => {
+  return (
+    <Button
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    >
+      {headerTitle}
+      {column.getIsSorted() === "asc" && <ArrowUp className="ml-2 h-4 w-4" />}
+      {column.getIsSorted() === "desc" && (
+        <ArrowDown className="ml-2 h-4 w-4" />
+      )}
+    </Button>
+  );
+};
+
+type HeaderProps = {
+  headerTitle: string;
+};
+
+const Header = ({ headerTitle }: HeaderProps) => {
+  return <div className="px-4">{headerTitle}</div>;
+};
