@@ -66,10 +66,10 @@ export default async function handler(
       to: "aslak@shera.no",
       from: env.EMAIL_FROM,
       subject: "Email reminders sent from Shera",
-      text: `Sent email reminders for the following events: ${events.map((e) => `${e.title}: ${e.attendees.map((a) => a.email).join(",")}`).join("\n\n ")} \n\n Total reminders sent: ${reminderCount}`,
+      text: `Sent email reminders for the following events: ${events.map((e) => `${e.title}: ${e.attendees.length} emails`).join("\n\n ")} \n\n Total reminders sent: ${reminderCount}`,
       html: `<p>Sent email reminders for the following events:</p>
     <ul>
-    ${events.map((e) => `<li>${e.title}: ${e.attendees.map((a) => a.email).join(",")}</li>`).join()}
+    ${events.map((e) => `<li>${e.title}: ${e.attendees.length} emails</li>`).join()}
     </ul>
     <p>Total reminders sent: ${reminderCount}</p>`,
     };
