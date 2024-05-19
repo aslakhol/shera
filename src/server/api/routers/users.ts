@@ -19,4 +19,13 @@ export const usersRouter = createTRPCRouter({
 
       return userInDb;
     }),
+  isLinkedToGoogle: publicProcedure
+    .input(z.object({ userId: z.string().cuid() }))
+    .query(async ({ ctx, input }) => {
+      const account = await ctx.db.account.findFirst({
+        where: { userId: input.userId },
+      });
+
+      return account?.provider === "google";
+    }),
 });
