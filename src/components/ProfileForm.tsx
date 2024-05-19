@@ -38,7 +38,6 @@ export const ProfileForm = ({ user }: Props) => {
     defaultValues: {
       name: user.name ?? "",
       email: user.email ?? "",
-      image: user.image ?? "",
     },
   });
 
@@ -82,20 +81,6 @@ export const ProfileForm = ({ user }: Props) => {
                 <Input placeholder="email@example.com" {...field} />
               </FormControl>
               <FormDescription>Your email.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Profile picture</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>Link to your profile picture.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
