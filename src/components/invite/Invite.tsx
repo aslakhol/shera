@@ -8,6 +8,8 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { LinkInvite } from "./LinkInvite";
+import { EmailInvite } from "./EmailInvite";
+import { Separator } from "../ui/separator";
 
 type InviteProps = {
   event: Event & {
@@ -28,8 +30,9 @@ const Invite = (props: InviteProps) => {
           <DialogHeader>
             <DialogTitle className="text-primary">Invite</DialogTitle>
           </DialogHeader>
-
           <LinkInvite event={event} />
+          <Separator />
+          <EmailInvite event={event} />
         </DialogContent>
       </Dialog>
     </>
