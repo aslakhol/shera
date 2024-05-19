@@ -27,6 +27,8 @@ export const env = createEnv({
     EMAIL_FROM: z.string().email(),
     BASE_URL: z.string().url(),
     CRON_SECRET: z.string(),
+    GOOGLE_CLIENT_ID: z.string(),
+    GOOGLE_CLIENT_SECRET: z.string(),
   },
 
   /**
@@ -52,6 +54,8 @@ export const env = createEnv({
     EMAIL_FROM: process.env.EMAIL_FROM,
     BASE_URL: process.env.BASE_URL,
     CRON_SECRET: process.env.CRON_SECRET,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     // DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
     // DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
   },
