@@ -30,7 +30,7 @@ const WebShare = ({ event }: WebShareProps) => {
 
   return (
     <Button variant="outline" onClick={share}>
-      Invite
+      Copy invite link
     </Button>
   );
 };

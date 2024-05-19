@@ -36,7 +36,7 @@ export const Event = ({ publicId }: Props) => {
         {event.title}
       </h2>
 
-      <div className="text-lg ">
+      <div className="text-lg">
         <div className="flex items-center gap-2">
           <WorkingClock date={event.dateTime} size={16} />
           <p>{format(event.dateTime, "EEEE, LLLL do, H:mm")}</p>
