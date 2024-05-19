@@ -1,6 +1,4 @@
 import { type Event, type User } from "@prisma/client";
-import NoWebShare from "./NoWebShare";
-import WebShare from "./WebShare";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +7,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
+import { LinkInvite } from "./LinkInvite";
 
 type InviteProps = {
   event: Event & {
@@ -38,21 +37,3 @@ const Invite = (props: InviteProps) => {
 };
 
 export default Invite;
-
-type LinkInviteProps = {
-  event: Event & {
-    host: User;
-  };
-};
-
-const LinkInvite = ({ event }: LinkInviteProps) => {
-  return (
-    <>
-      {!!navigator.share ? (
-        <WebShare event={event} />
-      ) : (
-        <NoWebShare event={event} />
-      )}
-    </>
-  );
-};
