@@ -106,8 +106,12 @@ export const EmailInvite = ({ event }: Props) => {
           </div>
         </div>
       )}
-
-      <Button variant="outline" className="w-full" onClick={handleSend}>
+      <Button
+        variant="outline"
+        className="w-full"
+        onClick={handleSend}
+        disabled={emailInput.trim().length !== 0 || emails.length === 0}
+      >
         Send invite emails
       </Button>
     </>
