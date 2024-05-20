@@ -4,6 +4,8 @@ import { Input } from "../ui/input";
 import { useState } from "react";
 import { cn } from "../../utils/cn";
 import { Button } from "../ui/button";
+import { Plus } from "lucide-react";
+import { api } from "../../utils/api";
 
 type Props = {
   event: Event & {
@@ -12,24 +14,29 @@ type Props = {
 };
 
 export const EmailInvite = ({ event }: Props) => {
+  const attendeesQuery = api.events.attendees.useQuery({
+    publicId: event.publicId,
+  });
   const [emailInput, setEmailInput] = useState("");
   const [emails, setEmails] = useState<string[]>([]);
   const [sentEmails, setSentEmails] = useState<string[]>([]);
 
-  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      const emailsInInput = emailInput.trim().split(",");
-      if (emailsInInput.length > 0) {
-        setEmails((prev) => {
-          const newEmails = emailsInInput.filter(
-            (email) => !prev.includes(email),
+  const handleAdd = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const emailsInInput = emailInput.trim().split(",");
+    if (emailsInInput.length > 0) {
+      setEmails((prev) => {
+        const newEmails = emailsInInput
+          .filter((email) => !prev.includes(email))
+          .filter(
+            (email) => !attendeesQuery.data?.some((a) => a.email === email),
           );
 
-          return [...prev, ...newEmails];
-        });
-        setEmailInput("");
-      }
+        return [...prev, ...newEmails];
+      });
     }
+    setEmailInput("");
   };
 
   const handleSend = () => {
@@ -50,17 +57,24 @@ export const EmailInvite = ({ event }: Props) => {
   return (
     <>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="email">Invite by Email</Label>
-        <Input
-          type="text"
-          id="email"
-          value={emailInput}
-          onChange={(e) => setEmailInput(e.target.value)}
-          onKeyDown={handleEnter}
-        />
-        <p className={cn("text-sm text-muted-foreground")}>
-          Separate multiple emails with comma
-        </p>
+        <form onSubmit={handleAdd}>
+          <Label htmlFor="email">Invite by Email</Label>
+          <div className="flex gap-1.5">
+            <Input
+              type="email"
+              id="email"
+              multiple
+              value={emailInput}
+              onChange={(e) => setEmailInput(e.target.value)}
+            />
+            <Button variant={"outline"}>
+              <Plus />
+            </Button>
+          </div>
+          <p className={cn("text-sm text-muted-foreground")}>
+            Separate multiple emails with comma
+          </p>
+        </form>
       </div>
 
       {emails.length > 0 && (
