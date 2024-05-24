@@ -342,7 +342,6 @@ export const eventsRouter = createTRPCRouter({
 
       const { fromExistingUsers, fromHasNoExistingUser } =
         await ctx.db.$transaction(async (tx) => {
-          console.log("in tx");
           const fromExistingUsers = await tx.attendee.createMany({
             data: existingUsers.map((user) => ({
               eventId: event.eventId,
@@ -352,8 +351,6 @@ export const eventsRouter = createTRPCRouter({
               status: "INVITED",
             })),
           });
-
-          console.log("fromExistingUsers", fromExistingUsers);
 
           const fromHasNoExistingUser = await tx.attendee.createMany({
             data: hasNoExistingUser.map((email) => ({
@@ -365,7 +362,6 @@ export const eventsRouter = createTRPCRouter({
             })),
           });
 
-          console.log("fromHasNoExistingUser", fromHasNoExistingUser);
           return {
             fromExistingUsers: fromExistingUsers.count,
             fromHasNoExistingUser: fromHasNoExistingUser.count,

@@ -67,11 +67,7 @@ export const EmailInvite = ({ event }: Props) => {
       inviterName: event.host.name ?? undefined,
     });
 
-    emailsToSend.forEach((email) => {
-      console.log("Sending email", email);
-      setSentEmails((prev) => [...prev, email]);
-    });
-
+    setSentEmails((prev) => [...prev, ...emailsToSend]);
     setEmails([]);
   };
 
