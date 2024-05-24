@@ -224,7 +224,7 @@ const AttendingSection = ({ section, attendants }: AttendingSectionProps) => {
 };
 
 const attendanceStatusString = (
-  status?: "GOING" | "NOT_GOING" | "MAYBE" | "UNKNOWN",
+  status?: "GOING" | "NOT_GOING" | "MAYBE" | "UNKNOWN" | "INVITED",
 ) => {
   if (status === "NOT_GOING") {
     return "Not going";
