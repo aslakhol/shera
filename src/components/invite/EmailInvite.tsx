@@ -1,4 +1,4 @@
-import { type User, type Event } from "@prisma/client";
+import { type User, type Event, type Attendee } from "@prisma/client";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useState } from "react";
@@ -18,9 +18,9 @@ export const EmailInvite = ({ event }: Props) => {
   const attendeesQuery = api.events.attendees.useQuery({
     publicId: event.publicId,
   });
+  const invited = attendeesQuery.data?.filter((a) => a.status === "INVITED");
   const [emailInput, setEmailInput] = useState("");
   const [emails, setEmails] = useState<string[]>([]);
-  const [sentEmails, setSentEmails] = useState<string[]>([]);
   const utils = api.useUtils();
   const inviteMutation = api.events.invite.useMutation({
     onSuccess: (response) => {
@@ -59,7 +59,9 @@ export const EmailInvite = ({ event }: Props) => {
       return;
     }
 
-    const emailsToSend = emails.filter((email) => !sentEmails.includes(email));
+    const emailsToSend = emails.filter((email) =>
+      invited?.every((a) => a.email !== email),
+    );
 
     inviteMutation.mutate({
       publicId: event.publicId,
@@ -67,7 +69,6 @@ export const EmailInvite = ({ event }: Props) => {
       inviterName: event.host.name ?? undefined,
     });
 
-    setSentEmails((prev) => [...prev, ...emailsToSend]);
     setEmails([]);
   };
 
@@ -113,12 +114,12 @@ export const EmailInvite = ({ event }: Props) => {
         </div>
       )}
 
-      {sentEmails.length > 0 && (
+      {invited && invited.length > 0 && (
         <div className="flex flex-col gap-1.5">
-          <p className="text-md font-semibold text-primary">Emails sent</p>
+          <p className="text-md font-semibold text-primary">Invited</p>
           <div className="flex flex-col gap-1.5">
-            {sentEmails.map((email, index) => (
-              <p key={`email-${index}`}>{email}</p>
+            {invited.map((attendee, index) => (
+              <p key={`attendee-${index}`}>{attendee.name}</p>
             ))}
           </div>
         </div>
