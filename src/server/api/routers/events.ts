@@ -343,15 +343,15 @@ export const eventsRouter = createTRPCRouter({
       const path = fullEventId(event);
       await ctx.res?.revalidate(`/events/${path}`);
 
-      const foo = {
+      return {
         fromExistingUsers,
         fromHasNoExistingUser,
         alreadyAttending: emails.length - notAlreadyAttending.length,
+        totalInvites:
+          fromExistingUsers +
+          fromHasNoExistingUser +
+          emails.length -
+          notAlreadyAttending.length,
       };
-
-      console.log(foo, "foo");
-      console.log(inviterName, "inviterName");
-
-      return foo;
     }),
 });

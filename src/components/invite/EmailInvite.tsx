@@ -6,6 +6,7 @@ import { cn } from "../../utils/cn";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { api } from "../../utils/api";
+import { toast } from "sonner";
 
 type Props = {
   event: Event & {
@@ -20,7 +21,20 @@ export const EmailInvite = ({ event }: Props) => {
   const [emailInput, setEmailInput] = useState("");
   const [emails, setEmails] = useState<string[]>([]);
   const [sentEmails, setSentEmails] = useState<string[]>([]);
-  const inviteMutation = api.events.invite.useMutation();
+  const utils = api.useUtils();
+  const inviteMutation = api.events.invite.useMutation({
+    onSuccess: (response) => {
+      toast.success(
+        `${response.totalInvites} invite${response.totalInvites > 1 ? "s" : ""} sent.`,
+      );
+      void utils.events.attendees.invalidate({
+        publicId: event.publicId,
+      });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const handleAdd = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
