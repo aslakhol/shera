@@ -7,7 +7,12 @@ import {
   loggedInAttendEventSchema,
 } from "../../../utils/formValidation";
 import { type Prisma } from "@prisma/client";
+import sgEmail from "@sendgrid/mail";
 import { fullEventId } from "../../../utils/event";
+import { env } from "../../../env";
+import { getInviteEmail } from "../../../../emails/utils";
+
+sgEmail.setApiKey(env.SENDGRID_API_KEY);
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
@@ -369,6 +374,13 @@ export const eventsRouter = createTRPCRouter({
 
       const path = fullEventId(event);
       await ctx.res?.revalidate(`/events/${path}`);
+
+      const inviteEmail = getInviteEmail(
+        event,
+        notAlreadyAttending,
+        inviterName,
+      );
+      await sgEmail.sendMultiple(inviteEmail);
 
       return {
         fromExistingUsers,
