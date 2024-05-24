@@ -24,13 +24,12 @@ const WebShare = ({ event }: WebShareProps) => {
         text: text,
         url: `https://shera.no/events/${fullEventId(event)}`,
       })
-      .then(() => console.log("Successful share"))
       .catch((error) => console.log("Error sharing", error));
   };
 
   return (
     <Button variant="outline" onClick={share}>
-      Invite
+      Copy invite link
     </Button>
   );
 };

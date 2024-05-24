@@ -16,21 +16,32 @@ import { fullEventId } from "../src/utils/event";
 
 const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
 
-type EventTomorrowProps = {
-  event: { title: string; dateTime: Date; publicId: string };
+type InviteProps = {
+  event: {
+    title: string;
+    dateTime: Date;
+    publicId: string;
+  };
+  inviterName?: string;
 };
 
-export const EventTomorrow = ({ event }: EventTomorrowProps) => {
+export const Invite = ({ event, inviterName }: InviteProps) => {
   return (
     <Html>
       <Head />
-      <Preview>{event.title} starting tomorrow</Preview>
+      <Preview>
+        {inviterName
+          ? `${inviterName} has invited you to ${event.title}!`
+          : `You've been invited to ${event.title}!`}
+      </Preview>
       <Tailwind>
         <Body className="bg-[#f6f9fc] font-sans">
           <Container className="mx-auto mt-0 px-0 pb-12 pt-5">
             <Section className="px-12">
               <Text className="text-xl font-semibold">
-                {event.title} starting tomorrow
+                {inviterName
+                  ? `${inviterName} has invited you to ${event.title}!`
+                  : `You've been invited to ${event.title}!`}{" "}
               </Text>
               <Text className="text-[#525f7f]">
                 Head over to Shera to see the event details.
@@ -38,7 +49,7 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
               <Section className="flex w-full justify-center">
                 <Button
                   className="whitespace-nowrap rounded-md bg-[#1f1d63] px-12 py-2 text-sm font-medium text-[#fff] ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                  href={`${baseUrl}events/${fullEventId(event)}`}
+                  href={`${baseUrl}/events/${fullEventId(event)}`}
                 >
                   See event
                 </Button>
@@ -65,12 +76,13 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
   );
 };
 
-export default EventTomorrow;
+export default Invite;
 
-EventTomorrow.PreviewProps = {
+Invite.PreviewProps = {
   event: {
     title: "4 Pils og en pizza",
     dateTime: new Date(),
     publicId: "inr40by0",
   },
-} as EventTomorrowProps;
+  inviterName: "Aslak",
+} as InviteProps;

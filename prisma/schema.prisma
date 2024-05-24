@@ -49,6 +49,7 @@ enum AttendingStatus {
     NOT_GOING
     MAYBE
     UNKNOWN
+    INVITED
 }
 
 model Account {

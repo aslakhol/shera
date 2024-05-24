@@ -2,7 +2,12 @@ import { type Session } from "next-auth";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 
-import { type User, type Event, type Attendee } from "@prisma/client";
+import {
+  type User,
+  type Event,
+  type Attendee,
+  type AttendingStatus,
+} from "@prisma/client";
 import { api } from "../../utils/api";
 import {
   Dialog,
@@ -178,6 +183,7 @@ const Attendants = ({ event }: AttendantsProps) => {
   const going = attendees?.filter((a) => a.status === "GOING") ?? [];
   const maybe = attendees?.filter((a) => a.status === "MAYBE") ?? [];
   const notGoing = attendees?.filter((a) => a.status === "NOT_GOING") ?? [];
+  const invited = attendees?.filter((a) => a.status === "INVITED") ?? [];
 
   return (
     <Dialog>
@@ -195,6 +201,7 @@ const Attendants = ({ event }: AttendantsProps) => {
             <AttendingSection section="Going" attendants={going} />
             <AttendingSection section="Maybe" attendants={maybe} />
             <AttendingSection section="Not going" attendants={notGoing} />
+            <AttendingSection section="Invited" attendants={invited} />
           </div>
         )}
       </DialogContent>
@@ -203,7 +210,7 @@ const Attendants = ({ event }: AttendantsProps) => {
 };
 
 type AttendingSectionProps = {
-  section: "Going" | "Maybe" | "Not going";
+  section: "Going" | "Maybe" | "Not going" | "Invited";
   attendants: Attendee[];
 };
 
@@ -213,7 +220,7 @@ const AttendingSection = ({ section, attendants }: AttendingSectionProps) => {
   }
   return (
     <div>
-      <p className="text-xs font-semibold  text-primary">{section}</p>
+      <p className="text-xs font-semibold text-primary">{section}</p>
       {attendants.map((attendant) => (
         <p key={attendant.attendeeId}>{attendant.name}</p>
       ))}
@@ -221,9 +228,7 @@ const AttendingSection = ({ section, attendants }: AttendingSectionProps) => {
   );
 };
 
-const attendanceStatusString = (
-  status?: "GOING" | "NOT_GOING" | "MAYBE" | "UNKNOWN",
-) => {
+const attendanceStatusString = (status?: AttendingStatus) => {
   if (status === "NOT_GOING") {
     return "Not going";
   }
@@ -232,6 +237,9 @@ const attendanceStatusString = (
   }
   if (status === "GOING") {
     return "Going";
+  }
+  if (status === "INVITED") {
+    return "You've been invited!";
   }
   return "Going?";
 };
