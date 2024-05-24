@@ -271,4 +271,87 @@ export const eventsRouter = createTRPCRouter({
 
       return attendees;
     }),
+  invite: publicProcedure
+    .input(
+      z.object({
+        publicId: z.string(),
+        emails: z.array(z.string().email()),
+        inviterName: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { publicId, emails, inviterName } = input;
+
+      const event = await ctx.db.event.findFirst({
+        where: {
+          publicId: publicId,
+        },
+        include: { attendees: true },
+      });
+
+      if (!event) {
+        throw new Error("Event not found");
+      }
+
+      const notAlreadyAttending = emails.filter((email) =>
+        event.attendees.some((a) => a.email !== email),
+      );
+
+      if (notAlreadyAttending.length === 0) {
+        throw new Error("All invitees are already attending");
+      }
+
+      const existingUsers = await ctx.db.user.findMany({
+        where: { email: { in: notAlreadyAttending } },
+      });
+      const hasNoExistingUser = notAlreadyAttending.filter((email) =>
+        existingUsers.every((user) => user.email !== email),
+      );
+
+      const { fromExistingUsers, fromHasNoExistingUser } =
+        await ctx.db.$transaction(async (tx) => {
+          console.log("in tx");
+          const fromExistingUsers = await tx.attendee.createMany({
+            data: existingUsers.map((user) => ({
+              eventId: event.eventId,
+              userId: user.id,
+              name: user.name ?? user.email ?? "Unknown",
+              email: user.email,
+              status: "INVITED",
+            })),
+          });
+
+          console.log("fromExistingUsers", fromExistingUsers);
+
+          const fromHasNoExistingUser = await tx.attendee.createMany({
+            data: hasNoExistingUser.map((email) => ({
+              eventId: event.eventId,
+              userId: null,
+              name: email,
+              email,
+              status: "INVITED",
+            })),
+          });
+
+          console.log("fromHasNoExistingUser", fromHasNoExistingUser);
+          return {
+            fromExistingUsers: fromExistingUsers.count,
+            fromHasNoExistingUser: fromHasNoExistingUser.count,
+          };
+        });
+
+      const path = fullEventId(event);
+      await ctx.res?.revalidate(`/events/${path}`);
+
+      const foo = {
+        fromExistingUsers,
+        fromHasNoExistingUser,
+        alreadyAttending: emails.length - notAlreadyAttending.length,
+      };
+
+      console.log(foo, "foo");
+      console.log(inviterName, "inviterName");
+
+      return foo;
+    }),
 });

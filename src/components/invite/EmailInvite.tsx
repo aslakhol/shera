@@ -20,6 +20,7 @@ export const EmailInvite = ({ event }: Props) => {
   const [emailInput, setEmailInput] = useState("");
   const [emails, setEmails] = useState<string[]>([]);
   const [sentEmails, setSentEmails] = useState<string[]>([]);
+  const inviteMutation = api.events.invite.useMutation();
 
   const handleAdd = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -45,6 +46,12 @@ export const EmailInvite = ({ event }: Props) => {
     }
 
     const emailsToSend = emails.filter((email) => !sentEmails.includes(email));
+
+    inviteMutation.mutate({
+      publicId: event.publicId,
+      emails: emailsToSend,
+      inviterName: event.host.name ?? undefined,
+    });
 
     emailsToSend.forEach((email) => {
       console.log("Sending email", email);
