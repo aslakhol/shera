@@ -2,7 +2,12 @@ import { type Session } from "next-auth";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 
-import { type User, type Event, type Attendee } from "@prisma/client";
+import {
+  type User,
+  type Event,
+  type Attendee,
+  type AttendingStatus,
+} from "@prisma/client";
 import { api } from "../../utils/api";
 import {
   Dialog,
@@ -223,9 +228,7 @@ const AttendingSection = ({ section, attendants }: AttendingSectionProps) => {
   );
 };
 
-const attendanceStatusString = (
-  status?: "GOING" | "NOT_GOING" | "MAYBE" | "UNKNOWN" | "INVITED",
-) => {
+const attendanceStatusString = (status?: AttendingStatus) => {
   if (status === "NOT_GOING") {
     return "Not going";
   }
