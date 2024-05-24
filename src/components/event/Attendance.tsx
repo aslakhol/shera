@@ -178,6 +178,7 @@ const Attendants = ({ event }: AttendantsProps) => {
   const going = attendees?.filter((a) => a.status === "GOING") ?? [];
   const maybe = attendees?.filter((a) => a.status === "MAYBE") ?? [];
   const notGoing = attendees?.filter((a) => a.status === "NOT_GOING") ?? [];
+  const invited = attendees?.filter((a) => a.status === "INVITED") ?? [];
 
   return (
     <Dialog>
@@ -195,6 +196,7 @@ const Attendants = ({ event }: AttendantsProps) => {
             <AttendingSection section="Going" attendants={going} />
             <AttendingSection section="Maybe" attendants={maybe} />
             <AttendingSection section="Not going" attendants={notGoing} />
+            <AttendingSection section="Invited" attendants={invited} />
           </div>
         )}
       </DialogContent>
@@ -203,7 +205,7 @@ const Attendants = ({ event }: AttendantsProps) => {
 };
 
 type AttendingSectionProps = {
-  section: "Going" | "Maybe" | "Not going";
+  section: "Going" | "Maybe" | "Not going" | "Invited";
   attendants: Attendee[];
 };
 
@@ -213,7 +215,7 @@ const AttendingSection = ({ section, attendants }: AttendingSectionProps) => {
   }
   return (
     <div>
-      <p className="text-xs font-semibold  text-primary">{section}</p>
+      <p className="text-xs font-semibold text-primary">{section}</p>
       {attendants.map((attendant) => (
         <p key={attendant.attendeeId}>{attendant.name}</p>
       ))}
