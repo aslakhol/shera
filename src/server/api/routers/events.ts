@@ -116,10 +116,10 @@ export const eventsRouter = createTRPCRouter({
       const event = await ctx.db.event.findFirst({
         where: { publicId },
       });
-
       if (!event) {
         throw new Error("Event not found");
       }
+      const path = fullEventId(event);
 
       const user = await ctx.db.user.findFirst({
         where: { id: input.userId },
@@ -129,8 +129,46 @@ export const eventsRouter = createTRPCRouter({
         throw new Error("User not found, are you logged in?");
       }
 
+      const shouldUpdateUserName =
+        name && !name.includes("@") && (!user.name || user.name.includes("@"));
+      if (shouldUpdateUserName) {
+        await ctx.db.user.update({
+          where: { id: user.id },
+          data: { name: name },
+        });
+      }
+
+      const attendeeFromBeforeUser = await ctx.db.attendee.findFirst({
+        where: {
+          eventId: event.eventId,
+          user: null,
+          email: user.email,
+        },
+      });
+
+      if (attendeeFromBeforeUser) {
+        const attendee = await ctx.db.attendee.update({
+          where: { attendeeId: attendeeFromBeforeUser.attendeeId },
+          data: {
+            status,
+            name: name ?? user.name ?? "Unknown",
+            email: user.email,
+            user: {
+              connect: {
+                id: user.id,
+              },
+            },
+          },
+        });
+
+        await ctx.res?.revalidate(`/events/${path}`);
+        return attendee;
+      }
+
       const attendee = await ctx.db.attendee.upsert({
-        where: { eventId_userId: { eventId: event.eventId, userId: user.id } },
+        where: {
+          eventId_userId: { eventId: event.eventId, userId: user.id },
+        },
         create: {
           eventId: event.eventId,
           userId: user.id,
@@ -145,18 +183,7 @@ export const eventsRouter = createTRPCRouter({
         },
       });
 
-      const shouldUpdateUserName =
-        name && !name.includes("@") && (!user.name || user.name.includes("@"));
-      if (shouldUpdateUserName) {
-        await ctx.db.user.update({
-          where: { id: user.id },
-          data: { name: name },
-        });
-      }
-
-      const path = fullEventId(event);
       await ctx.res?.revalidate(`/events/${path}`);
-
       return attendee;
     }),
   attend: publicProcedure
