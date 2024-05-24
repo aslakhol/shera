@@ -33,9 +33,7 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
                 {event.title} starting tomorrow
               </Text>
               <Text className="text-[#525f7f]">
-                Head over to Shera to see the event details. If you&apos;d
-                rather not receive any future emails from this event you can
-                unattend on event page.
+                Head over to Shera to see the event details.
               </Text>
               <Section className="flex w-full justify-center">
                 <Button
@@ -45,6 +43,9 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
                   See event
                 </Button>
               </Section>
+              <Text className="text-[#525f7f]">
+                Unattend the event to opt out of future emails.
+              </Text>
               <Hr className="mx-0 my-5 w-full border border-solid border-[#e6ebf1]" />
               <Text className="text-sm text-[#8898aa]">
                 Host your next event with{" "}
