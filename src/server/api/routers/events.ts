@@ -11,6 +11,8 @@ import sgEmail from "@sendgrid/mail";
 import { fullEventId } from "../../../utils/event";
 import { env } from "../../../env";
 import { getInviteEmail } from "../../../../emails/utils";
+import { title } from "process";
+import { type UserNetwork } from "../../../utils/types";
 
 sgEmail.setApiKey(env.SENDGRID_API_KEY);
 
@@ -283,6 +285,73 @@ export const eventsRouter = createTRPCRouter({
       return {
         attendee,
       };
+    }),
+  network: publicProcedure
+    .input(z.object({ userId: z.string().cuid() }))
+    .query(async ({ input, ctx }) => {
+      const attends: Prisma.EventWhereInput = {
+        attendees: { some: { userId: input.userId } },
+      };
+      const hosts: Prisma.EventWhereInput = {
+        host: { id: input.userId },
+      };
+      const myEvents = await ctx.db.event.findMany({
+        where: {
+          OR: [hosts, attends],
+        },
+        include: {
+          attendees: true,
+        },
+      });
+
+      if (myEvents.length === 0) {
+        return [];
+      }
+
+      const userNetwork: UserNetwork = myEvents.reduce((acc, event) => {
+        const attendees = event.attendees.filter(
+          (a) => a.userId !== input.userId,
+        );
+        if (attendees.length === 0) {
+          return acc;
+        }
+
+        const existingUpdated: UserNetwork = acc.map((userInNetwork) => {
+          const isAttendee = attendees.find(
+            (a) => a.userId === userInNetwork.userId,
+          );
+
+          if (!isAttendee) {
+            return userInNetwork;
+          }
+
+          return {
+            ...userInNetwork,
+            events: [
+              ...userInNetwork.events,
+              { publicId: event.publicId, title: event.title },
+            ],
+          };
+        });
+
+        const notAlreadyInNetwork: UserNetwork = attendees
+          .filter((a) => !existingUpdated.find((u) => u.userId === a.userId))
+          .filter((a) => a.email !== null && a.userId !== null)
+          .map((attendee) => ({
+            userId: attendee.userId!,
+            name: attendee.name,
+            events: [
+              {
+                publicId: event.publicId,
+                title: event.title,
+              },
+            ],
+          }));
+
+        return [...existingUpdated, ...notAlreadyInNetwork];
+      }, [] as UserNetwork);
+
+      return userNetwork;
     }),
   attendees: publicProcedure
     .input(z.object({ publicId: z.string() }))

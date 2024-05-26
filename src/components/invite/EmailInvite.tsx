@@ -1,4 +1,4 @@
-import { type User, type Event, type Attendee } from "@prisma/client";
+import { type User, type Event } from "@prisma/client";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useState } from "react";
