@@ -310,9 +310,9 @@ export const eventsRouter = createTRPCRouter({
       }
 
       const userNetwork: UserNetwork = myEvents.reduce((acc, event) => {
-        const attendees = event.attendees.filter(
-          (a) => a.userId !== input.userId,
-        );
+        const attendees = event.attendees
+          .filter((a) => a.userId !== input.userId)
+          .filter((a) => a.status === "GOING" || a.status === "MAYBE");
         if (attendees.length === 0) {
           return acc;
         }
