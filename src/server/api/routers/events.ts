@@ -302,6 +302,7 @@ export const eventsRouter = createTRPCRouter({
         include: {
           attendees: true,
         },
+        orderBy: { dateTime: "desc" },
       });
 
       if (myEvents.length === 0) {
