@@ -31,7 +31,7 @@ export const AuthButton = () => {
   return (
     <div className="flex items-center justify-center gap-2">
       <Link href={"/profile"} className="hover:underline">
-        {session.data?.user.name ?? "No name :("}
+        {session.data?.user.name ?? "Complete profile setup"}
       </Link>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

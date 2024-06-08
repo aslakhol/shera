@@ -238,8 +238,6 @@ const attendanceStatusString = (status?: AttendingStatus) => {
   if (status === "GOING") {
     return "Going";
   }
-  if (status === "INVITED") {
-    return "You've been invited!";
-  }
-  return "Going?";
+
+  return "Are you going?";
 };
