@@ -40,6 +40,23 @@ const ProfilePage: NextPageWithLayout = () => {
           </div>
         </>
       )}
+      <hr />
+      <div>
+        <iframe
+          src="https://embeds.beehiiv.com/bf777115-9d0a-458b-9805-56825cadf010"
+          data-test-id="beehiiv-embed"
+          width="100%"
+          height="320"
+          frameBorder="0"
+          scrolling="no"
+          style={{
+            borderRadius: "4px",
+            border: "2px solid #e5e7eb",
+            margin: "0",
+            backgroundColor: "transparent",
+          }}
+        ></iframe>
+      </div>
     </div>
   );
 };
