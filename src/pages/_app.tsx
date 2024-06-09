@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppProps } from "next/app";
@@ -27,6 +28,7 @@ const MyApp = ({
 
   return (
     <SessionProvider session={session}>
+      <Analytics />
       {getLayout(<Component {...pageProps} />)}
     </SessionProvider>
   );
