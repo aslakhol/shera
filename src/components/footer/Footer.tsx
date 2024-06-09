@@ -19,6 +19,9 @@ const Footer = () => {
           </Link>
         </div>
         <div className="flex gap-4">
+          <Link href={"https://shera.beehiiv.com/"} target="_blank">
+            Newsletter
+          </Link>
           <Link href="https://twitter.com/EchoEsq" target="_blank">
             <Twitter />
           </Link>
