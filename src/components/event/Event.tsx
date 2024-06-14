@@ -11,6 +11,7 @@ import { Loading } from "../Loading";
 
 import dynamic from "next/dynamic";
 import { Attendance } from "./Attendance";
+import { InviteNetwork } from "../invite/InviteNetwork";
 
 const Invite = dynamic(() => import("../invite/Invite"), {
   ssr: false,
@@ -77,6 +78,7 @@ export const Event = ({ publicId }: Props) => {
       <Body description={event.description} />
       <div className="flex flex-wrap justify-start gap-2">
         <Invite event={event} />
+        <InviteNetwork event={event} />
         <GoogleCalendar event={event} />
       </div>
 
