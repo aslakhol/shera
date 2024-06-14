@@ -72,7 +72,9 @@ const Network = ({ event }: NetworkProps) => {
       friends: [],
     },
   });
-
+  const attendeesQuery = api.events.attendees.useQuery({
+    publicId: event.publicId,
+  });
   const networkQuery = api.events.network.useQuery(
     {
       userId: session.data?.user.id ?? "",
@@ -123,6 +125,11 @@ const Network = ({ event }: NetworkProps) => {
                       friend={friend}
                       key={friend.userId}
                       form={form}
+                      attending={
+                        attendeesQuery.data?.some(
+                          (a) => a.userId === friend.userId,
+                        ) ?? false
+                      }
                     />
                   ))}
                 <FormMessage />
@@ -139,9 +146,12 @@ const Network = ({ event }: NetworkProps) => {
 type NetworkFriendProps = {
   friend: Friend;
   form: UseFormReturn<z.infer<typeof FormSchema>>;
+  attending: boolean;
 };
 
-const NetworkFriend = ({ friend, form }: NetworkFriendProps) => {
+const NetworkFriend = ({ friend, form, attending }: NetworkFriendProps) => {
+  const events = friend.events.map((e) => e.title).join(", ");
+
   return (
     <FormField
       key={friend.userId}
@@ -153,15 +163,21 @@ const NetworkFriend = ({ friend, form }: NetworkFriendProps) => {
             key={friend.userId}
             className="flex flex-row items-start space-x-3 "
           >
-            <FormLabel className="flex w-full flex-row items-center justify-between rounded px-2 py-1 hover:ring">
-              <div>
+            <FormLabel
+              className={cn(
+                "flex w-full flex-row items-center justify-between rounded px-3 py-1",
+                !attending && "hover:ring",
+              )}
+            >
+              <div className={cn(attending && "opacity-50")}>
                 <p className="text-md font-medium">{friend.name}</p>
                 <p className="line-clamp-1 text-sm font-normal">
-                  {friend.events.map((e) => e.title).join(", ")}
+                  {!attending ? events : "Already invited"}
                 </p>
               </div>
               <FormControl>
                 <Checkbox
+                  disabled={attending}
                   checked={field.value?.includes(friend.userId)}
                   onCheckedChange={(checked) => {
                     return checked
