@@ -112,13 +112,19 @@ const Network = ({ event }: NetworkProps) => {
             name="friends"
             render={() => (
               <FormItem>
-                {networkQuery.data?.map((friend) => (
-                  <NetworkFriend
-                    friend={friend}
-                    key={friend.userId}
-                    form={form}
-                  />
-                ))}
+                {networkQuery.data
+                  ?.filter((f) =>
+                    f.name
+                      .toLocaleLowerCase()
+                      .includes(search.toLocaleLowerCase()),
+                  )
+                  .map((friend) => (
+                    <NetworkFriend
+                      friend={friend}
+                      key={friend.userId}
+                      form={form}
+                    />
+                  ))}
                 <FormMessage />
               </FormItem>
             )}
