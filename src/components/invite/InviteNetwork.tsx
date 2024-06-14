@@ -1,4 +1,3 @@
-import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -7,10 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { EmailInvite } from "./EmailInvite";
-import { LinkInvite } from "./LinkInvite";
 import { type User, type Event } from "@prisma/client";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { cn } from "../../utils/cn";
@@ -24,7 +20,6 @@ import { type UseFormReturn, useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
