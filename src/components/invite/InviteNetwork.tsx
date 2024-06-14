@@ -97,13 +97,12 @@ const Network = ({ event }: NetworkProps) => {
 
   return (
     <>
-      <Label htmlFor="search">Search</Label>
       <div className="flex gap-1.5">
         <Input
           type="search"
           id="search"
           value={search}
-          placeholder="Name of person or event"
+          placeholder="Search for person or event"
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
@@ -115,10 +114,16 @@ const Network = ({ event }: NetworkProps) => {
             render={() => (
               <FormItem>
                 {networkQuery.data
-                  ?.filter((f) =>
-                    f.name
-                      .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()),
+                  ?.filter(
+                    (f) =>
+                      f.name
+                        .toLocaleLowerCase()
+                        .includes(search.toLocaleLowerCase()) ||
+                      f.events.some((e) =>
+                        e.title
+                          .toLocaleLowerCase()
+                          .includes(search.toLocaleLowerCase()),
+                      ),
                   )
                   .map((friend) => (
                     <NetworkFriend
