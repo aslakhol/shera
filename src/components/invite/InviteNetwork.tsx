@@ -141,7 +141,14 @@ const Network = ({ event }: NetworkProps) => {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button
+            variant="outline"
+            className="w-full"
+            type="submit"
+            disabled={form.watch("friends").length === 0}
+          >
+            Send invites
+          </Button>
         </form>
       </Form>
     </>
