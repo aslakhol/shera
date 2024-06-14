@@ -151,21 +151,30 @@ const NetworkFriend = ({ friend, form }: NetworkFriendProps) => {
         return (
           <FormItem
             key={friend.userId}
-            className="flex flex-row items-start space-x-3 space-y-0"
+            className="flex flex-row items-start space-x-3 "
           >
-            <FormControl>
-              <Checkbox
-                checked={field.value?.includes(friend.userId)}
-                onCheckedChange={(checked) => {
-                  return checked
-                    ? field.onChange([...field.value, friend.userId])
-                    : field.onChange(
-                        field.value?.filter((value) => value !== friend.userId),
-                      );
-                }}
-              />
-            </FormControl>
-            <FormLabel className="font-normal">{friend.name}</FormLabel>
+            <FormLabel className="flex w-full flex-row items-center justify-between rounded px-2 py-1 hover:ring">
+              <div>
+                <p className="text-md font-medium">{friend.name}</p>
+                <p className="line-clamp-1 text-sm font-normal">
+                  {friend.events.map((e) => e.title).join(", ")}
+                </p>
+              </div>
+              <FormControl>
+                <Checkbox
+                  checked={field.value?.includes(friend.userId)}
+                  onCheckedChange={(checked) => {
+                    return checked
+                      ? field.onChange([...field.value, friend.userId])
+                      : field.onChange(
+                          field.value?.filter(
+                            (value) => value !== friend.userId,
+                          ),
+                        );
+                  }}
+                />
+              </FormControl>
+            </FormLabel>
           </FormItem>
         );
       }}
