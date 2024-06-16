@@ -62,7 +62,7 @@ export const NetworkInvite = ({ event }: Props) => {
   };
 
   return (
-    <>
+    <div className="flex h-full flex-col">
       <div className="flex gap-1.5">
         <Input
           type="search"
@@ -73,7 +73,10 @@ export const NetworkInvite = ({ event }: Props) => {
         />
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-grow flex-col justify-between"
+        >
           <FormField
             control={form.control}
             name="friends"
@@ -117,7 +120,7 @@ export const NetworkInvite = ({ event }: Props) => {
           </Button>
         </form>
       </Form>
-    </>
+    </div>
   );
 };
 

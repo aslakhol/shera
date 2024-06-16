@@ -2,6 +2,7 @@ import { type Event, type User } from "@prisma/client";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -27,11 +28,11 @@ const Invite = (props: InviteProps) => {
         <Button asChild variant="outline">
           <DialogTrigger>Invite</DialogTrigger>
         </Button>
-        <DialogContent>
+        <DialogContent className="flex h-[50vh] flex-col">
           <DialogHeader>
             <DialogTitle className="text-primary">Invite</DialogTitle>
           </DialogHeader>
-          <Tabs defaultValue="link">
+          <Tabs defaultValue="network" className="flex flex-grow flex-col">
             <TabsList className="w-full">
               <TabsTrigger value="network" className="flex-grow">
                 Network
@@ -43,15 +44,17 @@ const Invite = (props: InviteProps) => {
                 Email
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="network">
-              <NetworkInvite event={event} />
-            </TabsContent>
-            <TabsContent value="link">
-              <LinkInvite event={event} />
-            </TabsContent>
-            <TabsContent value="email">
-              <EmailInvite event={event} />
-            </TabsContent>
+            <div className="flex-grow">
+              <TabsContent value="network" className="h-full">
+                <NetworkInvite event={event} />
+              </TabsContent>
+              <TabsContent value="link" className="h-full">
+                <LinkInvite event={event} />
+              </TabsContent>
+              <TabsContent value="email" className="h-full">
+                <EmailInvite event={event} />
+              </TabsContent>
+            </div>
           </Tabs>
         </DialogContent>
       </Dialog>

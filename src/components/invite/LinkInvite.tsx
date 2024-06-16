@@ -12,13 +12,17 @@ type LinkInviteProps = {
 
 export const LinkInvite = ({ event }: LinkInviteProps) => {
   return (
-    <>
+    <div className="flex h-full flex-col justify-between">
+      <p>
+        Anyone with the link can attend the event. Copy the link below and send
+        it to your friends.
+      </p>
       {!!navigator.share ? (
         <WebShare event={event} />
       ) : (
         <NoWebShare event={event} />
       )}
-    </>
+    </div>
   );
 };
 

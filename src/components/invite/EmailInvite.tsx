@@ -73,46 +73,48 @@ export const EmailInvite = ({ event }: Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
-        <form onSubmit={handleAdd}>
-          <Label htmlFor="email">Emails</Label>
-          <div className="flex gap-1.5">
-            <Input
-              type="email"
-              id="email"
-              multiple
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
-            />
-            <Button variant={"outline"}>
-              <Plus />
-            </Button>
-          </div>
-          <p className={cn("text-sm text-muted-foreground")}>
-            Separate multiple emails with comma
-          </p>
-        </form>
-      </div>
-
-      {emails.length > 0 && (
-        <div className="flex flex-col gap-1">
-          <p className="text-md font-semibold text-primary">Ready to send</p>
-          <div className="flex flex-col">
-            {emails.map((email, index) => (
-              <p
-                key={`email-${index}`}
-                className="hover:underline"
-                onClick={() =>
-                  setEmails((prev) => prev.filter((e) => e !== email))
-                }
-              >
-                {email}
-              </p>
-            ))}
-          </div>
+    <div className="flex h-full flex-col justify-between">
+      <div>
+        <div className="flex flex-col gap-1.5">
+          <form onSubmit={handleAdd}>
+            <Label htmlFor="email">Emails</Label>
+            <div className="flex gap-1.5">
+              <Input
+                type="email"
+                id="email"
+                multiple
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+              />
+              <Button variant={"outline"}>
+                <Plus />
+              </Button>
+            </div>
+            <p className={cn("text-sm text-muted-foreground")}>
+              Separate multiple emails with comma
+            </p>
+          </form>
         </div>
-      )}
+
+        {emails.length > 0 && (
+          <div className="flex flex-col gap-1">
+            <p className="text-md font-semibold text-primary">Ready to send</p>
+            <div className="flex flex-col">
+              {emails.map((email, index) => (
+                <p
+                  key={`email-${index}`}
+                  className="hover:underline"
+                  onClick={() =>
+                    setEmails((prev) => prev.filter((e) => e !== email))
+                  }
+                >
+                  {email}
+                </p>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
       <Button
         variant="outline"
