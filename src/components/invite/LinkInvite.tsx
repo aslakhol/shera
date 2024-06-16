@@ -42,7 +42,7 @@ const NoWebShare = (props: NoWebShareProps) => {
   };
 
   return (
-    <Button variant="outline" onClick={share}>
+    <Button variant="outline" className="w-full" onClick={share}>
       Copy invite link
     </Button>
   );
