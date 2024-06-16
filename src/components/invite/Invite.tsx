@@ -2,7 +2,6 @@ import { type Event, type User } from "@prisma/client";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
