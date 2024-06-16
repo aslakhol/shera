@@ -73,10 +73,10 @@ export const EmailInvite = ({ event }: Props) => {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <form onSubmit={handleAdd}>
-          <Label htmlFor="email">Invite by Email</Label>
+          <Label htmlFor="email">Emails</Label>
           <div className="flex gap-1.5">
             <Input
               type="email"
@@ -96,9 +96,9 @@ export const EmailInvite = ({ event }: Props) => {
       </div>
 
       {emails.length > 0 && (
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1">
           <p className="text-md font-semibold text-primary">Ready to send</p>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col">
             {emails.map((email, index) => (
               <p
                 key={`email-${index}`}
@@ -114,16 +114,6 @@ export const EmailInvite = ({ event }: Props) => {
         </div>
       )}
 
-      {invited && invited.length > 0 && (
-        <div className="flex flex-col gap-1.5">
-          <p className="text-md font-semibold text-primary">Invited</p>
-          <div className="flex flex-col gap-1.5">
-            {invited.map((attendee, index) => (
-              <p key={`attendee-${index}`}>{attendee.name}</p>
-            ))}
-          </div>
-        </div>
-      )}
       <Button
         variant="outline"
         className="w-full"
@@ -132,6 +122,6 @@ export const EmailInvite = ({ event }: Props) => {
       >
         Send invite emails
       </Button>
-    </>
+    </div>
   );
 };
