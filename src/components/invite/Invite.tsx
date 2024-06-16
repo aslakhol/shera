@@ -11,6 +11,7 @@ import { LinkInvite } from "./LinkInvite";
 import { EmailInvite } from "./EmailInvite";
 import { Separator } from "../ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { InviteNetwork } from "./InviteNetwork";
 
 type InviteProps = {
   event: Event & {
@@ -33,9 +34,13 @@ const Invite = (props: InviteProps) => {
           </DialogHeader>
           <Tabs defaultValue="link" className="">
             <TabsList>
+              <TabsTrigger value="network">Network</TabsTrigger>
               <TabsTrigger value="link">Link</TabsTrigger>
               <TabsTrigger value="email">Email</TabsTrigger>
             </TabsList>
+            <TabsContent value="network">
+              <InviteNetwork event={event} />
+            </TabsContent>
             <TabsContent value="link">
               <LinkInvite event={event} />
             </TabsContent>

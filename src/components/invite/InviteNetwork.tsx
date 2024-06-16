@@ -27,28 +27,6 @@ import {
 } from "../ui/form";
 import { Checkbox } from "../ui/checkbox";
 
-type Props = {
-  event: Event & {
-    host: User;
-  };
-};
-
-export const InviteNetwork = ({ event }: Props) => {
-  return (
-    <Dialog>
-      <Button asChild variant="outline">
-        <DialogTrigger>Invite network</DialogTrigger>
-      </Button>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="text-primary">Invite</DialogTitle>
-        </DialogHeader>
-        <Network event={event} />
-      </DialogContent>
-    </Dialog>
-  );
-};
-
 const FormSchema = z.object({
   friends: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one item.",
@@ -57,7 +35,7 @@ const FormSchema = z.object({
 
 type NetworkProps = { event: Event & { host: User } };
 
-const Network = ({ event }: NetworkProps) => {
+export const InviteNetwork = ({ event }: NetworkProps) => {
   const [search, setSearch] = useState("");
   const session = useSession();
 
