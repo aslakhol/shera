@@ -31,11 +31,17 @@ const Invite = (props: InviteProps) => {
           <DialogHeader>
             <DialogTitle className="text-primary">Invite</DialogTitle>
           </DialogHeader>
-          <Tabs defaultValue="link" className="">
-            <TabsList>
-              <TabsTrigger value="network">Network</TabsTrigger>
-              <TabsTrigger value="link">Link</TabsTrigger>
-              <TabsTrigger value="email">Email</TabsTrigger>
+          <Tabs defaultValue="link">
+            <TabsList className="w-full">
+              <TabsTrigger value="network" className="flex-grow">
+                Network
+              </TabsTrigger>
+              <TabsTrigger value="link" className="flex-grow">
+                Link
+              </TabsTrigger>
+              <TabsTrigger value="email" className="flex-grow">
+                Email
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="network">
               <NetworkInvite event={event} />
