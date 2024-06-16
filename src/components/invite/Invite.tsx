@@ -50,7 +50,7 @@ const Invite = (props: InviteProps) => {
             <TabsContent
               asChild
               value="network"
-              className="flex-1 overflow-auto"
+              className="flex-1 overflow-auto "
             >
               <NetworkInvite event={event} />
             </TabsContent>

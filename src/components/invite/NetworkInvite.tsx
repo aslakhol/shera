@@ -62,7 +62,7 @@ export const NetworkInvite = ({ event }: Props) => {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-2 overflow-auto">
+    <div className="flex flex-1 flex-col gap-2 overflow-auto p-1">
       <Input
         type="search"
         id="search"
@@ -75,7 +75,7 @@ export const NetworkInvite = ({ event }: Props) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-1 flex-col justify-between overflow-auto"
         >
-          <div className="flex-1 overflow-scroll">
+          <div className="flex-1 overflow-scroll p-1">
             <FormField
               control={form.control}
               name="friends"
@@ -142,11 +142,11 @@ const NetworkFriend = ({ friend, form, attending }: NetworkFriendProps) => {
         return (
           <FormItem
             key={friend.userId}
-            className="flex flex-row items-start space-x-3 "
+            className="flex flex-row items-start space-x-3"
           >
             <FormLabel
               className={cn(
-                "flex w-full flex-row items-center justify-between rounded px-3 py-1",
+                "flex w-full flex-row items-center justify-between rounded py-1",
                 !attending && "hover:ring",
               )}
             >
