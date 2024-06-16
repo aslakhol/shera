@@ -1,11 +1,4 @@
 import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
 import { type User, type Event } from "@prisma/client";
 import { Input } from "../ui/input";
 import { useState } from "react";
@@ -33,9 +26,9 @@ const FormSchema = z.object({
   }),
 });
 
-type NetworkProps = { event: Event & { host: User } };
+type Props = { event: Event & { host: User } };
 
-export const InviteNetwork = ({ event }: NetworkProps) => {
+export const NetworkInvite = ({ event }: Props) => {
   const [search, setSearch] = useState("");
   const session = useSession();
 
