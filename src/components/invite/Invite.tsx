@@ -32,8 +32,11 @@ const Invite = (props: InviteProps) => {
           <DialogHeader>
             <DialogTitle className="text-primary">Invite</DialogTitle>
           </DialogHeader>
-          <Tabs defaultValue="network" className="flex flex-grow flex-col">
-            <TabsList className="w-full">
+          <Tabs
+            defaultValue="network"
+            className="flex flex-1 flex-col overflow-auto"
+          >
+            <TabsList className="mb-2 w-full">
               <TabsTrigger value="network" className="flex-grow">
                 Network
               </TabsTrigger>
@@ -44,17 +47,19 @@ const Invite = (props: InviteProps) => {
                 Email
               </TabsTrigger>
             </TabsList>
-            <div className="flex-grow">
-              <TabsContent value="network" className="h-full">
-                <NetworkInvite event={event} />
-              </TabsContent>
-              <TabsContent value="link" className="h-full">
-                <LinkInvite event={event} />
-              </TabsContent>
-              <TabsContent value="email" className="h-full">
-                <EmailInvite event={event} />
-              </TabsContent>
-            </div>
+            <TabsContent
+              asChild
+              value="network"
+              className="flex-1 overflow-auto"
+            >
+              <NetworkInvite event={event} />
+            </TabsContent>
+            <TabsContent asChild value="link" className="h-full">
+              <LinkInvite event={event} />
+            </TabsContent>
+            <TabsContent asChild value="email" className="h-full">
+              <EmailInvite event={event} />
+            </TabsContent>
           </Tabs>
         </DialogContent>
       </Dialog>

@@ -62,54 +62,54 @@ export const NetworkInvite = ({ event }: Props) => {
   };
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex gap-1.5">
-        <Input
-          type="search"
-          id="search"
-          value={search}
-          placeholder="Search for person or event"
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+    <div className="flex flex-1 flex-col gap-2 overflow-auto">
+      <Input
+        type="search"
+        id="search"
+        value={search}
+        placeholder="Search for person or event"
+        onChange={(e) => setSearch(e.target.value)}
+      />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-grow flex-col justify-between"
+          className="flex flex-1 flex-col justify-between overflow-auto"
         >
-          <FormField
-            control={form.control}
-            name="friends"
-            render={() => (
-              <FormItem>
-                {networkQuery.data
-                  ?.filter(
-                    (f) =>
-                      f.name
-                        .toLocaleLowerCase()
-                        .includes(search.toLocaleLowerCase()) ||
-                      f.events.some((e) =>
-                        e.title
+          <div className="flex-1 overflow-scroll">
+            <FormField
+              control={form.control}
+              name="friends"
+              render={() => (
+                <FormItem>
+                  {networkQuery.data
+                    ?.filter(
+                      (f) =>
+                        f.name
                           .toLocaleLowerCase()
-                          .includes(search.toLocaleLowerCase()),
-                      ),
-                  )
-                  .map((friend) => (
-                    <NetworkFriend
-                      friend={friend}
-                      key={friend.userId}
-                      form={form}
-                      attending={
-                        attendeesQuery.data?.some(
-                          (a) => a.userId === friend.userId,
-                        ) ?? false
-                      }
-                    />
-                  ))}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                          .includes(search.toLocaleLowerCase()) ||
+                        f.events.some((e) =>
+                          e.title
+                            .toLocaleLowerCase()
+                            .includes(search.toLocaleLowerCase()),
+                        ),
+                    )
+                    .map((friend) => (
+                      <NetworkFriend
+                        friend={friend}
+                        key={friend.userId}
+                        form={form}
+                        attending={
+                          attendeesQuery.data?.some(
+                            (a) => a.userId === friend.userId,
+                          ) ?? false
+                        }
+                      />
+                    ))}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <Button
             variant="outline"
             className="w-full"
