@@ -151,7 +151,9 @@ const NetworkFriend = ({ friend, form, attending }: NetworkFriendProps) => {
               )}
             >
               <div className={cn(attending && "opacity-50")}>
-                <p className="text-md font-medium">{friend.name}</p>
+                <p className="text-md line-clamp-1 font-medium">
+                  {friend.name}
+                </p>
                 <p className="line-clamp-1 text-sm font-normal">
                   {!attending ? events : "Already invited"}
                 </p>
