@@ -35,7 +35,7 @@ export const eventsRouter = createTRPCRouter({
           host: { connect: { id: userId } },
           attendees: {
             create: {
-              name: hostName ?? "Host",
+              name: hostName ?? hostEmail ?? "Unknown",
               email: hostEmail,
               status: "GOING",
               userId: userId,
