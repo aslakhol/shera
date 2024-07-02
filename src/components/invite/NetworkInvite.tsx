@@ -68,6 +68,17 @@ export const NetworkInvite = ({ event }: Props) => {
     });
   };
 
+  const friends =
+    networkQuery.data
+      ?.filter(
+        (f) =>
+          f.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+          f.events.some((e) =>
+            e.title.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+          ),
+      )
+      .sort((a, b) => a.name.localeCompare(b.name)) ?? [];
+
   return (
     <div className="flex flex-1 flex-col gap-2 overflow-auto p-1">
       <Input
@@ -88,30 +99,18 @@ export const NetworkInvite = ({ event }: Props) => {
               name="friends"
               render={() => (
                 <FormItem>
-                  {networkQuery.data
-                    ?.filter(
-                      (f) =>
-                        f.name
-                          .toLocaleLowerCase()
-                          .includes(search.toLocaleLowerCase()) ||
-                        f.events.some((e) =>
-                          e.title
-                            .toLocaleLowerCase()
-                            .includes(search.toLocaleLowerCase()),
-                        ),
-                    )
-                    .map((friend) => (
-                      <NetworkFriend
-                        friend={friend}
-                        key={friend.userId}
-                        form={form}
-                        attending={
-                          attendeesQuery.data?.some(
-                            (a) => a.userId === friend.userId,
-                          ) ?? false
-                        }
-                      />
-                    ))}
+                  {friends.map((friend) => (
+                    <NetworkFriend
+                      friend={friend}
+                      key={friend.userId}
+                      form={form}
+                      attending={
+                        attendeesQuery.data?.some(
+                          (a) => a.userId === friend.userId,
+                        ) ?? false
+                      }
+                    />
+                  ))}
                   <FormMessage />
                 </FormItem>
               )}
