@@ -6,7 +6,7 @@ import {
   eventSchema,
   loggedInAttendEventSchema,
 } from "../../../utils/formValidation";
-import { type Prisma } from "@prisma/client";
+import { type User, type Prisma } from "@prisma/client";
 import sgEmail from "@sendgrid/mail";
 import { fullEventId } from "../../../utils/event";
 import { env } from "../../../env";
@@ -457,6 +457,55 @@ export const eventsRouter = createTRPCRouter({
           fromHasNoExistingUser +
           emails.length -
           notAlreadyAttending.length,
+      };
+    }),
+  networkInvite: publicProcedure
+    .input(
+      z.object({
+        publicId: z.string(),
+        friendsUserIds: z.array(z.string()),
+        inviterName: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { publicId, friendsUserIds, inviterName } = input;
+
+      const event = await ctx.db.event.findFirst({
+        where: {
+          publicId: publicId,
+        },
+      });
+
+      if (!event) {
+        throw new Error("Event not found");
+      }
+
+      const friends = await ctx.db.user.findMany({
+        where: { id: { in: friendsUserIds }, email: { not: null } },
+      });
+
+      await ctx.db.attendee.createMany({
+        data: friends.map((friend) => ({
+          eventId: event.eventId,
+          userId: friend.id,
+          name: friend.name ?? friend.email ?? "Unknown",
+          email: friend.email,
+          status: "INVITED",
+        })),
+      });
+
+      const path = fullEventId(event);
+      await ctx.res?.revalidate(`/events/${path}`);
+
+      const friendEmails = friends
+        .map((friend) => friend.email)
+        .filter((email): email is string => !!email);
+
+      const inviteEmail = getInviteEmail(event, friendEmails, inviterName);
+      await sgEmail.sendMultiple(inviteEmail);
+
+      return {
+        invites: friends.length,
       };
     }),
 });

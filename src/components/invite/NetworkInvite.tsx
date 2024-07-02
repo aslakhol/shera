@@ -31,6 +31,7 @@ type Props = { event: Event & { host: User } };
 export const NetworkInvite = ({ event }: Props) => {
   const [search, setSearch] = useState("");
   const session = useSession();
+  const networkInviteMutation = api.events.networkInvite.useMutation();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -50,6 +51,15 @@ export const NetworkInvite = ({ event }: Props) => {
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     toast.success("saldjlkasjldkj " + JSON.stringify(data, null, 2));
+
+    networkInviteMutation.mutate(
+      {
+        publicId: event.publicId,
+        friendsUserIds: data.friends,
+        inviterName: session.data?.user.name ?? undefined,
+      },
+      { onSuccess: (res) => toast.success("Invites sent: " + res.invites) },
+    );
 
     // toast.success({
     //   title: "You submitted the following values:",
