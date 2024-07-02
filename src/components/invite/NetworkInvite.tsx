@@ -40,6 +40,7 @@ export const NetworkInvite = ({ event }: Props) => {
       void utils.events.attendees.invalidate({
         publicId: event.publicId,
       });
+      form.reset();
     },
   });
 
