@@ -373,7 +373,7 @@ export const eventsRouter = createTRPCRouter({
 
       return attendees;
     }),
-  invite: publicProcedure
+  emailInvite: publicProcedure
     .input(
       z.object({
         publicId: z.string(),

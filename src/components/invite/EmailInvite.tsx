@@ -24,7 +24,7 @@ export const EmailInvite = ({ event }: Props) => {
   const [emailInput, setEmailInput] = useState("");
   const [emails, setEmails] = useState<string[]>([]);
   const utils = api.useUtils();
-  const inviteMutation = api.events.invite.useMutation({
+  const emailInviteMutation = api.events.emailInvite.useMutation({
     onSuccess: (response) => {
       toast.success(
         `${response.totalInvites} invite${response.totalInvites > 1 ? "s" : ""} sent.`,
@@ -65,7 +65,7 @@ export const EmailInvite = ({ event }: Props) => {
       invited?.every((a) => a.email !== email),
     );
 
-    inviteMutation.mutate({
+    emailInviteMutation.mutate({
       publicId: event.publicId,
       emails: emailsToSend,
       inviterName: event.host.name ?? undefined,
@@ -125,7 +125,7 @@ export const EmailInvite = ({ event }: Props) => {
         disabled={
           emailInput.trim().length !== 0 ||
           emails.length === 0 ||
-          inviteMutation.isLoading
+          emailInviteMutation.isLoading
         }
       >
         Send invite emails
