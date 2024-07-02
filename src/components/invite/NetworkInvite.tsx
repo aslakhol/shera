@@ -121,7 +121,10 @@ export const NetworkInvite = ({ event }: Props) => {
             variant="outline"
             className="w-full"
             type="submit"
-            disabled={form.watch("friends").length === 0}
+            disabled={
+              form.watch("friends").length === 0 ||
+              networkInviteMutation.isLoading
+            }
           >
             Send invites
           </Button>

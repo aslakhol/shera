@@ -122,7 +122,11 @@ export const EmailInvite = ({ event }: Props) => {
         variant="outline"
         className="w-full"
         onClick={handleSend}
-        disabled={emailInput.trim().length !== 0 || emails.length === 0}
+        disabled={
+          emailInput.trim().length !== 0 ||
+          emails.length === 0 ||
+          inviteMutation.isLoading
+        }
       >
         Send invite emails
       </Button>
