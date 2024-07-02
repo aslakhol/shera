@@ -30,8 +30,18 @@ type Props = { event: Event & { host: User } };
 
 export const NetworkInvite = ({ event }: Props) => {
   const [search, setSearch] = useState("");
+  const utils = api.useUtils();
   const session = useSession();
-  const networkInviteMutation = api.events.networkInvite.useMutation();
+  const networkInviteMutation = api.events.networkInvite.useMutation({
+    onSuccess: (response) => {
+      toast.success(
+        `${response.invites} invite${response.invites > 1 ? "s" : ""} sent.`,
+      );
+      void utils.events.attendees.invalidate({
+        publicId: event.publicId,
+      });
+    },
+  });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -50,25 +60,11 @@ export const NetworkInvite = ({ event }: Props) => {
   );
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    toast.success("saldjlkasjldkj " + JSON.stringify(data, null, 2));
-
-    networkInviteMutation.mutate(
-      {
-        publicId: event.publicId,
-        friendsUserIds: data.friends,
-        inviterName: session.data?.user.name ?? undefined,
-      },
-      { onSuccess: (res) => toast.success("Invites sent: " + res.invites) },
-    );
-
-    // toast.success({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // });
+    networkInviteMutation.mutate({
+      publicId: event.publicId,
+      friendsUserIds: data.friends,
+      inviterName: session.data?.user.name ?? undefined,
+    });
   };
 
   return (
