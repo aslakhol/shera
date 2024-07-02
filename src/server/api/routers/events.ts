@@ -474,14 +474,23 @@ export const eventsRouter = createTRPCRouter({
         where: {
           publicId: publicId,
         },
+        include: { attendees: true },
       });
 
       if (!event) {
         throw new Error("Event not found");
       }
 
+      const notAlreadyAttending = friendsUserIds.filter((id) =>
+        event.attendees.some((a) => a.userId !== id),
+      );
+
+      if (notAlreadyAttending.length === 0) {
+        throw new Error("All invitees are already attending");
+      }
+
       const friends = await ctx.db.user.findMany({
-        where: { id: { in: friendsUserIds }, email: { not: null } },
+        where: { id: { in: notAlreadyAttending }, email: { not: null } },
       });
 
       await ctx.db.attendee.createMany({
@@ -506,6 +515,7 @@ export const eventsRouter = createTRPCRouter({
 
       return {
         invites: friends.length,
+        alreadyAttending: friendsUserIds.length - notAlreadyAttending.length,
       };
     }),
 });
