@@ -6,11 +6,13 @@ import {
   eventSchema,
   loggedInAttendEventSchema,
 } from "../../../utils/formValidation";
-import { type Prisma } from "@prisma/client";
+import { type User, type Prisma } from "@prisma/client";
 import sgEmail from "@sendgrid/mail";
 import { fullEventId } from "../../../utils/event";
 import { env } from "../../../env";
 import { getInviteEmail } from "../../../../emails/utils";
+import { title } from "process";
+import { type UserNetwork } from "../../../utils/types";
 
 sgEmail.setApiKey(env.SENDGRID_API_KEY);
 
@@ -33,7 +35,7 @@ export const eventsRouter = createTRPCRouter({
           host: { connect: { id: userId } },
           attendees: {
             create: {
-              name: hostName ?? "Host",
+              name: hostName ?? hostEmail ?? "Unknown",
               email: hostEmail,
               status: "GOING",
               userId: userId,
@@ -191,98 +193,73 @@ export const eventsRouter = createTRPCRouter({
       await ctx.res?.revalidate(`/events/${path}`);
       return attendee;
     }),
-  attend: publicProcedure
-    .input(attendEventSchema.extend({ publicId: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const { publicId, ...attendee } = input;
-
-      const eventInDb = await ctx.db.event.update({
-        where: { publicId },
-        data: { attendees: { create: { ...attendee } } },
-      });
-
-      const path = fullEventId(eventInDb);
-      await ctx.res?.revalidate(`/events/${path}`);
-
-      return {
-        event: eventInDb,
+  network: publicProcedure
+    .input(z.object({ userId: z.string().cuid() }))
+    .query(async ({ input, ctx }) => {
+      const attends: Prisma.EventWhereInput = {
+        attendees: { some: { userId: input.userId } },
       };
-    }),
-  loggedInAttend: publicProcedure
-    .input(
-      loggedInAttendEventSchema.extend({
-        publicId: z.string(),
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const { publicId, ...attendee } = input;
-
-      const eventInDb = await ctx.db.event.update({
-        where: { publicId },
-        data: { attendees: { create: { ...attendee } } },
-      });
-
-      const path = fullEventId(eventInDb);
-      await ctx.res?.revalidate(`/events/${path}`);
-
-      return {
-        event: eventInDb,
+      const hosts: Prisma.EventWhereInput = {
+        host: { id: input.userId },
       };
-    }),
-  reattend: publicProcedure
-    .input(z.object({ attendeeId: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const { attendeeId } = input;
-
-      const attendeeInDb = await ctx.db.attendee.update({
-        where: { attendeeId },
-        data: { status: "GOING" },
-        include: { event: true },
+      const myEvents = await ctx.db.event.findMany({
+        where: {
+          OR: [hosts, attends],
+        },
+        include: {
+          attendees: true,
+        },
+        orderBy: { dateTime: "desc" },
       });
 
-      const path = fullEventId(attendeeInDb.event);
-      await ctx.res?.revalidate(`/events/${path}`);
-
-      return {
-        attendee: attendeeInDb,
-      };
-    }),
-  unattend: publicProcedure
-    .input(z.object({ attendeeId: z.string().cuid() }))
-    .mutation(async ({ input, ctx }) => {
-      const attendeeInDb = await ctx.db.attendee.findFirst({
-        where: { attendeeId: input.attendeeId },
-      });
-
-      if (!attendeeInDb) {
-        throw new Error("Attendee not found");
+      if (myEvents.length === 0) {
+        return [];
       }
 
-      if (attendeeInDb.userId) {
-        const updatedAttendee = await ctx.db.attendee.update({
-          where: { attendeeId: input.attendeeId },
-          data: { status: "NOT_GOING" },
-          include: { event: true },
+      const userNetwork: UserNetwork = myEvents.reduce((acc, event) => {
+        const attendees = event.attendees
+          .filter((a) => a.userId !== input.userId)
+          .filter((a) => a.status !== "NOT_GOING");
+        if (attendees.length === 0) {
+          return acc;
+        }
+
+        const existingUpdated: UserNetwork = acc.map((userInNetwork) => {
+          const isAttendee = attendees.find(
+            (a) => a.userId === userInNetwork.userId,
+          );
+
+          if (!isAttendee) {
+            return userInNetwork;
+          }
+
+          return {
+            ...userInNetwork,
+            events: [
+              ...userInNetwork.events,
+              { publicId: event.publicId, title: event.title },
+            ],
+          };
         });
 
-        const path = fullEventId(updatedAttendee.event);
-        await ctx.res?.revalidate(`/events/${path}`);
+        const notAlreadyInNetwork: UserNetwork = attendees
+          .filter((a) => !existingUpdated.find((u) => u.userId === a.userId))
+          .filter((a) => a.email !== null && a.userId !== null)
+          .map((attendee) => ({
+            userId: attendee.userId!,
+            name: attendee.name,
+            events: [
+              {
+                publicId: event.publicId,
+                title: event.title,
+              },
+            ],
+          }));
 
-        return {
-          attendee: updatedAttendee,
-        };
-      }
+        return [...existingUpdated, ...notAlreadyInNetwork];
+      }, [] as UserNetwork);
 
-      const attendee = await ctx.db.attendee.delete({
-        where: { attendeeId: input.attendeeId },
-        include: { event: true },
-      });
-      const path = fullEventId(attendee.event);
-      await ctx.res?.revalidate(`/events/${path}`);
-
-      return {
-        attendee,
-      };
+      return userNetwork;
     }),
   attendees: publicProcedure
     .input(z.object({ publicId: z.string() }))
@@ -303,7 +280,7 @@ export const eventsRouter = createTRPCRouter({
 
       return attendees;
     }),
-  invite: publicProcedure
+  emailInvite: publicProcedure
     .input(
       z.object({
         publicId: z.string(),
@@ -387,6 +364,65 @@ export const eventsRouter = createTRPCRouter({
           fromHasNoExistingUser +
           emails.length -
           notAlreadyAttending.length,
+      };
+    }),
+  networkInvite: publicProcedure
+    .input(
+      z.object({
+        publicId: z.string(),
+        friendsUserIds: z.array(z.string()),
+        inviterName: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { publicId, friendsUserIds, inviterName } = input;
+
+      const event = await ctx.db.event.findFirst({
+        where: {
+          publicId: publicId,
+        },
+        include: { attendees: true },
+      });
+
+      if (!event) {
+        throw new Error("Event not found");
+      }
+
+      const notAlreadyAttending = friendsUserIds.filter((id) =>
+        event.attendees.some((a) => a.userId !== id),
+      );
+
+      if (notAlreadyAttending.length === 0) {
+        throw new Error("All invitees are already attending");
+      }
+
+      const friends = await ctx.db.user.findMany({
+        where: { id: { in: notAlreadyAttending }, email: { not: null } },
+      });
+
+      await ctx.db.attendee.createMany({
+        data: friends.map((friend) => ({
+          eventId: event.eventId,
+          userId: friend.id,
+          name: friend.name ?? friend.email ?? "Unknown",
+          email: friend.email,
+          status: "INVITED",
+        })),
+      });
+
+      const path = fullEventId(event);
+      await ctx.res?.revalidate(`/events/${path}`);
+
+      const friendEmails = friends
+        .map((friend) => friend.email)
+        .filter((email): email is string => !!email);
+
+      const inviteEmail = getInviteEmail(event, friendEmails, inviterName);
+      await sgEmail.sendMultiple(inviteEmail);
+
+      return {
+        invites: friends.length,
+        alreadyAttending: friendsUserIds.length - notAlreadyAttending.length,
       };
     }),
 });

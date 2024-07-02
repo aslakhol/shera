@@ -9,7 +9,8 @@ import {
 import { Button } from "../ui/button";
 import { LinkInvite } from "./LinkInvite";
 import { EmailInvite } from "./EmailInvite";
-import { Separator } from "../ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { NetworkInvite } from "./NetworkInvite";
 
 type InviteProps = {
   event: Event & {
@@ -26,13 +27,39 @@ const Invite = (props: InviteProps) => {
         <Button asChild variant="outline">
           <DialogTrigger>Invite</DialogTrigger>
         </Button>
-        <DialogContent>
+        <DialogContent className="flex h-[50vh] flex-col">
           <DialogHeader>
             <DialogTitle className="text-primary">Invite</DialogTitle>
           </DialogHeader>
-          <LinkInvite event={event} />
-          <Separator />
-          <EmailInvite event={event} />
+          <Tabs
+            defaultValue="network"
+            className="flex flex-1 flex-col overflow-auto"
+          >
+            <TabsList className="mb-2 w-full">
+              <TabsTrigger value="network" className="flex-grow">
+                Network
+              </TabsTrigger>
+              <TabsTrigger value="link" className="flex-grow">
+                Link
+              </TabsTrigger>
+              <TabsTrigger value="email" className="flex-grow">
+                Email
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent
+              asChild
+              value="network"
+              className="flex-1 overflow-auto "
+            >
+              <NetworkInvite event={event} />
+            </TabsContent>
+            <TabsContent asChild value="link" className="h-full">
+              <LinkInvite event={event} />
+            </TabsContent>
+            <TabsContent asChild value="email" className="h-full">
+              <EmailInvite event={event} />
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </>
