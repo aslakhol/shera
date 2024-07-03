@@ -10,6 +10,11 @@ export const columns: ColumnDef<
   Event & { host: User; attendees: Attendee[] }
 >[] = [
   {
+    accessorKey: "eventId",
+    header: ({ column }) => <SortHeader headerTitle="ID" column={column} />,
+    cell: (info) => info.getValue(),
+  },
+  {
     accessorKey: "dateTime",
     header: ({ column }) => <SortHeader headerTitle="Date" column={column} />,
     accessorFn: (row) => format(row.dateTime, "LLLL do, H:mm"),
