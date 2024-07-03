@@ -53,6 +53,9 @@ export const columns: ColumnDef<
   {
     accessorKey: "place",
     header: ({ column }) => <SortHeader headerTitle="Place" column={column} />,
+    cell: (info) => (
+      <div className="line-clamp-1">{info.getValue<string>()}</div>
+    ),
   },
   {
     accessorKey: "attendees.length",
