@@ -17,7 +17,7 @@ export const columns: ColumnDef<
   {
     accessorKey: "dateTime",
     header: ({ column }) => <SortHeader headerTitle="Date" column={column} />,
-    accessorFn: (row) => format(row.dateTime, "LLLL do, H:mm, yyyy"),
+    accessorFn: (row) => format(row.dateTime, "d/LL/yy HH:mm"),
     filterFn: (row, _, filterValue) => {
       const date = row.original.dateTime;
       if (!date || !filterValue) {
