@@ -30,7 +30,13 @@ const NewPost = (props: NewPostProps) => {
 
   const { data: session } = useSession();
   const utils = api.useUtils();
-  const postMutation = api.posts.post.useMutation();
+  const postMutation = api.posts.post.useMutation({
+    onSuccess: () => {
+      form.reset();
+      setDialogOpen(false);
+      return utils.posts.posts.invalidate({ publicId: publicId });
+    },
+  });
 
   const form = useZodForm({
     schema: postSchema,
@@ -41,20 +47,11 @@ const NewPost = (props: NewPostProps) => {
       return;
     }
 
-    postMutation.mutate(
-      {
-        ...values,
-        authorId: session.user.id,
-        publicId: publicId,
-      },
-      {
-        onSuccess: () => {
-          form.reset();
-          void utils.posts.posts.invalidate({ publicId: publicId });
-          setDialogOpen(false);
-        },
-      },
-    );
+    postMutation.mutate({
+      ...values,
+      authorId: session.user.id,
+      publicId: publicId,
+    });
   };
 
   return (
@@ -84,8 +81,8 @@ const NewPost = (props: NewPostProps) => {
                 )}
               />
 
-              <Button type="submit" disabled={!postMutation.isIdle}>
-                {postMutation.isIdle ? "Post" : <Loading />}
+              <Button type="submit" disabled={postMutation.isLoading}>
+                {!postMutation.isLoading ? "Post" : <Loading />}
               </Button>
             </form>
           </Form>

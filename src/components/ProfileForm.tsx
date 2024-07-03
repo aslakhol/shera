@@ -26,7 +26,8 @@ export const ProfileForm = ({ user }: Props) => {
   const updateProfileMutation = api.users.updateProfile.useMutation({
     onSuccess: () => {
       toast.success("Profile updated");
-      router.reload();
+      form.reset();
+      return router.reload();
     },
     onError: (error) => {
       toast.error(error.message);
@@ -87,7 +88,7 @@ export const ProfileForm = ({ user }: Props) => {
         />
         <Button
           type="submit"
-          disabled={!form.formState.isDirty || !updateProfileMutation.isIdle}
+          disabled={!form.formState.isDirty || updateProfileMutation.isLoading}
         >
           Submit
         </Button>

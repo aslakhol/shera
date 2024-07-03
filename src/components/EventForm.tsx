@@ -22,10 +22,10 @@ import { TimePicker } from "./ui/timepicker/time-picker";
 type Props = {
   event?: Event;
   onSubmit: (values: EventSchemaType) => void;
-  mutationIsIdle: boolean;
+  mutationIsLoading: boolean;
 };
 
-export const EventForm = ({ event, onSubmit, mutationIsIdle }: Props) => {
+export const EventForm = ({ event, onSubmit, mutationIsLoading }: Props) => {
   const form = useZodForm({
     schema: eventSchema,
     defaultValues: {
@@ -132,7 +132,7 @@ export const EventForm = ({ event, onSubmit, mutationIsIdle }: Props) => {
           )}
         />
 
-        <Button type="submit" disabled={!mutationIsIdle}>
+        <Button type="submit" disabled={mutationIsLoading}>
           Submit
         </Button>
       </form>

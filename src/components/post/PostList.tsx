@@ -74,18 +74,15 @@ type ConfirmDeleteProps = { post: PostType & { author: User; event: Event } };
 const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const utils = api.useUtils();
-  const deletePostMutation = api.posts.deletePost.useMutation();
+  const deletePostMutation = api.posts.deletePost.useMutation({
+    onSuccess: () => {
+      setDialogOpen(false);
+      return utils.posts.posts.invalidate({ publicId: post.event.publicId });
+    },
+  });
 
   const deletePost = () => {
-    deletePostMutation.mutate(
-      { postId: post.postId },
-      {
-        onSuccess: () => {
-          setDialogOpen(false);
-          void utils.posts.posts.invalidate({ publicId: post.event.publicId });
-        },
-      },
-    );
+    deletePostMutation.mutate({ postId: post.postId });
   };
 
   return (
@@ -105,9 +102,9 @@ const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
             <Button
               variant="destructive"
               onClick={deletePost}
-              disabled={!deletePostMutation.isIdle}
+              disabled={deletePostMutation.isLoading}
             >
-              {deletePostMutation.isIdle ? "Delete" : <Loading />}
+              {!deletePostMutation.isLoading ? "Delete" : <Loading />}
             </Button>
           </DialogFooter>
         </DialogHeader>
