@@ -27,8 +27,6 @@ export const CreateEvent = () => {
     createEventMutation.mutate({
       userId: session.data.user.id,
       ...values,
-      hostEmail: session.data.user.email ?? undefined,
-      hostName: session.data.user.name ?? undefined,
     });
   };
 

@@ -1,17 +1,12 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { compareDesc } from "date-fns";
-import {
-  attendEventSchema,
-  eventSchema,
-  loggedInAttendEventSchema,
-} from "../../../utils/formValidation";
-import { type User, type Prisma } from "@prisma/client";
+import { eventSchema } from "../../../utils/formValidation";
+import { type Prisma } from "@prisma/client";
 import sgEmail from "@sendgrid/mail";
 import { fullEventId } from "../../../utils/event";
 import { env } from "../../../env";
 import { getInviteEmail } from "../../../../emails/utils";
-import { title } from "process";
 import { type UserNetwork } from "../../../utils/types";
 
 sgEmail.setApiKey(env.SENDGRID_API_KEY);
@@ -21,12 +16,14 @@ export const eventsRouter = createTRPCRouter({
     .input(
       eventSchema.extend({
         userId: z.string(),
-        hostName: z.string().optional(),
-        hostEmail: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { userId, hostName, hostEmail, ...event } = input;
+      const { userId, ...event } = input;
+
+      const host = await ctx.db.user.findFirst({
+        where: { id: userId },
+      });
 
       const eventInDb = await ctx.db.event.create({
         data: {
@@ -35,8 +32,8 @@ export const eventsRouter = createTRPCRouter({
           host: { connect: { id: userId } },
           attendees: {
             create: {
-              name: hostName ?? hostEmail ?? "Unknown",
-              email: hostEmail,
+              name: host?.name ?? host?.email ?? "Unknown",
+              email: host?.email,
               status: "GOING",
               userId: userId,
             },
