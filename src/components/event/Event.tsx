@@ -21,16 +21,6 @@ type Props = { publicId: string };
 export const Event = ({ publicId }: Props) => {
   const { data: event, isSuccess } = api.events.event.useQuery({ publicId });
   const { data: session } = useSession();
-  const networkQuery = api.events.network.useQuery(
-    {
-      userId: session?.user.id ?? "",
-    },
-    {
-      enabled: !!session?.user.id,
-    },
-  );
-
-  console.log(networkQuery.data);
 
   if (!isSuccess) {
     return <Loading />;
