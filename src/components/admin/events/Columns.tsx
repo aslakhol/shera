@@ -18,6 +18,7 @@ export const columns: ColumnDef<
     accessorKey: "dateTime",
     header: ({ column }) => <SortHeader headerTitle="Date" column={column} />,
     accessorFn: (row) => format(row.dateTime, "d/LL/yy HH:mm"),
+    sortingFn: "datetime",
     filterFn: (row, _, filterValue) => {
       const date = row.original.dateTime;
       if (!date || !filterValue) {
@@ -35,6 +36,7 @@ export const columns: ColumnDef<
   },
   {
     accessorKey: "createdAt",
+    sortingFn: "datetime",
     header: ({ column }) => (
       <SortHeader headerTitle="Created" column={column} />
     ),
