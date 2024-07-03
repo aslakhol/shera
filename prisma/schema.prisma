@@ -16,6 +16,8 @@ model Event {
     place       String?
     hostId      String
     dateTime    DateTime
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @default(now()) @updatedAt
     attendees   Attendee[]
     host        User       @relation(fields: [hostId], references: [id])
     posts       Post[]

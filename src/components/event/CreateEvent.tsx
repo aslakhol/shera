@@ -12,7 +12,7 @@ export const CreateEvent = () => {
   const createEventMutation = api.events.createEvent.useMutation({
     onSuccess: (response) => {
       toast.success(`${response.event.title} created!`);
-      void router.push(`/events/${fullEventId(response.event)}`);
+      return router.push(`/events/${fullEventId(response.event)}`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -35,7 +35,7 @@ export const CreateEvent = () => {
   return (
     <EventForm
       onSubmit={createEvent}
-      mutationIsIdle={createEventMutation.isIdle}
+      mutationIsLoading={createEventMutation.isLoading}
     />
   );
 };

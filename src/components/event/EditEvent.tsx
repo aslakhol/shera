@@ -18,7 +18,7 @@ export const EditEvent = ({ publicId }: Props) => {
   const updateEventMutation = api.events.updateEvent.useMutation({
     onSuccess: (response) => {
       toast.success(`${response.event.title} updated`);
-      void router.push(`/events/${fullEventId(response.event)}`);
+      return router.push(`/events/${fullEventId(response.event)}`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -45,7 +45,7 @@ export const EditEvent = ({ publicId }: Props) => {
     <EventForm
       onSubmit={createEvent}
       event={eventQuery.data}
-      mutationIsIdle={updateEventMutation.isIdle}
+      mutationIsLoading={updateEventMutation.isLoading}
     />
   );
 };

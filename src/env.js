@@ -24,7 +24,7 @@ export const env = createEnv({
       process.env.VERCEL ? z.string() : z.string().url(),
     ),
     SENDGRID_API_KEY: z.string(),
-    EMAIL_FROM: z.string().email(),
+    EMAIL_FROM: z.string(),
     BASE_URL: z.string().url(),
     CRON_SECRET: z.string(),
     GOOGLE_CLIENT_ID: z.string(),

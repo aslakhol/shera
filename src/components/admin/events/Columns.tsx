@@ -10,9 +10,14 @@ export const columns: ColumnDef<
   Event & { host: User; attendees: Attendee[] }
 >[] = [
   {
+    accessorKey: "eventId",
+    header: ({ column }) => <SortHeader headerTitle="ID" column={column} />,
+    cell: (info) => info.getValue(),
+  },
+  {
     accessorKey: "dateTime",
     header: ({ column }) => <SortHeader headerTitle="Date" column={column} />,
-    accessorFn: (row) => format(row.dateTime, "LLLL do, H:mm"),
+    accessorFn: (row) => format(row.dateTime, "d/LL/yy HH:mm"),
     filterFn: (row, _, filterValue) => {
       const date = row.original.dateTime;
       if (!date || !filterValue) {
@@ -29,6 +34,13 @@ export const columns: ColumnDef<
     },
   },
   {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <SortHeader headerTitle="Created" column={column} />
+    ),
+    accessorFn: (row) => format(row.createdAt, "d/LL/yy HH:mm"),
+  },
+  {
     accessorKey: "title",
     header: ({ column }) => <SortHeader headerTitle="Title" column={column} />,
     cell: (info) => info.getValue(),
@@ -41,6 +53,9 @@ export const columns: ColumnDef<
   {
     accessorKey: "place",
     header: ({ column }) => <SortHeader headerTitle="Place" column={column} />,
+    cell: (info) => (
+      <div className="line-clamp-1">{info.getValue<string>()}</div>
+    ),
   },
   {
     accessorKey: "attendees.length",
@@ -50,24 +65,23 @@ export const columns: ColumnDef<
     accessorFn: (row) => row.attendees.length,
   },
   {
-    accessorKey: "attendees.status.going",
-    header: ({ column }) => <SortHeader headerTitle="Going" column={column} />,
-    accessorFn: (row) =>
-      row.attendees.filter((a) => a.status === "GOING").length,
-  },
-  {
-    accessorKey: "attendees.status.notGoing",
-    header: ({ column }) => (
-      <SortHeader headerTitle="Not going" column={column} />
-    ),
-    accessorFn: (row) =>
-      row.attendees.filter((a) => a.status === "NOT_GOING").length,
-  },
-  {
-    accessorKey: "attendees.status.maybe",
-    header: ({ column }) => <SortHeader headerTitle="Maybe" column={column} />,
-    accessorFn: (row) =>
-      row.attendees.filter((a) => a.status === "MAYBE").length,
+    accessorKey: "attendees.status",
+    header: () => <Header headerTitle="G | N | M | I | U" />,
+    accessorFn: (row) => {
+      const going = row.attendees.filter((a) => a.status === "GOING").length;
+      const notGoing = row.attendees.filter(
+        (a) => a.status === "NOT_GOING",
+      ).length;
+      const maybe = row.attendees.filter((a) => a.status === "MAYBE").length;
+      const invited = row.attendees.filter(
+        (a) => a.status === "INVITED",
+      ).length;
+      const unknown = row.attendees.filter(
+        (a) => a.status === "UNKNOWN",
+      ).length;
+
+      return `${going} | ${notGoing} | ${maybe} | ${invited} | ${unknown}`;
+    },
   },
   {
     accessorKey: "publicId",
