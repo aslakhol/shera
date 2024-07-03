@@ -34,6 +34,13 @@ export const columns: ColumnDef<
     },
   },
   {
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <SortHeader headerTitle="Created" column={column} />
+    ),
+    accessorFn: (row) => format(row.createdAt, "d/LL/yy HH:mm"),
+  },
+  {
     accessorKey: "title",
     header: ({ column }) => <SortHeader headerTitle="Title" column={column} />,
     cell: (info) => info.getValue(),
