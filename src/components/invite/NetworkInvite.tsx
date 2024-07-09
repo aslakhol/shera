@@ -93,7 +93,7 @@ export const NetworkInvite = ({ event }: Props) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-1 flex-col justify-between overflow-auto"
         >
-          <div className="flex-1 overflow-scroll p-1">
+          <div className="flex-1 overflow-scroll">
             <FormField
               control={form.control}
               name="friends"
@@ -151,12 +151,14 @@ const NetworkFriend = ({ friend, form, attending }: NetworkFriendProps) => {
         return (
           <FormItem
             key={friend.userId}
-            className="flex flex-row items-start space-x-3"
+            className={cn(
+              "flex flex-row items-start space-x-3 rounded p-1",
+              !attending && "hover:bg-muted",
+            )}
           >
             <FormLabel
               className={cn(
-                "flex w-full flex-row items-center justify-between rounded py-1",
-                !attending && "hover:ring",
+                "flex w-full cursor-pointer flex-row items-center justify-between rounded py-1",
               )}
             >
               <div className={cn(attending && "opacity-50")}>
