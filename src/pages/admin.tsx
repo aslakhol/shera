@@ -24,22 +24,24 @@ const AdminPage: NextPageWithLayout = () => {
       </h2>
       {isDev ? <Admin /> : <p>You are not authorized to view this page</p>}
       <span>User agent: {userAgent}</span>
-      <Link href={"auth/singin"}>Normal</Link>
-      <Link href={"auth/singin"} target="_blank">
-        _blank
-      </Link>
-      <Link href={"auth/singin"} target="_system">
-        _system
-      </Link>
-      <Link href={"auth/singin"} target="_parent">
-        _parent
-      </Link>
-      <Link href={"auth/singin"} target="_top">
-        _top
-      </Link>
-      <Link href={"auth/singin"} target="_unfencedTop">
-        _unfencedTop
-      </Link>
+      <div className="flex flex-col gap-4">
+        <Link href={"auth/singin"}>Normal</Link>
+        <Link href={"auth/singin"} target="_blank">
+          _blank
+        </Link>
+        <Link href={"auth/singin"} target="_system">
+          _system
+        </Link>
+        <Link href={"auth/singin"} target="_parent">
+          _parent
+        </Link>
+        <Link href={"auth/singin"} target="_top">
+          _top
+        </Link>
+        <Link href={"auth/singin"} target="_unfencedTop">
+          _unfencedTop
+        </Link>
+      </div>
     </div>
   );
 };
