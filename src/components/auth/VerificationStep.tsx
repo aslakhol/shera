@@ -46,9 +46,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
           </InputOTPGroup>
         </InputOTP>
       </div>
-      <div className="text-center text-sm">
-        Input the code from your email above
-      </div>
+      <div className="text-center text-sm">Input the code from your email</div>
     </div>
   );
 };

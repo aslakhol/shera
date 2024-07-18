@@ -29,13 +29,18 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
   }, [email, onSuccess]);
 
   return (
-    <form>
-      <Label htmlFor={"email"}>Email</Label>
+    <form className="grid gap-2">
+      <Label className="sr-only" htmlFor={"email"}>
+        Email
+      </Label>
       <Input
         id={"email"}
         type="email"
         name="email"
-        placeholder="example@company.com"
+        placeholder="your@email.com"
+        autoComplete="email"
+        autoCapitalize="none"
+        autoCorrect="off"
         value={email}
         onChange={(e) => {
           setEmail(e.target.value);
@@ -51,7 +56,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
         disabled={loading}
         onClick={handleSignin}
       >
-        Send code
+        Sign In with Email
       </Button>
     </form>
   );
