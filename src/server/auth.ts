@@ -10,6 +10,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
+import { EmailOtpProvider } from "./emailOtp";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -53,14 +54,18 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
-    EmailProvider({
-      server: {
-        service: "SendGrid",
-        auth: { user: "apikey", pass: env.SENDGRID_API_KEY },
-      },
-      from: env.EMAIL_FROM,
-    }),
+    // EmailProvider({
+    //   server: {
+    //     service: "SendGrid",
+    //     auth: { user: "apikey", pass: env.SENDGRID_API_KEY },
+    //   },
+    //   from: env.EMAIL_FROM,
+    // }),
+    EmailOtpProvider,
   ],
+  pages: {
+    signIn: "/auth/signin",
+  },
 };
 
 /**
