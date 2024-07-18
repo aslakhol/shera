@@ -25,6 +25,7 @@ export const AuthButton = () => {
     );
     setIsEmbedded(embeddedBrowser);
   }, []);
+  console.log(isEmbedded, navigator.userAgent);
 
   if (session.status === "loading") {
     return <div className=" h-10 w-10  rounded-full bg-muted"></div>;
@@ -33,12 +34,7 @@ export const AuthButton = () => {
   if (session.status === "unauthenticated") {
     return (
       <Button asChild variant={"ghost"} className="text-lg">
-        <Link
-          href={"/api/auth/signin"}
-          target={isEmbedded ? "_top" : undefined}
-        >
-          Sign in{isEmbedded ? "." : ""}
-        </Link>
+        <Link href={"/api/auth/signin"}>Sign in</Link>
       </Button>
     );
   }
