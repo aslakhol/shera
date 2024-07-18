@@ -35,7 +35,7 @@ export const AuthButton = () => {
       <Button asChild variant={"ghost"} className="text-lg">
         <Link
           href={"/api/auth/signin"}
-          target={isEmbedded ? "_unfencedTop" : undefined}
+          target={isEmbedded ? "_top" : undefined}
         >
           Sign in{isEmbedded ? "." : ""}
         </Link>
