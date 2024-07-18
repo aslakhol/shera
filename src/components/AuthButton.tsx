@@ -12,9 +12,19 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { User } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export const AuthButton = () => {
   const session = useSession();
+
+  const [isEmbedded, setIsEmbedded] = useState(false);
+
+  useEffect(() => {
+    const embeddedBrowser = /FBAN|FBAV|FBMS|FB_IAB|FB4A|FBAN\/Messenger/.test(
+      navigator.userAgent,
+    );
+    setIsEmbedded(embeddedBrowser);
+  }, []);
 
   if (session.status === "loading") {
     return <div className=" h-10 w-10  rounded-full bg-muted"></div>;
@@ -23,7 +33,12 @@ export const AuthButton = () => {
   if (session.status === "unauthenticated") {
     return (
       <Button asChild variant={"ghost"} className="text-lg">
-        <Link href={"/api/auth/signin"}>Sign in</Link>
+        <Link
+          href={"/api/auth/signin"}
+          target={isEmbedded ? "_blank" : undefined}
+        >
+          Sign in{isEmbedded ? "." : ""}
+        </Link>
       </Button>
     );
   }
