@@ -4,6 +4,7 @@ import { AdminLayout } from "../components/Layout";
 import { useEffect, useState, type ReactElement } from "react";
 import { useIsDev } from "../utils/useIsDev";
 import { Admin } from "../components/admin/Admin";
+import Link from "next/link";
 
 const AdminPage: NextPageWithLayout = () => {
   const isDev = useIsDev();
@@ -23,6 +24,22 @@ const AdminPage: NextPageWithLayout = () => {
       </h2>
       {isDev ? <Admin /> : <p>You are not authorized to view this page</p>}
       <span>User agent: {userAgent}</span>
+      <Link href={"auth/singin"}>Normal</Link>
+      <Link href={"auth/singin"} target="_blank">
+        _blank
+      </Link>
+      <Link href={"auth/singin"} target="_system">
+        _system
+      </Link>
+      <Link href={"auth/singin"} target="_parent">
+        _parent
+      </Link>
+      <Link href={"auth/singin"} target="_top">
+        _top
+      </Link>
+      <Link href={"auth/singin"} target="_unfencedTop">
+        _unfencedTop
+      </Link>
     </div>
   );
 };
