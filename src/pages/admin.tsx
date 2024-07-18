@@ -1,12 +1,20 @@
 import Head from "next/head";
 import { type NextPageWithLayout } from "./_app";
 import { AdminLayout } from "../components/Layout";
-import { type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import { useIsDev } from "../utils/useIsDev";
 import { Admin } from "../components/admin/Admin";
 
 const AdminPage: NextPageWithLayout = () => {
   const isDev = useIsDev();
+
+  const [userAgent, setUserAgent] = useState("");
+
+  useEffect(() => {
+    if (navigator) {
+      setUserAgent(navigator.userAgent);
+    }
+  }, []);
 
   return (
     <div className="p-4">
@@ -14,6 +22,7 @@ const AdminPage: NextPageWithLayout = () => {
         Admin
       </h2>
       {isDev ? <Admin /> : <p>You are not authorized to view this page</p>}
+      <span>User agent: {userAgent}</span>
     </div>
   );
 };
