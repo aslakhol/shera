@@ -25,7 +25,7 @@ export const AuthButton = () => {
     );
     setIsEmbedded(embeddedBrowser);
   }, []);
-  console.log(isEmbedded, navigator.userAgent);
+  console.log(isEmbedded);
 
   if (session.status === "loading") {
     return <div className=" h-10 w-10  rounded-full bg-muted"></div>;
