@@ -23,19 +23,20 @@ interface Provider {
 interface SigninPageProps {
   providers: Array<Provider>;
   csrfToken: string;
+  callbackUrl?: string;
 }
 
-const SigninPage: NextPage<SigninPageProps> = ({ providers }) => {
+const SigninPage: NextPage<SigninPageProps> = (props) => {
   const { query } = useRouter();
   const { error } = query;
-  const callbackUrl = "/home";
+  const callbackUrl = props.callbackUrl ?? "/home";
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const [email, setEmail] = useState("");
   const [showVerificationStep, setShowVerificationStep] = useState(false);
 
-  const googleProvider = Object.values(providers).find(
+  const googleProvider = Object.values(props.providers).find(
     (provider) => provider.id === "google",
   );
 
@@ -115,11 +116,13 @@ SigninPage.getInitialProps = async (context) => {
 
     return {
       providers,
+      callbackUrl: context.query.callbackUrl,
     } as unknown as SigninPageProps;
   }
 
   return {
     providers,
+    callbackUrl: context.query.callbackUrl,
   } as unknown as SigninPageProps;
 };
 

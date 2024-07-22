@@ -13,9 +13,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { User } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 export const AuthButton = () => {
   const session = useSession();
+  const router = useRouter();
 
   const [isEmbedded, setIsEmbedded] = useState(false);
 
@@ -34,7 +36,7 @@ export const AuthButton = () => {
   if (session.status === "unauthenticated") {
     return (
       <Button asChild variant={"ghost"} className="text-lg">
-        <Link href={"/auth/signin"}>Sign in</Link>
+        <Link href={`/auth/signin?callbackUrl=${router.asPath}`}>Sign in</Link>
       </Button>
     );
   }

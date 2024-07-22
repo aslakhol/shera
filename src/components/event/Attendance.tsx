@@ -22,6 +22,7 @@ import { useState } from "react";
 import { cn } from "../../utils/cn";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 type Props = {
   event: Event & {
@@ -49,6 +50,7 @@ type AttendButtonProps = {
 };
 
 const AttendButton = ({ event }: AttendButtonProps) => {
+  const router = useRouter();
   const session = useSession();
   const attendeesQuery = api.events.attendees.useQuery({
     publicId: event.publicId,
@@ -74,7 +76,9 @@ const AttendButton = ({ event }: AttendButtonProps) => {
 
   return (
     <Button asChild variant={"outline"} className="w-full">
-      <Link href={"/api/auth/signin"}>Sign in to attend</Link>
+      <Link href={`/auth/signin?callbackUrl=${router.asPath}`}>
+        Sign in to attend
+      </Link>
     </Button>
   );
 };
