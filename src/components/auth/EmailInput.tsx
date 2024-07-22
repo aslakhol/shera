@@ -6,11 +6,16 @@ import { Label } from "~/components/ui/label";
 
 interface EmailInputProps {
   onSuccess: (email: string) => void;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
+export const EmailInput: React.FC<EmailInputProps> = ({
+  onSuccess,
+  loading,
+  setLoading,
+}) => {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleSignin = useCallback(async () => {
     setLoading(true);
@@ -26,7 +31,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({ onSuccess }) => {
     } else {
       onSuccess(email);
     }
-  }, [email, onSuccess]);
+  }, [email, onSuccess, setLoading]);
 
   return (
     <form className="grid gap-2">

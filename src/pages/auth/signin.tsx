@@ -77,6 +77,8 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers, isLoggedIn }) => {
             setEmail(email);
             setShowVerificationStep(true);
           }}
+          loading={isLoading}
+          setLoading={setIsLoading}
         />
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
