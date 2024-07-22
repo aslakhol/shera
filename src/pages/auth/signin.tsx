@@ -28,7 +28,7 @@ interface SigninPageProps {
 const SigninPage: NextPage<SigninPageProps> = ({ providers }) => {
   const { query } = useRouter();
   const { error } = query;
-  const callbackUrl = "https://your-website.com";
+  const callbackUrl = "/home";
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 

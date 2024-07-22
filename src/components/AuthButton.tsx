@@ -34,7 +34,7 @@ export const AuthButton = () => {
   if (session.status === "unauthenticated") {
     return (
       <Button asChild variant={"ghost"} className="text-lg">
-        <Link href={"/api/auth/signin"}>Sign in</Link>
+        <Link href={"/auth/signin"}>Sign in</Link>
       </Button>
     );
   }
