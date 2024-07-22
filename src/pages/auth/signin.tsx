@@ -10,6 +10,8 @@ import { Input } from "../../components/ui/input";
 import { Loading } from "../../components/Loading";
 import { Button } from "../../components/ui/button";
 import { OAuthAccountNotLinked } from "../../components/auth/AuthErrors";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "../../components/ui/alert";
 
 interface Provider {
   id: string;
@@ -55,6 +57,16 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers, isLoggedIn }) => {
       <div className="flex flex-col space-y-2 text-center">
         <h1 className="pb-2 text-2xl font-semibold tracking-tight">Sign In</h1>
         {error === "OAuthAccountNotLinked" && <OAuthAccountNotLinked />}
+        {error && error !== "OAuthAccountNotLinked" && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription className="pb-2">
+              There has been an error, please try again or contact the developer
+              and send him the URL you are currently on.
+            </AlertDescription>
+          </Alert>
+        )}
         <p className="text-sm text-muted-foreground">
           Enter your email below to receive a one-time code
         </p>
