@@ -32,37 +32,6 @@ export const EmailOtpProvider = EmailProvider({
       html: html({ host, token }),
     });
   },
-  // sendVerificationRequest: ({
-  //   identifier: email,
-  //   url,
-  //   token,
-  //   baseUrl,
-  //   provider,
-  // }) => {
-  //   return new Promise((resolve, reject) => {
-  //     const { server, from } = provider;
-  //     // Strip protocol from URL and use domain as site name
-  //     const site = baseUrl.replace(/^https?:\/\//, "");
-
-  //     nodemailer.createTransport(server).sendMail(
-  //       {
-  //         to: email,
-  //         from,
-  //         subject: `Authentication code: ${token}`,
-  //         text: text({ url, site, email, token }),
-  //         html: html({ url, site, email, token }),
-  //       },
-  //       (error) => {
-  //         if (error) {
-  //           // logger.error('SEND_VERIFICATION_EMAIL_ERROR', email, error);
-  //           console.error("SEND_VERIFICATION_EMAIL_ERROR", email, error);
-  //           return reject(new Error(`SEND_VERIFICATION_EMAIL_ERROR ${error}`));
-  //         }
-  //         return resolve();
-  //       },
-  //     );
-  //   });
-  // },
 });
 
 function text({ host, token }: { host: string; token: string }) {
