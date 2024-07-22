@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { type NextPage } from "next";
 import { useRouter } from "next/dist/client/router";
 import { VerificationStep } from "../../components/auth/VerificationStep";
@@ -39,6 +39,16 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
   const googleProvider = Object.values(props.providers).find(
     (provider) => provider.id === "google",
   );
+
+  const [isEmbedded, setIsEmbedded] = useState(false);
+
+  useEffect(() => {
+    const embeddedBrowser =
+      /FBAN|FBAV|FBMS|FB_IAB|FB4A|FBAN|Instagram|LinkedInApp|Snapchat|\/Messenger/.test(
+        navigator.userAgent,
+      );
+    setIsEmbedded(embeddedBrowser);
+  }, []);
 
   if (showVerificationStep) {
     return (
@@ -86,7 +96,17 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
             </span>
           </div>
         </div>
-        {googleProvider && (
+        {isEmbedded && (
+          <Alert variant="default">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Embedded browser</AlertTitle>
+            <AlertDescription className="pb-2">
+              Google login does not work in embedded browsers. Please use your
+              default browser.
+            </AlertDescription>
+          </Alert>
+        )}
+        {googleProvider && !isEmbedded && (
           <Button
             variant="outline"
             type="button"
