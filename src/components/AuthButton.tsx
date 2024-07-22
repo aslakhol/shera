@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -96,9 +96,9 @@ const SignedInContent = ({ session }: SignedInContentProps) => {
         </Link>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
-      <Link href={"/api/auth/signout"}>
-        <DropdownMenuItem>Sign out</DropdownMenuItem>
-      </Link>
+      <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
+        Sign out
+      </DropdownMenuItem>
     </>
   );
 };
