@@ -10,6 +10,7 @@ import { Button } from "../../components/ui/button";
 import { OAuthAccountNotLinked } from "../../components/auth/AuthErrors";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "../../components/ui/alert";
+import GoogleIcon from "../../components/auth/GoogleIcon";
 
 interface Provider {
   id: string;
@@ -93,7 +94,7 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers, isLoggedIn }) => {
             disabled={isLoading}
             onClick={() => signIn(googleProvider.id)}
           >
-            {isLoading ? <Loading /> : "(G)"} Google
+            {isLoading ? <Loading /> : <GoogleIcon />} Google
           </Button>
         )}
       </div>
