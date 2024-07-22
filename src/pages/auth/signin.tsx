@@ -5,8 +5,6 @@ import { VerificationStep } from "../../components/auth/VerificationStep";
 import { EmailInput } from "../../components/auth/EmailInput";
 import { getProviders, getSession, signIn } from "next-auth/react";
 import { cn } from "../../utils/cn";
-import { Label } from "../../components/ui/label";
-import { Input } from "../../components/ui/input";
 import { Loading } from "../../components/Loading";
 import { Button } from "../../components/ui/button";
 import { OAuthAccountNotLinked } from "../../components/auth/AuthErrors";
@@ -35,9 +33,7 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers, isLoggedIn }) => {
 
   const [email, setEmail] = useState("");
   const [showVerificationStep, setShowVerificationStep] = useState(false);
-  const emailProvider = Object.values(providers).filter(
-    (provider) => provider.type === "email",
-  );
+
   const googleProvider = Object.values(providers).find(
     (provider) => provider.id === "google",
   );
@@ -101,26 +97,6 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers, isLoggedIn }) => {
           </Button>
         )}
       </div>
-    </div>
-  );
-
-  return (
-    <div>
-      <div>
-        <h2>Sign in with your email</h2>
-
-        {emailProvider.map((provider) => (
-          <EmailInput
-            key={provider.id}
-            onSuccess={(email) => {
-              setEmail(email);
-              setShowVerificationStep(true);
-            }}
-          />
-        ))}
-      </div>
-
-      {/* {credentials} */}
     </div>
   );
 };

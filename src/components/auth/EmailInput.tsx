@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { signIn } from "next-auth/react";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
@@ -50,14 +50,11 @@ export const EmailInput: React.FC<EmailInputProps> = ({
         onChange={(e) => {
           setEmail(e.target.value);
         }}
-        // helpText={"A one-time code will be sent to your email."}
       />
 
       <Button
         type={"submit"}
-        // variant={"green"}
         size="lg"
-        className={""}
         disabled={loading}
         onClick={handleSignin}
       >
