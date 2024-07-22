@@ -32,7 +32,9 @@ const ProfilePage: NextPageWithLayout = () => {
           </h2>
           <div className="flex flex-col  gap-2">
             <Button variant="outline" asChild>
-              <Link href={"/api/auth/signin"}>Link to Google</Link>
+              <Link href={"/auth/signin?callbackUrl=/profile"}>
+                Link to Google
+              </Link>
             </Button>
             <p className="text-sm text-muted-foreground">
               Link with Google account is only used for login.

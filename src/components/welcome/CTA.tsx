@@ -25,7 +25,7 @@ export const CTA = () => {
       ) : (
         <Button asChild>
           <Link
-            href={"/api/auth/signin"}
+            href={"/auth/signin?callbackUrl=/events/new"}
             className="border shadow-lg hover:text-primary-foreground/80"
           >
             Create event

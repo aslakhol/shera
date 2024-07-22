@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -13,9 +13,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { User } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 export const AuthButton = () => {
   const session = useSession();
+  const router = useRouter();
 
   const [isEmbedded, setIsEmbedded] = useState(false);
 
@@ -34,7 +36,7 @@ export const AuthButton = () => {
   if (session.status === "unauthenticated") {
     return (
       <Button asChild variant={"ghost"} className="text-lg">
-        <Link href={"/api/auth/signin"}>Sign in</Link>
+        <Link href={`/auth/signin?callbackUrl=${router.asPath}`}>Sign in</Link>
       </Button>
     );
   }
@@ -94,9 +96,9 @@ const SignedInContent = ({ session }: SignedInContentProps) => {
         </Link>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
-      <Link href={"/api/auth/signout"}>
-        <DropdownMenuItem>Sign out</DropdownMenuItem>
-      </Link>
+      <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
+        Sign out
+      </DropdownMenuItem>
     </>
   );
 };
