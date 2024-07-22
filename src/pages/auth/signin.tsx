@@ -11,6 +11,7 @@ import { OAuthAccountNotLinked } from "../../components/auth/AuthErrors";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "../../components/ui/alert";
 import GoogleIcon from "../../components/auth/GoogleIcon";
+import Router from "next/router";
 
 interface Provider {
   id: string;
@@ -20,12 +21,11 @@ interface Provider {
 }
 
 interface SigninPageProps {
-  isLoggedIn: boolean;
   providers: Array<Provider>;
   csrfToken: string;
 }
 
-const SigninPage: NextPage<SigninPageProps> = ({ providers, isLoggedIn }) => {
+const SigninPage: NextPage<SigninPageProps> = ({ providers }) => {
   const { query } = useRouter();
   const { error } = query;
   const callbackUrl = "https://your-website.com";
@@ -38,8 +38,6 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers, isLoggedIn }) => {
   const googleProvider = Object.values(providers).find(
     (provider) => provider.id === "google",
   );
-
-  console.log(error, "error");
 
   if (showVerificationStep) {
     return (
@@ -103,11 +101,25 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers, isLoggedIn }) => {
 };
 
 SigninPage.getInitialProps = async (context) => {
-  const { req } = context;
+  const { req, res } = context;
   const session = await getSession({ req });
+  const providers = await getProviders();
+
+  if (session !== null) {
+    if (res) {
+      res.writeHead(307, { Location: "/events" });
+      res.end();
+    } else {
+      void Router.replace("/events");
+    }
+
+    return {
+      providers,
+    } as unknown as SigninPageProps;
+  }
+
   return {
-    isLoggedIn: session !== null,
-    providers: await getProviders(),
+    providers,
   } as unknown as SigninPageProps;
 };
 
