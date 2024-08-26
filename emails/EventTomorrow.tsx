@@ -35,7 +35,7 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
               <Text className="text-[#525f7f]">
                 Head over to Shera to see the event details.
               </Text>
-              <Section className="flex w-full justify-center">
+              <Section className="flex w-full">
                 <Button
                   className="whitespace-nowrap rounded-md bg-[#1f1d63] px-12 py-2 text-sm font-medium text-[#fff] ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                   href={`${baseUrl}events/${fullEventId(event)}`}
