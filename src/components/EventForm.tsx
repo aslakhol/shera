@@ -90,7 +90,12 @@ export const EventForm = ({ event, onSubmit, mutationIsLoading }: Props) => {
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={(value) => {
+                      const time = field.value ?? new Date();
+                      value?.setHours(time.getHours());
+                      value?.setMinutes(time.getMinutes());
+                      field.onChange(value);
+                    }}
                     disabled={(date) => date < new Date()}
                     initialFocus
                   />
