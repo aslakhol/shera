@@ -12,22 +12,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { User } from "lucide-react";
-import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 export const AuthButton = () => {
   const session = useSession();
   const router = useRouter();
-
-  const [isEmbedded, setIsEmbedded] = useState(false);
-
-  useEffect(() => {
-    const embeddedBrowser = /FBAN|FBAV|FBMS|FB_IAB|FB4A|FBAN\/Messenger/.test(
-      navigator.userAgent,
-    );
-    setIsEmbedded(embeddedBrowser);
-  }, []);
-  console.log(isEmbedded);
 
   if (session.status === "loading") {
     return <div className=" h-10 w-10  rounded-full bg-muted"></div>;
