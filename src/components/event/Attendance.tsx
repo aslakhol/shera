@@ -196,7 +196,7 @@ const Attendants = ({ event }: AttendantsProps) => {
           {attendees?.filter((a) => a.status === "GOING")?.length ?? 0} going
         </DialogTrigger>
       </Button>
-      <DialogContent>
+      <DialogContent className="max-h-full overflow-y-scroll">
         <DialogHeader>
           <DialogTitle className="text-primary">Attendees:</DialogTitle>
         </DialogHeader>
