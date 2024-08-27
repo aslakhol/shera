@@ -16,21 +16,21 @@ import { fullEventId } from "../src/utils/event";
 
 const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
 
-type EventTomorrowProps = {
+type ConfirmationEmailProps = {
   event: { title: string; dateTime: Date; publicId: string };
 };
 
-export const EventTomorrow = ({ event }: EventTomorrowProps) => {
+export const ConfirmationEmail = ({ event }: ConfirmationEmailProps) => {
   return (
     <Html>
       <Head />
-      <Preview>{event.title} starting tomorrow</Preview>
+      <Preview>Attendance confirmed for {event.title}</Preview>
       <Tailwind>
         <Body className="bg-[#f6f9fc] font-sans">
           <Container className="mx-auto mt-0 px-0 pb-12 pt-5">
             <Section className="px-12">
               <Text className="text-xl font-semibold">
-                {event.title} starting tomorrow
+                You are attending {event.title}!
               </Text>
               <Text className="text-[#525f7f]">
                 Head over to Shera to see the event details.
@@ -65,12 +65,12 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
   );
 };
 
-export default EventTomorrow;
+export default ConfirmationEmail;
 
-EventTomorrow.PreviewProps = {
+ConfirmationEmail.PreviewProps = {
   event: {
     title: "4 Pils og en pizza",
     dateTime: new Date(),
     publicId: "inr40by0",
   },
-} as EventTomorrowProps;
+} as ConfirmationEmailProps;

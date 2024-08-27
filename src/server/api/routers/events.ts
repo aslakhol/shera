@@ -6,7 +6,7 @@ import { type Prisma } from "@prisma/client";
 import sgEmail from "@sendgrid/mail";
 import { fullEventId } from "../../../utils/event";
 import { env } from "../../../env";
-import { getInviteEmail } from "../../../../emails/utils";
+import { getConfirmationEmail, getInviteEmail } from "../../../../emails/utils";
 import { type UserNetwork } from "../../../utils/types";
 
 sgEmail.setApiKey(env.SENDGRID_API_KEY);
@@ -140,6 +140,11 @@ export const eventsRouter = createTRPCRouter({
           where: { id: user.id },
           data: { name: name },
         });
+      }
+
+      if (status === "GOING" && user.email) {
+        const inviteEmail = getConfirmationEmail(event, user.email);
+        await sgEmail.send(inviteEmail);
       }
 
       const attendeeFromBeforeUser = await ctx.db.attendee.findFirst({

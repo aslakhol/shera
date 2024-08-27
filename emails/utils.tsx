@@ -3,6 +3,7 @@ import { env } from "../src/env";
 import { type Event } from "@prisma/client";
 import Invite from "./Invite";
 import { fullEventId } from "../src/utils/event";
+import ConfirmationEmail from "./ConfirmationEmail";
 
 export const getInviteEmail = (
   event: Event,
@@ -23,4 +24,20 @@ export const getInviteEmail = (
   };
 
   return inviteEmail;
+};
+
+export const getConfirmationEmail = (event: Event, email: string) => {
+  const eventUrl = `https://shera.no/events/${fullEventId(event)}`;
+
+  const html = render(<ConfirmationEmail event={event} />);
+
+  const confirmEmail = {
+    to: email,
+    from: env.EMAIL_FROM,
+    subject: `You are attending ${event.title}!`,
+    text: `You are attending ${event.title}! Head over to ${eventUrl} to confirm your attendance.`,
+    html,
+  };
+
+  return confirmEmail;
 };
