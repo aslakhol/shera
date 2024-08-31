@@ -8,7 +8,6 @@ import {
   Html,
   Link,
   Preview,
-  Section,
   Tailwind,
   Text,
 } from "@react-email/components";
@@ -17,14 +16,23 @@ import { fullEventId } from "../src/utils/event";
 import { Crown, MapPin, UsersRound } from "lucide-react";
 import { format } from "date-fns";
 import { WorkingClock } from "../src/components/WorkingClock";
+import {
+  type User,
+  type Event,
+  type Attendee,
+  type AttendingStatus,
+} from "@prisma/client";
 
 const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
 
 type ReminderOneHourProps = {
-  event: { title: string; dateTime: Date; publicId: string };
+  event: Event & { host: User; attendees: Attendee[] };
+  attendeeStatus: AttendingStatus;
 };
 
 export const ReminderOneHour = ({ event }: ReminderOneHourProps) => {
+  const eventUrl = `${baseUrl}events/${fullEventId(event)}`;
+
   return (
     <Html>
       <Head />
@@ -40,27 +48,31 @@ export const ReminderOneHour = ({ event }: ReminderOneHourProps) => {
             </Container>
             <Container
               id="infobox"
-              className=" my-4 rounded-lg border bg-[#e4e3f5] px-4 py-2 text-[#6a696f] shadow-sm"
+              className="my-4 rounded-lg border bg-[#e4e3f5] px-4 py-2 text-[#6a696f] shadow-sm"
             >
               <Text className="m-0 flex items-center gap-2">
                 <WorkingClock date={event.dateTime} size={16} />{" "}
                 {format(event.dateTime, "H:mm")}
               </Text>
-              {true && (
+              {event.place && (
                 <Text className="m-0 flex items-center gap-2">
-                  <MapPin size={16} /> Sofaen
+                  <MapPin size={16} /> {event.place}
+                </Text>
+              )}
+              {event.host.name && (
+                <Text className="m-0 flex items-center gap-2">
+                  <Crown size={16} /> {event.host.name}
                 </Text>
               )}
               <Text className="m-0 flex items-center gap-2">
-                <Crown size={16} /> {"Aslak"}
-              </Text>
-              <Text className="m-0 flex items-center gap-2">
-                <UsersRound size={16} /> 2 attendees
+                <UsersRound size={16} />{" "}
+                {event.attendees.filter((a) => a.status === "GOING").length}{" "}
+                attendees
               </Text>
             </Container>
             <Button
               className="my-4 whitespace-nowrap rounded-md bg-[#1f1d63] px-12 py-2 text-sm font-medium text-[#fff] ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-              href={`${baseUrl}events/${fullEventId(event)}`}
+              href={eventUrl}
             >
               View event
             </Button>
@@ -78,7 +90,11 @@ export const ReminderOneHour = ({ event }: ReminderOneHourProps) => {
             <div className="py-3" />
             <Text className="text-xs text-[#525f7f]">
               You received this email because you are attending {event.title} on
-              Shera. To unsubscribe unattend the event.
+              Shera.
+              <br />
+              <Link className=" text-xs text-[#525f7f]" href={eventUrl}>
+                To unsubscribe, unattend the event.
+              </Link>
             </Text>
           </Container>
         </Body>
@@ -91,8 +107,32 @@ export default ReminderOneHour;
 
 ReminderOneHour.PreviewProps = {
   event: {
-    title: "4 Pils og en pizza",
+    eventId: 42,
+    publicId: "publicId",
+    description: "Vi spiser noe pils og drikker en pizza",
+    title: "4 Pils og en Pizza",
+    place: "Jens Bjelkes gate 72",
+    hostId: "hostId",
     dateTime: new Date(),
-    publicId: "inr40by0",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    host: {
+      id: "hostId",
+      name: "Aslak Hollund",
+      email: "aslak@shera.no",
+      emailVerified: new Date(),
+      image: null,
+    },
+    attendees: [
+      {
+        attendeeId: "attendeeId",
+        name: "Aslak Hollund",
+        email: "aslak@shera.no",
+        eventId: 42,
+        status: "GOING",
+        userId: "userId",
+      },
+    ],
   },
-} as ReminderOneHourProps;
+  attendeeStatus: "GOING",
+} satisfies ReminderOneHourProps;
