@@ -16,12 +16,19 @@ import { fullEventId } from "../../src/utils/event";
 import { Crown, MapPin, UsersRound } from "lucide-react";
 import { format } from "date-fns";
 import { WorkingClock } from "../../src/components/WorkingClock";
-import { type User, type Event, type Attendee } from "@prisma/client";
+import { type AttendingStatus } from "@prisma/client";
 
 const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
 
 type EventEmail = {
-  event: Event & { host: User; attendees: Attendee[] };
+  event: {
+    publicId: string;
+    title: string;
+    dateTime: Date;
+    place: string | null;
+    host: { name: string | null };
+    attendees: Array<{ status: AttendingStatus }>;
+  };
   previewText: string;
   aboveText?: string;
   belowText?: string;
@@ -83,7 +90,14 @@ export const EventEmail = ({
   );
 };
 
-type InfoBoxProps = { event: Event & { host: User; attendees: Attendee[] } };
+type InfoBoxProps = {
+  event: {
+    dateTime: Date;
+    place: string | null;
+    host: { name: string | null };
+    attendees: Array<{ status: AttendingStatus }>;
+  };
+};
 
 const InfoBox = ({ event }: InfoBoxProps) => {
   return (
