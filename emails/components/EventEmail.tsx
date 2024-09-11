@@ -43,7 +43,8 @@ export const EventEmail = ({
         <Body className="bg-[#f6f9fc] font-sans">
           <Container className="mt-0 px-12 pb-12 pt-5">
             <Container>
-              <Heading as="h1" className="mb-0">
+              {aboveText && <Text className="m-0 text-xl">{aboveText}</Text>}
+              <Heading as="h1" className="my-0">
                 {event.title}
               </Heading>
               {belowText && <Text className="m-0 text-xl">{belowText}</Text>}
