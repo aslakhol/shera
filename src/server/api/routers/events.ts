@@ -350,8 +350,17 @@ export const eventsRouter = createTRPCRouter({
       const path = fullEventId(event);
       await ctx.res?.revalidate(`/events/${path}`);
 
+      const inviteEvent = await ctx.db.event.findFirst({
+        where: { publicId: event.publicId },
+        include: { host: true, attendees: true },
+      });
+
+      if (!inviteEvent) {
+        throw new Error("Event suddenly dissapeared");
+      }
+
       const inviteEmail = getInviteEmail(
-        event,
+        inviteEvent,
         notAlreadyAttending,
         inviterName,
       );
@@ -419,7 +428,20 @@ export const eventsRouter = createTRPCRouter({
         .map((friend) => friend.email)
         .filter((email): email is string => !!email);
 
-      const inviteEmail = getInviteEmail(event, friendEmails, inviterName);
+      const inviteEvent = await ctx.db.event.findFirst({
+        where: { publicId: event.publicId },
+        include: { host: true, attendees: true },
+      });
+
+      if (!inviteEvent) {
+        throw new Error("Event suddenly dissapeared");
+      }
+
+      const inviteEmail = getInviteEmail(
+        inviteEvent,
+        friendEmails,
+        inviterName,
+      );
       await sgEmail.sendMultiple(inviteEmail);
 
       return {

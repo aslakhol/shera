@@ -1,12 +1,12 @@
 import { render } from "@react-email/render";
 import { env } from "../src/env";
-import { type Event } from "@prisma/client";
+import { type Attendee, type User, type Event } from "@prisma/client";
 import Invite from "./Invite";
 import { fullEventId } from "../src/utils/event";
 import ConfirmationEmail from "./ConfirmationEmail";
 
 export const getInviteEmail = (
-  event: Event,
+  event: Event & { host: User; attendees: Attendee[] },
   emails: string[],
   inviterName?: string,
 ) => {
