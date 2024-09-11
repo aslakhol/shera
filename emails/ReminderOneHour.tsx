@@ -16,18 +16,12 @@ import { fullEventId } from "../src/utils/event";
 import { Crown, MapPin, UsersRound } from "lucide-react";
 import { format } from "date-fns";
 import { WorkingClock } from "../src/components/WorkingClock";
-import {
-  type User,
-  type Event,
-  type Attendee,
-  type AttendingStatus,
-} from "@prisma/client";
+import { type User, type Event, type Attendee } from "@prisma/client";
 
 const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
 
 type ReminderOneHourProps = {
   event: Event & { host: User; attendees: Attendee[] };
-  attendeeStatus: AttendingStatus;
 };
 
 export const ReminderOneHour = ({ event }: ReminderOneHourProps) => {
@@ -134,5 +128,4 @@ ReminderOneHour.PreviewProps = {
       },
     ],
   },
-  attendeeStatus: "GOING",
 } satisfies ReminderOneHourProps;
