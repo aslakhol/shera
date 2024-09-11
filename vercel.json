@@ -3,6 +3,10 @@
     {
       "path": "/api/cron",
       "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/cron/reminder1Hour",
+      "schedule": "*/15 * * * *"
     }
   ]
 }
