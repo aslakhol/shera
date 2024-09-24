@@ -45,6 +45,14 @@ EventTomorrow.PreviewProps = {
         status: "GOING",
         userId: "userId",
       },
+      {
+        attendeeId: "attendeeId",
+        name: "Aslak Hollund",
+        email: "aslak@shera.no",
+        eventId: 42,
+        status: "GOING",
+        userId: "userId",
+      },
     ],
   },
 } as EventTomorrowProps;

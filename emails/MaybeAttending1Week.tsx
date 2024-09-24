@@ -48,6 +48,14 @@ MaybeAttending1Week.PreviewProps = {
         status: "MAYBE",
         userId: "userId",
       },
+      {
+        attendeeId: "attendeeId",
+        name: "Aslak Hollund",
+        email: "aslak@shera.no",
+        eventId: 42,
+        status: "GOING",
+        userId: "userId",
+      },
     ],
   },
 } satisfies MaybeAttending1Week;
