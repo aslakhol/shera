@@ -11,9 +11,10 @@ export const AttendanceReminder1Week = ({
   event,
   attendanceStatus,
 }: AttendanceReminder1Week) => {
-  const attendPrompt = attendanceStatus
-    ? `You are invited to ${event.title} in 1 week, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`
-    : `${event.title} is happening in 1 week and your attendance is set to maybe, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`;
+  const attendPrompt =
+    attendanceStatus === "INVITED"
+      ? `You are invited to ${event.title} in 1 week, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`
+      : `${event.title} is happening in 1 week and your attendance is set to maybe, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`;
 
   return (
     <EventEmail
@@ -64,4 +65,5 @@ AttendanceReminder1Week.PreviewProps = {
       },
     ],
   },
+  attendanceStatus: "INVITED",
 } satisfies AttendanceReminder1Week;
