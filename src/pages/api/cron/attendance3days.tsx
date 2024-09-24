@@ -1,18 +1,11 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
-import {
-  addDays,
-  endOfToday,
-  endOfTomorrow,
-  startOfToday,
-  startOfTomorrow,
-} from "date-fns";
+import { addDays, endOfToday, startOfToday } from "date-fns";
 import { db } from "../../../server/db";
 import sgEmail from "@sendgrid/mail";
 import { env } from "../../../env";
 import { type Attendee, type Event, type User } from "@prisma/client";
 import { render } from "@react-email/render";
-import EventTomorrow from "../../../../emails/EventTomorrow";
-import { MaybeAttending3Days } from "../../../../emails/MaybeAttending3Days";
+import { AttendanceReminder3Days } from "../../../../emails/AttendanceReminder3Days";
 
 sgEmail.setApiKey(env.SENDGRID_API_KEY);
 
@@ -37,13 +30,25 @@ export default async function handler(
     const startOf3DaysFromNow = addDays(startOfToday(), 3);
     const endOf3DaysFromNow = addDays(endOfToday(), 3);
 
-    const events = await db.event.findMany({
+    const maybeEvents = await db.event.findMany({
       where: {
         dateTime: { gte: startOf3DaysFromNow, lte: endOf3DaysFromNow },
       },
-      include: { attendees: { where: { email: { not: null } } }, host: true },
+      include: {
+        attendees: { where: { email: { not: null }, status: "MAYBE" } },
+        host: true,
+      },
     });
-    const reminderCount = events
+    const invitedEvents = await db.event.findMany({
+      where: {
+        dateTime: { gte: startOf3DaysFromNow, lte: endOf3DaysFromNow },
+      },
+      include: {
+        attendees: { where: { email: { not: null }, status: "INVITED" } },
+        host: true,
+      },
+    });
+    const reminderCount = [...maybeEvents, ...invitedEvents]
       .map((e) => e.attendees.filter((a) => a.status === "MAYBE").length)
       .reduce((a, b) => a + b, 0);
 
@@ -55,12 +60,16 @@ export default async function handler(
       });
     }
 
-    const reminderEmailsPerEvent = events
-      .map((e) => getReminderEmail(e))
+    const maybeEmailsPerEvent = maybeEvents
+      .map((e) => getEmail(e, "MAYBE"))
+      .filter((eventEmail) => eventEmail.to.length > 0);
+
+    const invitedEmailsPerEvent = invitedEvents
+      .map((e) => getEmail(e, "INVITED"))
       .filter((eventEmail) => eventEmail.to.length > 0);
 
     await Promise.all(
-      reminderEmailsPerEvent.map((eventEmail) =>
+      [...maybeEmailsPerEvent, ...invitedEmailsPerEvent].map((eventEmail) =>
         sgEmail.sendMultiple(eventEmail),
       ),
     );
@@ -73,18 +82,29 @@ export default async function handler(
   }
 }
 
-const getReminderEmail = (
+const getEmail = (
   event: Event & { host: User } & { attendees: Attendee[] },
+  attendanceStatus: "INVITED" | "MAYBE",
 ) => {
-  const attendeesMaybe = event.attendees.filter((a) => a.status === "MAYBE");
-  const attendeeEmails = attendeesMaybe
+  const attendeeEmails = event.attendees
     .map((a) => a.email!)
     .filter((email) => email !== null);
 
-  const html = render(<MaybeAttending3Days event={event} />);
-  const text = render(<MaybeAttending3Days event={event} />, {
-    plainText: true,
-  });
+  const html = render(
+    <AttendanceReminder3Days
+      event={event}
+      attendanceStatus={attendanceStatus}
+    />,
+  );
+  const text = render(
+    <AttendanceReminder3Days
+      event={event}
+      attendanceStatus={attendanceStatus}
+    />,
+    {
+      plainText: true,
+    },
+  );
 
   return {
     to: attendeeEmails,
