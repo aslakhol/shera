@@ -2,12 +2,12 @@ import * as React from "react";
 import { type Attendee, type User, type Event } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
 
-type MaybeAttending1Week = {
+type MaybeAttending3Days = {
   event: Event & { host: User; attendees: Attendee[] };
 };
 
-export const MaybeAttending1Week = ({ event }: MaybeAttending1Week) => {
-  const attendPrompt = `${event.title} is happening in 1 week and your attendance is set to maybe, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`;
+export const MaybeAttending3Days = ({ event }: MaybeAttending3Days) => {
+  const attendPrompt = `${event.title} is happening in 3 days and your attendance is set to maybe, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`;
 
   return (
     <EventEmail
@@ -19,9 +19,9 @@ export const MaybeAttending1Week = ({ event }: MaybeAttending1Week) => {
   );
 };
 
-export default MaybeAttending1Week;
+export default MaybeAttending3Days;
 
-MaybeAttending1Week.PreviewProps = {
+MaybeAttending3Days.PreviewProps = {
   event: {
     eventId: 42,
     publicId: "publicId",
@@ -50,4 +50,4 @@ MaybeAttending1Week.PreviewProps = {
       },
     ],
   },
-} satisfies MaybeAttending1Week;
+} satisfies MaybeAttending3Days;
