@@ -4,7 +4,6 @@ import { db } from "../../../server/db";
 import sgEmail from "@sendgrid/mail";
 import { env } from "../../../env";
 import { type Attendee, type Event, type User } from "@prisma/client";
-import { fullEventId } from "../../../utils/event";
 import { render } from "@react-email/render";
 import ReminderOneHour from "../../../../emails/ReminderOneHour";
 
@@ -83,19 +82,16 @@ const getReminderEmail = (
     .map((a) => a.email!)
     .filter((email) => email !== null);
 
-  const startTime = event.dateTime.toLocaleString("en-GB", {
-    hour: "numeric",
-    minute: "numeric",
-  });
-
-  const eventUrl = `https://shera.no/events/${fullEventId(event)}`;
   const html = render(<ReminderOneHour event={event} />);
+  const text = render(<ReminderOneHour event={event} />, {
+    plainText: true,
+  });
 
   return {
     to: attendeeEmails,
     from: env.EMAIL_FROM,
     subject: `Reminder: ${event.title} is happening tomorrow!`,
-    text: `${event.title} is starting tomorrow at ${startTime}! Head over to ${eventUrl} to see if there is any more information.`,
+    text,
     html,
   };
 };
