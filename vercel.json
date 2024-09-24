@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/attendance3days",
       "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/cron/attendance1week",
+      "schedule": "0 12 * * *"
     }
   ]
 }
