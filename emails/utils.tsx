@@ -26,7 +26,10 @@ export const getInviteEmail = (
   return inviteEmail;
 };
 
-export const getConfirmationEmail = (event: Event, email: string) => {
+export const getConfirmationEmail = (
+  event: Event & { host: User; attendees: Attendee[] },
+  email: string,
+) => {
   const eventUrl = `https://shera.no/events/${fullEventId(event)}`;
 
   const html = render(<ConfirmationEmail event={event} />);

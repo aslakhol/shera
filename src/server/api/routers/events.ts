@@ -119,6 +119,7 @@ export const eventsRouter = createTRPCRouter({
 
       const event = await ctx.db.event.findFirst({
         where: { publicId },
+        include: { host: true, attendees: true },
       });
       if (!event) {
         throw new Error("Event not found");
