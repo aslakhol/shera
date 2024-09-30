@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { Trash } from "lucide-react";
+import { Crown, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { Loading } from "../Loading";
 import { useState } from "react";
@@ -35,7 +35,9 @@ const PostList = ({ publicId }: PostListProps) => {
 
 export default PostList;
 
-type PostProps = { post: PostType & { author: User; event: Event } };
+type PostProps = {
+  post: PostType & { author: User; event: Event };
+};
 
 export const Post = (props: PostProps) => {
   const { post } = props;
@@ -49,7 +51,8 @@ export const Post = (props: PostProps) => {
     <div key={post.postId} className="w-full rounded border p-4">
       <div className="flex flex-row justify-between">
         <div className="flex flex-col">
-          <span className="font-bold">
+          <span className="flex flex-row items-center gap-1 font-bold">
+            {post.event.hostId === post.authorId && <Crown size={16} />}
             {post.author.name ?? post.author.email ?? "Anonymous"}
           </span>
           <span className="text-sm italic">
