@@ -1,6 +1,6 @@
 import EmailProvider from "next-auth/providers/email";
 import { env } from "../env";
-import { Transport, type TransportOptions, createTransport } from "nodemailer";
+import { type TransportOptions, createTransport } from "nodemailer";
 
 const generateOtpCode = async () => {
   return Math.floor(1000 + Math.random() * 9000).toString();

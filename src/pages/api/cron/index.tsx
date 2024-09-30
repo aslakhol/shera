@@ -12,7 +12,6 @@ import { env } from "../../../env";
 import { type Attendee, type Event, type User } from "@prisma/client";
 import { render } from "@react-email/render";
 import EventTomorrow from "../../../../emails/EventTomorrow";
-import events from "../../events";
 import AttendanceReminder1Week from "../../../../emails/AttendanceReminder1Week";
 import AttendanceReminder3Days from "../../../../emails/AttendanceReminder3Days";
 
