@@ -5,10 +5,6 @@
       "schedule": "0 12 * * *"
     },
     {
-      "path": "/api/cron/reminder1Hour",
-      "schedule": "*/15 * * * *"
-    },
-    {
       "path": "/api/cron/attendance3days",
       "schedule": "0 12 * * *"
     },

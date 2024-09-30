@@ -2,6 +2,8 @@ import * as React from "react";
 import { type User, type Event, type Attendee } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
 
+// This is not currently used as I couldn't have crons go more accurate than once an hour on free vercel
+
 type ReminderOneHourProps = {
   event: Event & { host: User; attendees: Attendee[] };
 };
