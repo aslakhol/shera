@@ -30,16 +30,22 @@ export const getInviteEmail = (
 export const getConfirmationEmail = (
   event: Event & { host: User; attendees: Attendee[] },
   email: string,
+  status: "GOING" | "MAYBE",
 ) => {
-  const html = render(<ConfirmationEmail event={event} />);
-  const text = render(<ConfirmationEmail event={event} />, {
-    plainText: true,
-  });
+  const html = render(
+    <ConfirmationEmail event={event} attendanceStatus={status} />,
+  );
+  const text = render(
+    <ConfirmationEmail event={event} attendanceStatus={status} />,
+    {
+      plainText: true,
+    },
+  );
 
   const confirmEmail = {
     to: email,
     from: env.EMAIL_FROM,
-    subject: `You are attending ${event.title}!`,
+    subject: `You are ${status === "MAYBE" ? "maybe " : ""}attending ${event.title}!`,
     text,
     html,
   };

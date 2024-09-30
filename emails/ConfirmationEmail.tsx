@@ -4,14 +4,24 @@ import { EventEmail } from "./components/EventEmail";
 
 type ConfirmationEmailProps = {
   event: Event & { host: User; attendees: Attendee[] };
+  attendanceStatus: "GOING" | "MAYBE";
 };
 
-export const ConfirmationEmail = ({ event }: ConfirmationEmailProps) => {
+export const ConfirmationEmail = ({
+  event,
+  attendanceStatus,
+}: ConfirmationEmailProps) => {
+  const body =
+    attendanceStatus === "MAYBE"
+      ? `Make sure to let ${event.host.name ? event.host.name : "the host"} know if you are going soon!`
+      : undefined;
+
   return (
     <EventEmail
       event={event}
-      previewText={`You are attending ${event.title}`}
-      aboveText="You are attending"
+      previewText={`You are ${attendanceStatus === "MAYBE" ? "maybe " : ""}attending ${event.title}`}
+      aboveText={`You are ${attendanceStatus === "MAYBE" ? "maybe " : ""}attending `}
+      bodyText={body}
     />
   );
 };
@@ -19,6 +29,7 @@ export const ConfirmationEmail = ({ event }: ConfirmationEmailProps) => {
 export default ConfirmationEmail;
 
 ConfirmationEmail.PreviewProps = {
+  attendanceStatus: "MAYBE",
   event: {
     eventId: 42,
     publicId: "publicId",
