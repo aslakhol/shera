@@ -2,34 +2,33 @@ import * as React from "react";
 import { type Attendee, type User, type Event } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
 
-type ConfirmationEmailProps = {
+type AttendanceReminder3Days = {
   event: Event & { host: User; attendees: Attendee[] };
-  attendanceStatus: "GOING" | "MAYBE";
+  attendanceStatus: "INVITED" | "MAYBE";
 };
 
-export const ConfirmationEmail = ({
+export const AttendanceReminder3Days = ({
   event,
   attendanceStatus,
-}: ConfirmationEmailProps) => {
-  const body =
-    attendanceStatus === "MAYBE"
-      ? `Make sure to let ${event.host.name ? event.host.name : "the host"} know if you are going soon!`
-      : undefined;
+}: AttendanceReminder3Days) => {
+  const attendPrompt =
+    attendanceStatus === "INVITED"
+      ? `You are invited to ${event.title} in 3 days, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`
+      : `${event.title} is happening in 3 days and your attendance is set to maybe, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`;
 
   return (
     <EventEmail
       event={event}
-      previewText={`You are ${attendanceStatus === "MAYBE" ? "maybe " : ""}attending ${event.title}`}
-      aboveText={`You are ${attendanceStatus === "MAYBE" ? "maybe " : ""}attending `}
-      bodyText={body}
+      previewText={`Are you attending ${event.title}?`}
+      aboveText="Are you attending"
+      bodyText={attendPrompt}
     />
   );
 };
 
-export default ConfirmationEmail;
+export default AttendanceReminder3Days;
 
-ConfirmationEmail.PreviewProps = {
-  attendanceStatus: "MAYBE",
+AttendanceReminder3Days.PreviewProps = {
   event: {
     eventId: 42,
     publicId: "publicId",
@@ -53,7 +52,7 @@ ConfirmationEmail.PreviewProps = {
         name: "Aslak Hollund",
         email: "aslak@shera.no",
         eventId: 42,
-        status: "GOING",
+        status: "MAYBE",
         userId: "userId",
       },
       {
@@ -66,4 +65,5 @@ ConfirmationEmail.PreviewProps = {
       },
     ],
   },
-} satisfies ConfirmationEmailProps;
+  attendanceStatus: "MAYBE",
+} satisfies AttendanceReminder3Days;

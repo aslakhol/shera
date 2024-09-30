@@ -1,35 +1,26 @@
 import * as React from "react";
-import { type Attendee, type User, type Event } from "@prisma/client";
+import { type User, type Event, type Attendee } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
 
-type ConfirmationEmailProps = {
+// This is not currently used as I couldn't have crons go more accurate than once an hour on free vercel
+
+type ReminderOneHourProps = {
   event: Event & { host: User; attendees: Attendee[] };
-  attendanceStatus: "GOING" | "MAYBE";
 };
 
-export const ConfirmationEmail = ({
-  event,
-  attendanceStatus,
-}: ConfirmationEmailProps) => {
-  const body =
-    attendanceStatus === "MAYBE"
-      ? `Make sure to let ${event.host.name ? event.host.name : "the host"} know if you are going soon!`
-      : undefined;
-
+export const ReminderOneHour = ({ event }: ReminderOneHourProps) => {
   return (
     <EventEmail
       event={event}
-      previewText={`You are ${attendanceStatus === "MAYBE" ? "maybe " : ""}attending ${event.title}`}
-      aboveText={`You are ${attendanceStatus === "MAYBE" ? "maybe " : ""}attending `}
-      bodyText={body}
+      previewText={`${event.title} is starting in 1 hour`}
+      belowText="Is starting in 1 hour"
     />
   );
 };
 
-export default ConfirmationEmail;
+export default ReminderOneHour;
 
-ConfirmationEmail.PreviewProps = {
-  attendanceStatus: "MAYBE",
+ReminderOneHour.PreviewProps = {
   event: {
     eventId: 42,
     publicId: "publicId",
@@ -66,4 +57,4 @@ ConfirmationEmail.PreviewProps = {
       },
     ],
   },
-} satisfies ConfirmationEmailProps;
+} satisfies ReminderOneHourProps;

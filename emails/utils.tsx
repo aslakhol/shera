@@ -1,17 +1,18 @@
 import { render } from "@react-email/render";
 import { env } from "../src/env";
-import { type Event } from "@prisma/client";
+import { type Attendee, type User, type Event } from "@prisma/client";
 import Invite from "./Invite";
-import { fullEventId } from "../src/utils/event";
 import ConfirmationEmail from "./ConfirmationEmail";
 
 export const getInviteEmail = (
-  event: Event,
+  event: Event & { host: User; attendees: Attendee[] },
   emails: string[],
   inviterName?: string,
 ) => {
-  const inviteUrl = `https://shera.no/events/${fullEventId(event)}`;
   const html = render(<Invite event={event} inviterName={inviterName} />);
+  const text = render(<Invite event={event} inviterName={inviterName} />, {
+    plainText: true,
+  });
 
   const inviteEmail = {
     to: emails,
@@ -19,23 +20,33 @@ export const getInviteEmail = (
     subject: inviterName
       ? `${inviterName} has invited you to ${event.title}!`
       : `You've been invited to ${event.title}!`,
-    text: `You've been invited to ${event.title}! Head over to ${inviteUrl} to see if there is any more information.`,
+    text,
     html,
   };
 
   return inviteEmail;
 };
 
-export const getConfirmationEmail = (event: Event, email: string) => {
-  const eventUrl = `https://shera.no/events/${fullEventId(event)}`;
-
-  const html = render(<ConfirmationEmail event={event} />);
+export const getConfirmationEmail = (
+  event: Event & { host: User; attendees: Attendee[] },
+  email: string,
+  status: "GOING" | "MAYBE",
+) => {
+  const html = render(
+    <ConfirmationEmail event={event} attendanceStatus={status} />,
+  );
+  const text = render(
+    <ConfirmationEmail event={event} attendanceStatus={status} />,
+    {
+      plainText: true,
+    },
+  );
 
   const confirmEmail = {
     to: email,
     from: env.EMAIL_FROM,
-    subject: `You are attending ${event.title}!`,
-    text: `You are attending ${event.title}! Head over to ${eventUrl} to confirm your attendance.`,
+    subject: `You are ${status === "MAYBE" ? "maybe " : ""}attending ${event.title}!`,
+    text,
     html,
   };
 

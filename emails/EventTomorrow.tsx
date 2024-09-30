@@ -1,67 +1,18 @@
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Hr,
-  Html,
-  Link,
-  Preview,
-  Section,
-  Tailwind,
-  Text,
-} from "@react-email/components";
 import * as React from "react";
-import { fullEventId } from "../src/utils/event";
-
-const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
+import { EventEmail } from "./components/EventEmail";
+import { type Attendee, type Event, type User } from "@prisma/client";
 
 type EventTomorrowProps = {
-  event: { title: string; dateTime: Date; publicId: string };
+  event: Event & { host: User; attendees: Attendee[] };
 };
 
 export const EventTomorrow = ({ event }: EventTomorrowProps) => {
   return (
-    <Html>
-      <Head />
-      <Preview>{event.title} starting tomorrow</Preview>
-      <Tailwind>
-        <Body className="bg-[#f6f9fc] font-sans">
-          <Container className="mx-auto mt-0 px-0 pb-12 pt-5">
-            <Section className="px-12">
-              <Text className="text-xl font-semibold">
-                {event.title} starting tomorrow
-              </Text>
-              <Text className="text-[#525f7f]">
-                Head over to Shera to see the event details.
-              </Text>
-              <Section className="flex w-full">
-                <Button
-                  className="whitespace-nowrap rounded-md bg-[#1f1d63] px-12 py-2 text-sm font-medium text-[#fff] ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-                  href={`${baseUrl}events/${fullEventId(event)}`}
-                >
-                  See event
-                </Button>
-              </Section>
-              <Text className="text-[#525f7f]">
-                Unattend the event to opt out of future emails.
-              </Text>
-              <Hr className="mx-0 my-5 w-full border border-solid border-[#e6ebf1]" />
-              <Text className="text-sm text-[#8898aa]">
-                Host your next event with{" "}
-                <Link
-                  className="text-[#8898aa] underline"
-                  href={`${baseUrl}/events/new`}
-                >
-                  Shera
-                </Link>
-                .
-              </Text>
-            </Section>
-          </Container>
-        </Body>
-      </Tailwind>
-    </Html>
+    <EventEmail
+      event={event}
+      previewText={`${event.title} starting tomorrow`}
+      belowText="Is starting tomorrow"
+    />
   );
 };
 
@@ -69,8 +20,39 @@ export default EventTomorrow;
 
 EventTomorrow.PreviewProps = {
   event: {
-    title: "4 Pils og en pizza",
+    eventId: 42,
+    publicId: "publicId",
+    description: "Vi spiser noe pils og drikker en pizza",
+    title: "4 Pils og en Pizza",
+    place: "Jens Bjelkes gate 72",
+    hostId: "hostId",
     dateTime: new Date(),
-    publicId: "inr40by0",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    host: {
+      id: "hostId",
+      name: "Aslak Hollund",
+      email: "aslak@shera.no",
+      emailVerified: new Date(),
+      image: null,
+    },
+    attendees: [
+      {
+        attendeeId: "attendeeId",
+        name: "Aslak Hollund",
+        email: "aslak@shera.no",
+        eventId: 42,
+        status: "GOING",
+        userId: "userId",
+      },
+      {
+        attendeeId: "attendeeId",
+        name: "Aslak Hollund",
+        email: "aslak@shera.no",
+        eventId: 42,
+        status: "GOING",
+        userId: "userId",
+      },
+    ],
   },
 } as EventTomorrowProps;
