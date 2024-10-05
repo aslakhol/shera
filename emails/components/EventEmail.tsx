@@ -1,6 +1,7 @@
 import {
   Body,
   Button,
+  Column,
   Container,
   Head,
   Heading,
@@ -111,31 +112,68 @@ const InfoBox = ({ event }: InfoBoxProps) => {
 
   return (
     <Container className="my-4 rounded-lg border bg-[#e4e3f5] px-4 py-2 text-[#6a696f] shadow-sm">
-      <Text className="m-0 flex items-center gap-2">
+      <Row width={"fit-content"} align="left">
+        <Column className="pr-2">
+          <WorkingClock date={event.dateTime} size={16} />
+        </Column>
+        <Column>
+          <Text className="m-0">
+            {formatInTimeZone(event.dateTime, event.timeZone, "H:mm")}
+          </Text>
+        </Column>
+      </Row>
+      <Row>
+        <Column></Column>
+      </Row>
+      {/* <Text className="m-0 flex items-center gap-2">
         <WorkingClock date={event.dateTime} size={16} />{" "}
         {formatInTimeZone(event.dateTime, event.timeZone, "H:mm")}
-      </Text>
+      </Text> */}
       {event.place && (
-        <Row className="m-0 flex items-center gap-2">
-          <Img
-            style={{ alignSelf: "center", paddingRight: "4px" }}
-            src={`${baseUrl}map-pin.png`}
-            width={16}
-            height={16}
-          />
-          <Text className="m-0 flex items-center gap-2">{event.place}</Text>
+        <Row width={"fit-content"} align="left">
+          <Column className="pr-2">
+            <Img src={`${baseUrl}map-pin.png`} width={16} height={16} />
+          </Column>
+          <Column>
+            <Text className="m-0">{event.place}</Text>
+          </Column>
         </Row>
       )}
+      <Row>
+        <Column></Column>
+      </Row>
       {event.host.name && (
-        <Text className="m-0 flex items-center gap-2">
-          <Crown size={16} /> {event.host.name}
-        </Text>
+        <Row width={"fit-content"} align="left">
+          <Column className="pr-2">
+            <Crown size={16} />
+          </Column>
+          <Column>
+            <Text className="m-0">{event.host.name}</Text>
+          </Column>
+        </Row>
+        // <Text className="m-0 flex items-center gap-2">
+        //   <Crown size={16} /> {event.host.name}
+        // </Text>
       )}
+      <Row>
+        <Column></Column>
+      </Row>
       {going > 1 && (
-        <Text className="m-0 flex items-center gap-2">
-          <UsersRound size={16} />{" "}
-          {event.attendees.filter((a) => a.status === "GOING").length} attendees
-        </Text>
+        <Row width={"fit-content"} align="left">
+          <Column className="pr-2">
+            <UsersRound size={16} />
+          </Column>
+          <Column>
+            <Text className="m-0">
+              {event.attendees.filter((a) => a.status === "GOING").length}{" "}
+              attendees
+            </Text>
+          </Column>
+        </Row>
+        // <Text className="m-0 flex items-center gap-2">
+        //   <UsersRound size={16} />{" "}
+        //   {event.attendees.filter((a) => a.status === "GOING").length} attendees
+        // </Text>
       )}
     </Container>
   );
