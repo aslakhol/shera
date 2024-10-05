@@ -16,10 +16,9 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 import { fullEventId } from "../../src/utils/event";
-import { Crown, MapPin, UsersRound } from "lucide-react";
-import { WorkingClock } from "../../src/components/WorkingClock";
 import { formatInTimeZone } from "date-fns-tz";
 import { type AttendingStatus } from "@prisma/client";
+import { EmailClock } from "./EmailClock";
 
 const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
 
@@ -109,12 +108,16 @@ type InfoBoxProps = {
 
 const InfoBox = ({ event }: InfoBoxProps) => {
   const going = event.attendees.filter((a) => a.status === "GOING").length;
-
+  console.log(event.timeZone);
   return (
     <Container className="my-4 rounded-lg border bg-[#e4e3f5] px-4 py-2 text-[#6a696f] shadow-sm">
       <Row width={"fit-content"} align="left">
         <Column className="pr-2">
-          <WorkingClock date={event.dateTime} size={16} />
+          <EmailClock
+            date={event.dateTime}
+            size={16}
+            timeZone={event.timeZone}
+          />
         </Column>
         <Column>
           <Text className="m-0">
@@ -125,14 +128,10 @@ const InfoBox = ({ event }: InfoBoxProps) => {
       <Row>
         <Column></Column>
       </Row>
-      {/* <Text className="m-0 flex items-center gap-2">
-        <WorkingClock date={event.dateTime} size={16} />{" "}
-        {formatInTimeZone(event.dateTime, event.timeZone, "H:mm")}
-      </Text> */}
       {event.place && (
         <Row width={"fit-content"} align="left">
           <Column className="pr-2">
-            <Img src={`${baseUrl}map-pin.png`} width={16} height={16} />
+            <Img src={`${baseUrl}/email/map-pin.png`} width={16} height={16} />
           </Column>
           <Column>
             <Text className="m-0">{event.place}</Text>
@@ -145,15 +144,12 @@ const InfoBox = ({ event }: InfoBoxProps) => {
       {event.host.name && (
         <Row width={"fit-content"} align="left">
           <Column className="pr-2">
-            <Crown size={16} />
+            <Img src={`${baseUrl}/email/crown.png`} width={16} height={16} />
           </Column>
           <Column>
             <Text className="m-0">{event.host.name}</Text>
           </Column>
         </Row>
-        // <Text className="m-0 flex items-center gap-2">
-        //   <Crown size={16} /> {event.host.name}
-        // </Text>
       )}
       <Row>
         <Column></Column>
@@ -161,7 +157,11 @@ const InfoBox = ({ event }: InfoBoxProps) => {
       {going > 1 && (
         <Row width={"fit-content"} align="left">
           <Column className="pr-2">
-            <UsersRound size={16} />
+            <Img
+              src={`${baseUrl}/email/user-round.png`}
+              width={16}
+              height={16}
+            />
           </Column>
           <Column>
             <Text className="m-0">
@@ -170,10 +170,6 @@ const InfoBox = ({ event }: InfoBoxProps) => {
             </Text>
           </Column>
         </Row>
-        // <Text className="m-0 flex items-center gap-2">
-        //   <UsersRound size={16} />{" "}
-        //   {event.attendees.filter((a) => a.status === "GOING").length} attendees
-        // </Text>
       )}
     </Container>
   );
