@@ -108,7 +108,7 @@ type InfoBoxProps = {
 
 const InfoBox = ({ event }: InfoBoxProps) => {
   const going = event.attendees.filter((a) => a.status === "GOING").length;
-  console.log(event.timeZone);
+
   return (
     <Container className="my-4 rounded-lg border bg-[#e4e3f5] px-4 py-2 text-[#6a696f] shadow-sm">
       <Row width={"fit-content"} align="left">
