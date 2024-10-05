@@ -16,6 +16,7 @@ model Event {
     place       String?
     hostId      String
     dateTime    DateTime
+    timeZone    String     @default("Europe/Oslo")
     createdAt   DateTime   @default(now())
     updatedAt   DateTime   @default(now()) @updatedAt
     attendees   Attendee[]
