@@ -40,6 +40,7 @@ ConfirmationEmail.PreviewProps = {
     place: "Jens Bjelkes gate 72",
     hostId: "hostId",
     dateTime: new Date(),
+    timeZone: "Europe/Oslo",
     createdAt: new Date(),
     updatedAt: new Date(),
     host: {
