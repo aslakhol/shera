@@ -16,12 +16,14 @@ export const ConfirmationEmail = ({
       ? `Make sure to let ${event.host.name ? event.host.name : "the host"} know if you are going soon!`
       : undefined;
 
+  const foo = `offset: ${event.dateTime.getTimezoneOffset()}\n ISO: ${event.dateTime.toISOString()}\n UTC: ${event.dateTime.toUTCString()}\n locale: ${event.dateTime.toLocaleString()}`;
+
   return (
     <EventEmail
       event={event}
       previewText={`You are ${attendanceStatus === "MAYBE" ? "maybe " : ""}attending ${event.title}`}
       aboveText={`You are ${attendanceStatus === "MAYBE" ? "maybe " : ""}attending `}
-      bodyText={body}
+      bodyText={foo}
     />
   );
 };
