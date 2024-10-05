@@ -6,6 +6,7 @@ import {
   Heading,
   Hr,
   Html,
+  Img,
   Link,
   Preview,
   Tailwind,
@@ -115,7 +116,7 @@ const InfoBox = ({ event }: InfoBoxProps) => {
       </Text>
       {event.place && (
         <Text className="m-0 flex items-center gap-2">
-          <MapPin size={16} /> {event.place}
+          <Img src="/map-pin.png" width={16} height={16} /> {event.place}
         </Text>
       )}
       {event.host.name && (
