@@ -34,6 +34,7 @@ export const EventForm = ({ event, onSubmit, mutationIsLoading }: Props) => {
       dateTime:
         event?.dateTime ?? roundToNearestMinutes(new Date(), { nearestTo: 30 }),
       place: event?.place ?? "",
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
   });
 
