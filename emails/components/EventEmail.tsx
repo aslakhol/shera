@@ -14,8 +14,8 @@ import {
 import * as React from "react";
 import { fullEventId } from "../../src/utils/event";
 import { Crown, MapPin, UsersRound } from "lucide-react";
-import { format } from "date-fns";
 import { WorkingClock } from "../../src/components/WorkingClock";
+import { formatInTimeZone } from "date-fns-tz";
 import { type AttendingStatus } from "@prisma/client";
 
 const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
@@ -25,6 +25,7 @@ type EventEmail = {
     publicId: string;
     title: string;
     dateTime: Date;
+    timeZone: string;
     place: string | null;
     host: { name: string | null };
     attendees: Array<{ status: AttendingStatus }>;
@@ -96,6 +97,7 @@ export const EventEmail = ({
 type InfoBoxProps = {
   event: {
     dateTime: Date;
+    timeZone: string;
     place: string | null;
     host: { name: string | null };
     attendees: Array<{ status: AttendingStatus }>;
@@ -109,7 +111,7 @@ const InfoBox = ({ event }: InfoBoxProps) => {
     <Container className="my-4 rounded-lg border bg-[#e4e3f5] px-4 py-2 text-[#6a696f] shadow-sm">
       <Text className="m-0 flex items-center gap-2">
         <WorkingClock date={event.dateTime} size={16} />{" "}
-        {format(event.dateTime, "H:mm")}
+        {formatInTimeZone(event.dateTime, event.timeZone, "H:mm")}
       </Text>
       {event.place && (
         <Text className="m-0 flex items-center gap-2">
