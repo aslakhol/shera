@@ -116,7 +116,13 @@ const InfoBox = ({ event }: InfoBoxProps) => {
       </Text>
       {event.place && (
         <Text className="m-0 flex items-center gap-2">
-          <Img src={`${baseUrl}/map-pin.png`} width={16} height={16} />{" "}
+          <Img
+            className="self-center"
+            src={`${baseUrl}map-pin.png`}
+            width={16}
+            height={16}
+            color="#6a696f"
+          />{" "}
           {event.place}
         </Text>
       )}
