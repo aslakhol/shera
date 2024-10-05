@@ -9,6 +9,7 @@ import {
   Img,
   Link,
   Preview,
+  Row,
   Tailwind,
   Text,
 } from "@react-email/components";
@@ -115,15 +116,15 @@ const InfoBox = ({ event }: InfoBoxProps) => {
         {formatInTimeZone(event.dateTime, event.timeZone, "H:mm")}
       </Text>
       {event.place && (
-        <Text className="m-0 flex items-center gap-2">
+        <Row className="m-0 flex items-center gap-2">
           <Img
             style={{ alignSelf: "center", paddingRight: "4px" }}
             src={`${baseUrl}map-pin.png`}
             width={16}
             height={16}
-          />{" "}
-          {event.place}
-        </Text>
+          />
+          <Text className="m-0 flex items-center gap-2">{event.place}</Text>
+        </Row>
       )}
       {event.host.name && (
         <Text className="m-0 flex items-center gap-2">
