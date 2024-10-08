@@ -20,6 +20,7 @@ export type PostSchemaType = z.infer<typeof postSchema>;
 
 export const postSchema = z.object({
   message: z.string(),
+  notify: z.boolean(),
 });
 
 export type EventSchemaType = z.infer<typeof eventSchema>;

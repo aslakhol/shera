@@ -21,6 +21,7 @@ import {
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
 import { Loading } from "../Loading";
+import { Checkbox } from "../ui/checkbox";
 
 type NewPostProps = { publicId: string };
 
@@ -40,6 +41,10 @@ const NewPost = (props: NewPostProps) => {
 
   const form = useZodForm({
     schema: postSchema,
+    defaultValues: {
+      notify: true,
+      message: "",
+    },
   });
 
   const handleSubmit = (values: PostSchemaType) => {
@@ -65,7 +70,7 @@ const NewPost = (props: NewPostProps) => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
-              className="space-y-8"
+              className="space-y-6"
             >
               <FormField
                 control={form.control}
@@ -76,6 +81,25 @@ const NewPost = (props: NewPostProps) => {
                     <FormControl>
                       <Textarea {...field} />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="notify"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Notify attendees</FormLabel>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
