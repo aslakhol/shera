@@ -4,13 +4,14 @@ import { Body } from "./Body";
 import GoogleCalendar from "./GoogleCalendar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import Posts from "../post/Posts";
 import { Crown, MapPin, Pencil } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
 import { Loading } from "../Loading";
 
 import dynamic from "next/dynamic";
 import { Attendance } from "./Attendance";
+import NewPost from "../post/NewPost";
+import PostList from "../post/PostList";
 
 const Invite = dynamic(() => import("../invite/Invite"), {
   ssr: false,
@@ -68,9 +69,10 @@ export const Event = ({ publicId }: Props) => {
       <div className="flex flex-wrap justify-start gap-2">
         <Invite event={event} />
         <GoogleCalendar event={event} />
+        <NewPost publicId={publicId} />
       </div>
 
-      <Posts publicId={publicId} />
+      <PostList publicId={publicId} />
     </div>
   );
 };
