@@ -9,7 +9,7 @@ type NewPostProps = {
 };
 
 export const NewPost = ({ event, poster }: NewPostProps) => {
-  const body = `${poster.name ?? "Someone"} posted on ${event.title}`;
+  const body = `${poster.name ?? "Someone"} posted on ${event.title}.`;
 
   return (
     <EventEmail
