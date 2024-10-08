@@ -23,10 +23,10 @@ import { Textarea } from "../ui/textarea";
 import { Loading } from "../Loading";
 import { Checkbox } from "../ui/checkbox";
 
-type NewPostProps = { publicId: string };
+type NewPostProps = { publicId: string; isHost: boolean };
 
 const NewPost = (props: NewPostProps) => {
-  const { publicId } = props;
+  const { publicId, isHost } = props;
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { data: session } = useSession();
@@ -85,25 +85,26 @@ const NewPost = (props: NewPostProps) => {
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="notify"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Notify attendees</FormLabel>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {isHost && (
+                <FormField
+                  control={form.control}
+                  name="notify"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>Notify attendees</FormLabel>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
 
               <Button type="submit" disabled={postMutation.isLoading}>
                 {!postMutation.isLoading ? "Post" : <Loading />}

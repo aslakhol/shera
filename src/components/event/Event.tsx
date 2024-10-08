@@ -31,6 +31,8 @@ export const Event = ({ publicId }: Props) => {
     return <div>Event {publicId} not found</div>;
   }
 
+  const isHost = session?.user?.id === event.hostId;
+
   return (
     <div className="flex flex-col gap-4 p-4">
       <h2 className="text-2xl font-bold tracking-tight text-primary">
@@ -54,7 +56,7 @@ export const Event = ({ publicId }: Props) => {
             <p>{event.host.name ?? event.host.email}</p>
           </div>
         )}
-        {session?.user?.id === event.host.id && (
+        {isHost && (
           <div className="flex items-center gap-2">
             <Pencil size={16} />
             <Link href={`/events/${publicId}/edit`}>
@@ -69,7 +71,7 @@ export const Event = ({ publicId }: Props) => {
       <div className="flex flex-wrap justify-start gap-2">
         <Invite event={event} />
         <GoogleCalendar event={event} />
-        <NewPost publicId={publicId} />
+        <NewPost publicId={publicId} isHost={isHost} />
       </div>
 
       <PostList publicId={publicId} />
