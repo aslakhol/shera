@@ -2,6 +2,10 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { postSchema } from "../../../utils/formValidation";
 import { fullEventId } from "../../../utils/event";
+import { getNewPostEmail } from "../../../../emails/utils";
+import sgEmail from "@sendgrid/mail";
+import { env } from "../../../env";
+sgEmail.setApiKey(env.SENDGRID_API_KEY);
 
 export const postsRouter = createTRPCRouter({
   post: publicProcedure
@@ -9,7 +13,7 @@ export const postsRouter = createTRPCRouter({
       postSchema.extend({ authorId: z.string().cuid(), publicId: z.string() }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { publicId, authorId, ...post } = input;
+      const { publicId, authorId, notify, ...post } = input;
 
       const postInDb = await ctx.db.post.create({
         data: {
@@ -17,11 +21,30 @@ export const postsRouter = createTRPCRouter({
           event: { connect: { publicId } },
           author: { connect: { id: authorId } },
         },
-        include: { event: true },
+        include: {
+          event: {
+            include: { attendees: true, host: true },
+          },
+          author: true,
+        },
       });
 
       const path = fullEventId(postInDb.event);
       await ctx.res?.revalidate(`/events/${path}`);
+
+      if (notify) {
+        const attendeeEmails = postInDb.event.attendees
+          .map((attendee) => attendee.email)
+          .filter((email) => email !== null);
+
+        const newPostEmail = getNewPostEmail(
+          postInDb.event,
+          attendeeEmails,
+          postInDb.author,
+        );
+
+        await sgEmail.send(newPostEmail);
+      }
 
       return postInDb;
     }),
