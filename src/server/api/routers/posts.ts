@@ -33,18 +33,25 @@ export const postsRouter = createTRPCRouter({
       await ctx.res?.revalidate(`/events/${path}`);
 
       if (notify) {
+        const posterIsHost = postInDb.author.id === postInDb.event.hostId;
         const attendeeEmails = postInDb.event.attendees
           .map((attendee) => attendee.email)
           .filter((email) => email !== null)
           .filter((email) => email !== postInDb.author.email);
 
-        const newPostEmail = getNewPostEmail(
-          postInDb.event,
-          attendeeEmails,
-          postInDb.author,
-        );
+        const emails = posterIsHost
+          ? attendeeEmails
+          : [postInDb.event.host.email].filter((e) => e !== null);
 
-        await sgEmail.send(newPostEmail);
+        if (emails.length > 0) {
+          const newPostEmail = getNewPostEmail(
+            postInDb.event,
+            emails,
+            postInDb.author,
+          );
+
+          await sgEmail.send(newPostEmail);
+        }
       }
 
       return postInDb;
