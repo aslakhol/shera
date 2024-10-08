@@ -50,12 +50,10 @@ export const Event = ({ publicId }: Props) => {
             <p>{event.place}</p>
           </div>
         )}
-        {event.hostId && (
-          <div className="flex items-center gap-2">
-            <Crown size={16} />
-            <p>{event.host.name ?? event.host.email}</p>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <Crown size={16} />
+          <p>{event.host.name ?? event.host.email}</p>
+        </div>
         {isHost && (
           <div className="flex items-center gap-2">
             <Pencil size={16} />
