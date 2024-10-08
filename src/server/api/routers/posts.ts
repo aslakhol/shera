@@ -35,7 +35,8 @@ export const postsRouter = createTRPCRouter({
       if (notify) {
         const attendeeEmails = postInDb.event.attendees
           .map((attendee) => attendee.email)
-          .filter((email) => email !== null);
+          .filter((email) => email !== null)
+          .filter((email) => email !== postInDb.author.email);
 
         const newPostEmail = getNewPostEmail(
           postInDb.event,
