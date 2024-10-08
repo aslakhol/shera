@@ -3,6 +3,7 @@ import { env } from "../src/env";
 import { type Attendee, type User, type Event } from "@prisma/client";
 import Invite from "./Invite";
 import ConfirmationEmail from "./ConfirmationEmail";
+import NewPost from "./NewPost";
 
 export const getInviteEmail = (
   event: Event & { host: User; attendees: Attendee[] },
@@ -51,4 +52,25 @@ export const getConfirmationEmail = (
   };
 
   return confirmEmail;
+};
+
+export const getNewPostEmail = (
+  event: Event & { host: User; attendees: Attendee[] },
+  emails: string[],
+  poster: User,
+) => {
+  const html = render(<NewPost event={event} poster={poster} />);
+  const text = render(<NewPost event={event} poster={poster} />, {
+    plainText: true,
+  });
+
+  const newPostEmail = {
+    to: emails,
+    from: env.EMAIL_FROM,
+    subject: `New post in ${event.title}!`,
+    text,
+    html,
+  };
+
+  return newPostEmail;
 };
