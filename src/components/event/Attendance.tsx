@@ -92,7 +92,7 @@ type AttendProps = {
 const Attend = ({ session, event, currentAttendee }: AttendProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState(
-    currentAttendee?.name ?? session.user.name ?? session.user.email ?? "",
+    currentAttendee?.name ?? session.user.name ?? "",
   );
   const updateAttendanceMutation = api.events.updateAttendance.useMutation({
     onSuccess: async () => {
