@@ -29,9 +29,7 @@ const GoogleCalendar = (props: GoogleCalendarProps) => {
     .replace(/-|:|\.\d+/g, "");
   const time = `${startTime}%2F${endTime}`;
 
-  const timezone = Intl.DateTimeFormat()
-    .resolvedOptions()
-    .timeZone.replace("/", "%2F");
+  const timezone = encodeURIComponent(event.timeZone);
 
   const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${description}&location=${location}&dates=${time}&ctz=${timezone}`;
 
