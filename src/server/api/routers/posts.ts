@@ -40,8 +40,8 @@ export const postsRouter = createTRPCRouter({
           .filter((email) => email !== postInDb.author.email);
 
         const emails = posterIsHost
-          ? (attendeeEmails as string[])
-          : ([postInDb.event.host.email].filter((e) => e !== null) as string[]);
+          ? attendeeEmails
+          : [postInDb.event.host.email].filter((e) => e !== null);
 
         if (emails.length > 0) {
           const newPostEmail = getNewPostEmail(
