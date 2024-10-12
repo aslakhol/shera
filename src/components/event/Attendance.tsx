@@ -92,7 +92,7 @@ type AttendProps = {
 const Attend = ({ session, event, currentAttendee }: AttendProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState(
-    currentAttendee?.name ?? session.user.name ?? session.user.email ?? "",
+    currentAttendee?.name ?? session.user.name ?? "",
   );
   const updateAttendanceMutation = api.events.updateAttendance.useMutation({
     onSuccess: async () => {
@@ -102,6 +102,7 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
     },
   });
   const utils = api.useUtils();
+  const attendanceDisabled = updateAttendanceMutation.isLoading || !name;
 
   const updateAttendance = async (status: "GOING" | "NOT_GOING" | "MAYBE") => {
     await updateAttendanceMutation.mutateAsync({
@@ -139,7 +140,7 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
           </div>
 
           <Button
-            disabled={updateAttendanceMutation.isLoading}
+            disabled={attendanceDisabled}
             variant="outline"
             className={cn(
               "w-full",
@@ -150,7 +151,7 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
             Going
           </Button>
           <Button
-            disabled={updateAttendanceMutation.isLoading}
+            disabled={attendanceDisabled}
             variant="outline"
             className={cn(
               "w-full",
@@ -161,7 +162,7 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
             Maybe
           </Button>
           <Button
-            disabled={updateAttendanceMutation.isLoading}
+            disabled={attendanceDisabled}
             variant="outline"
             className={cn(
               "w-full",
