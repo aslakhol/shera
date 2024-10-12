@@ -142,8 +142,14 @@ export const eventsRouter = createTRPCRouter({
           data: { name: name },
         });
       }
-
-      if (user.email && (status === "GOING" || status === "MAYBE")) {
+      const previousStatus = event.attendees.find(
+        (a) => a.userId === user.id,
+      )?.status;
+      const shouldGetConfirmationEmail =
+        previousStatus !== status &&
+        previousStatus !== "GOING" &&
+        (status === "GOING" || status === "MAYBE");
+      if (user.email && shouldGetConfirmationEmail) {
         const inviteEmail = getConfirmationEmail(event, user.email, status);
         await sgEmail.send(inviteEmail);
       }
