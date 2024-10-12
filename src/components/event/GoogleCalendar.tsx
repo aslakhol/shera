@@ -14,14 +14,14 @@ type GoogleCalendarProps = {
 const GoogleCalendar = (props: GoogleCalendarProps) => {
   const { event } = props;
 
-  const title = event.title;
+  const title = encodeURIComponent(event.title);
   const sheraLink = `https://shera.no/events/${fullEventId(event)}`;
 
-  const description = `${sheraLink}%0A%0A${event.description.replaceAll(
-    "\n",
-    "%0A",
-  )}`;
-  const location = event.place;
+  const description = encodeURIComponent(
+    `${sheraLink}\n\n${event.description}`,
+  );
+
+  const location = encodeURIComponent(event.place ?? "");
 
   const startTime = event.dateTime.toISOString().replace(/-|:|\.\d+/g, "");
   const endTime = add(event.dateTime, { hours: 1 })
@@ -29,9 +29,7 @@ const GoogleCalendar = (props: GoogleCalendarProps) => {
     .replace(/-|:|\.\d+/g, "");
   const time = `${startTime}%2F${endTime}`;
 
-  const timezone = Intl.DateTimeFormat()
-    .resolvedOptions()
-    .timeZone.replace("/", "%2F");
+  const timezone = encodeURIComponent(event.timeZone);
 
   const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${description}&location=${location}&dates=${time}&ctz=${timezone}`;
 
