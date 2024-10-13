@@ -2,6 +2,7 @@ import * as React from "react";
 import { type Attendee, type User, type Event } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
 import { previewEvent, previewUser } from "./previews";
+import { Text } from "@react-email/components";
 
 type UpdatedEventProps = {
   event: Event & { host: User; attendees: Attendee[] };
@@ -9,16 +10,12 @@ type UpdatedEventProps = {
 };
 
 export const UpdatedEvent = ({ event, changes }: UpdatedEventProps) => {
-  const body = `The following information has been updated:
-  ${changes.map((change) => `- ${change}`).join("\n")}
-`;
-
   return (
     <EventEmail
       event={event}
       previewText={`New post in ${event.title}`}
       aboveText={`New post in`}
-      bodyText={body}
+      body={<UpdatedBody changes={changes} />}
     />
   );
 };
@@ -34,3 +31,18 @@ UpdatedEvent.PreviewProps = {
     `The date was changed from October 31st to October 29th`,
   ],
 } satisfies UpdatedEventProps;
+
+type UpdatedBodyProps = { changes: string[] };
+
+const UpdatedBody = ({ changes }: UpdatedBodyProps) => {
+  return (
+    <>
+      <Text>The following information has been updated:</Text>
+      <ul className="text-sm ">
+        {changes.map((change) => (
+          <li key={change}>{change}</li>
+        ))}
+      </ul>
+    </>
+  );
+};
