@@ -4,12 +4,15 @@ import { EventEmail } from "./components/EventEmail";
 import { previewEvent } from "./previews";
 import { Text } from "@react-email/components";
 
-type UpdatedEventProps = {
+type UpdatedEventEmailProps = {
   event: Event & { host: User; attendees: Attendee[] };
   changes: string[];
 };
 
-export const UpdatedEvent = ({ event, changes }: UpdatedEventProps) => {
+export const UpdatedEventEmail = ({
+  event,
+  changes,
+}: UpdatedEventEmailProps) => {
   return (
     <EventEmail
       event={event}
@@ -20,9 +23,9 @@ export const UpdatedEvent = ({ event, changes }: UpdatedEventProps) => {
   );
 };
 
-export default UpdatedEvent;
+export default UpdatedEventEmail;
 
-UpdatedEvent.PreviewProps = {
+UpdatedEventEmail.PreviewProps = {
   event: previewEvent,
   changes: [
     `The location changed from "Brød & Sirkus" to "Fyrhuset Kuba".`,
@@ -30,7 +33,7 @@ UpdatedEvent.PreviewProps = {
     `The time was changed from 18:00 to 20:00`,
     `The date was changed from October 31st to October 29th`,
   ],
-} satisfies UpdatedEventProps;
+} satisfies UpdatedEventEmailProps;
 
 type UpdatedBodyProps = { changes: string[] };
 

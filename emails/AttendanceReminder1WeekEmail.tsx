@@ -2,19 +2,19 @@ import * as React from "react";
 import { type Attendee, type User, type Event } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
 
-type AttendanceReminder3Days = {
+type AttendanceReminder1WeekEmailProps = {
   event: Event & { host: User; attendees: Attendee[] };
   attendanceStatus: "INVITED" | "MAYBE";
 };
 
-export const AttendanceReminder3Days = ({
+export const AttendanceReminder1WeekEmail = ({
   event,
   attendanceStatus,
-}: AttendanceReminder3Days) => {
+}: AttendanceReminder1WeekEmailProps) => {
   const attendPrompt =
     attendanceStatus === "INVITED"
-      ? `You are invited to ${event.title} in 3 days, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`
-      : `${event.title} is happening in 3 days and your attendance is set to maybe, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`;
+      ? `You are invited to ${event.title} in 1 week, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`
+      : `${event.title} is happening in 1 week and your attendance is set to maybe, let ${event.host.name ? event.host.name : "the host"} know if you are coming!`;
 
   return (
     <EventEmail
@@ -26,9 +26,9 @@ export const AttendanceReminder3Days = ({
   );
 };
 
-export default AttendanceReminder3Days;
+export default AttendanceReminder1WeekEmail;
 
-AttendanceReminder3Days.PreviewProps = {
+AttendanceReminder1WeekEmail.PreviewProps = {
   event: {
     eventId: 42,
     publicId: "publicId",
@@ -66,5 +66,5 @@ AttendanceReminder3Days.PreviewProps = {
       },
     ],
   },
-  attendanceStatus: "MAYBE",
-} satisfies AttendanceReminder3Days;
+  attendanceStatus: "INVITED",
+} satisfies AttendanceReminder1WeekEmailProps;

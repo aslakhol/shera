@@ -3,12 +3,12 @@ import { type Attendee, type User, type Event } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
 import { previewEvent, previewUser } from "./previews";
 
-type NewPostProps = {
+type NewPostEmailProps = {
   event: Event & { host: User; attendees: Attendee[] };
   poster: User;
 };
 
-export const NewPost = ({ event, poster }: NewPostProps) => {
+export const NewPostEmail = ({ event, poster }: NewPostEmailProps) => {
   const body = `${poster.name ?? "Someone"} posted in ${event.title}.`;
 
   return (
@@ -21,9 +21,9 @@ export const NewPost = ({ event, poster }: NewPostProps) => {
   );
 };
 
-export default NewPost;
+export default NewPostEmail;
 
-NewPost.PreviewProps = {
+NewPostEmail.PreviewProps = {
   event: previewEvent,
   poster: previewUser,
-} satisfies NewPostProps;
+} satisfies NewPostEmailProps;

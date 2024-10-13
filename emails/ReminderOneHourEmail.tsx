@@ -5,11 +5,11 @@ import { previewEvent } from "./previews";
 
 // This is not currently used as I couldn't have crons go more accurate than once an hour on free vercel
 
-type ReminderOneHourProps = {
+type ReminderOneHourEmailProps = {
   event: Event & { host: User; attendees: Attendee[] };
 };
 
-export const ReminderOneHour = ({ event }: ReminderOneHourProps) => {
+export const ReminderOneHourEmail = ({ event }: ReminderOneHourEmailProps) => {
   return (
     <EventEmail
       event={event}
@@ -19,8 +19,8 @@ export const ReminderOneHour = ({ event }: ReminderOneHourProps) => {
   );
 };
 
-export default ReminderOneHour;
+export default ReminderOneHourEmail;
 
-ReminderOneHour.PreviewProps = {
+ReminderOneHourEmail.PreviewProps = {
   event: previewEvent,
-} satisfies ReminderOneHourProps;
+} satisfies ReminderOneHourEmailProps;
