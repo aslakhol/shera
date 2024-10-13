@@ -78,12 +78,28 @@ export const eventsRouter = createTRPCRouter({
           ? `The place changed from "${oldEvent.place}" to "${eventInDb.place}".`
           : undefined;
       const dateChanged = !isSameDay(oldEvent.dateTime, eventInDb.dateTime)
-        ? `The date changed from "${formatInTimeZone(oldEvent.dateTime, "LLLL do", oldEvent.timeZone)}" to "${formatInTimeZone(eventInDb.dateTime, "LLLL do", eventInDb.timeZone)}".`
+        ? `The date changed from "${formatInTimeZone(
+            oldEvent.dateTime,
+            oldEvent.timeZone,
+            "LLLL do",
+          )}" to "${formatInTimeZone(
+            eventInDb.dateTime,
+            eventInDb.timeZone,
+            "LLLL do",
+          )}"`
         : undefined;
       const timeChanged =
         !isSameHour(oldEvent.dateTime, eventInDb.dateTime) ||
         !isSameMinute(oldEvent.dateTime, eventInDb.dateTime)
-          ? `The time changed from "${formatInTimeZone(oldEvent.dateTime, "h:mm", oldEvent.timeZone)}" to "${formatInTimeZone(eventInDb.dateTime, "h:mm", eventInDb.timeZone)}".`
+          ? `The time changed from "${formatInTimeZone(
+              oldEvent.dateTime,
+              oldEvent.timeZone,
+              "h:mm",
+            )}" to "${formatInTimeZone(
+              eventInDb.dateTime,
+              eventInDb.timeZone,
+              "h:mm",
+            )}"`
           : undefined;
 
       const changes = [
