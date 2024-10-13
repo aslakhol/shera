@@ -112,6 +112,10 @@ export const eventsRouter = createTRPCRouter({
 
       if (notify && changes.length > 0) {
         const attendeeEmails = eventInDb.attendees
+          .filter(
+            (attendee) =>
+              attendee.status === "GOING" || attendee.status === "MAYBE",
+          )
           .map((attendee) => attendee.email)
           .filter((email) => email !== null)
           .filter((email) => email !== eventInDb.host.email);
