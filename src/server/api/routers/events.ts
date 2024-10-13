@@ -51,7 +51,7 @@ export const eventsRouter = createTRPCRouter({
       };
     }),
   updateEvent: publicProcedure
-    .input(eventSchema.extend({ publicId: z.string(), notify: z.boolean() }))
+    .input(eventSchema.extend({ publicId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { publicId, notify, ...event } = input;
 
