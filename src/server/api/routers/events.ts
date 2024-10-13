@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { compareDesc } from "date-fns";
+import { compareDesc, isSameDay, isSameHour, isSameMinute } from "date-fns";
 import { eventSchema } from "../../../utils/formValidation";
 import { type Prisma } from "@prisma/client";
 import sgEmail from "@sendgrid/mail";
@@ -8,6 +8,7 @@ import { fullEventId } from "../../../utils/event";
 import { env } from "../../../env";
 import { getConfirmationEmail, getInviteEmail } from "../../../../emails/utils";
 import { type UserNetwork } from "../../../utils/types";
+import { formatInTimeZone } from "date-fns-tz";
 
 sgEmail.setApiKey(env.SENDGRID_API_KEY);
 
@@ -50,10 +51,43 @@ export const eventsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { publicId, ...event } = input;
 
+      const oldEvent = await ctx.db.event.findFirstOrThrow({
+        where: { publicId },
+      });
+
       const eventInDb = await ctx.db.event.update({
         where: { publicId },
         data: { ...event },
       });
+
+      const titleChanged =
+        oldEvent?.title !== eventInDb.title
+          ? `The title changed from "${oldEvent.title}" to "${eventInDb.title}".`
+          : undefined;
+      const descriptionChanged =
+        oldEvent.description !== eventInDb.description
+          ? `The description was updated.`
+          : undefined;
+      const placeChanged =
+        oldEvent.place !== eventInDb.place
+          ? `The place changed from "${oldEvent.place}" to "${eventInDb.place}".`
+          : undefined;
+      const dateChanged = !isSameDay(oldEvent.dateTime, eventInDb.dateTime)
+        ? `The date changed from "${formatInTimeZone(oldEvent.dateTime, "LLLL do", oldEvent.timeZone)}" to "${formatInTimeZone(eventInDb.dateTime, "LLLL do", eventInDb.timeZone)}".`
+        : undefined;
+      const timeChanged =
+        !isSameHour(oldEvent.dateTime, eventInDb.dateTime) ||
+        !isSameMinute(oldEvent.dateTime, eventInDb.dateTime)
+          ? `The time changed from "${formatInTimeZone(oldEvent.dateTime, "h:mm", oldEvent.timeZone)}" to "${formatInTimeZone(eventInDb.dateTime, "h:mm", eventInDb.timeZone)}".`
+          : undefined;
+
+      const changes = [
+        titleChanged,
+        descriptionChanged,
+        placeChanged,
+        dateChanged,
+        timeChanged,
+      ].filter((change): change is string => !!change);
 
       const path = fullEventId(eventInDb);
       await ctx.res?.revalidate(`/events/${path}`);
