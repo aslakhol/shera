@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type Attendee, type User, type Event } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
-import { previewEvent, previewUser } from "./previews";
+import { previewEvent } from "./previews";
 import { Text } from "@react-email/components";
 
 type UpdatedEventProps = {
