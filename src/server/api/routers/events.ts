@@ -94,7 +94,7 @@ export const eventsRouter = createTRPCRouter({
         timeChanged,
       ].filter((change): change is string => !!change);
 
-      if (true) {
+      if (changes.length > 0) {
         const attendeeEmails = eventInDb.attendees
           .map((attendee) => attendee.email)
           .filter((email) => email !== null)
