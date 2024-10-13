@@ -3,12 +3,12 @@ import { type Attendee, type User, type Event } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
 import { previewEvent } from "./previews";
 
-type InviteProps = {
+type InviteEmailProps = {
   event: Event & { host: User; attendees: Attendee[] };
   inviterName?: string;
 };
 
-export const Invite = ({ event, inviterName }: InviteProps) => {
+export const InviteEmail = ({ event, inviterName }: InviteEmailProps) => {
   const preview = inviterName
     ? `${inviterName} has invited you to ${event.title}!`
     : `You've been invited to ${event.title}!`;
@@ -22,9 +22,9 @@ export const Invite = ({ event, inviterName }: InviteProps) => {
   );
 };
 
-export default Invite;
+export default InviteEmail;
 
-Invite.PreviewProps = {
+InviteEmail.PreviewProps = {
   event: previewEvent,
   inviterName: "Aslak",
-} satisfies InviteProps;
+} satisfies InviteEmailProps;

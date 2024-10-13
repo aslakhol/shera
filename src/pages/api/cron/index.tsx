@@ -11,9 +11,9 @@ import sgEmail from "@sendgrid/mail";
 import { env } from "../../../env";
 import { type Attendee, type Event, type User } from "@prisma/client";
 import { render } from "@react-email/render";
-import EventTomorrow from "../../../../emails/EventTomorrow";
-import AttendanceReminder1Week from "../../../../emails/AttendanceReminder1Week";
-import AttendanceReminder3Days from "../../../../emails/AttendanceReminder3Days";
+import EventTomorrowEmail from "../../../../emails/EventTomorrowEmail";
+import AttendanceReminder1WeekEmail from "../../../../emails/AttendanceReminder1WeekEmail";
+import AttendanceReminder3DaysEmail from "../../../../emails/AttendanceReminder3DaysEmail";
 
 sgEmail.setApiKey(env.SENDGRID_API_KEY);
 
@@ -194,8 +194,8 @@ const getReminderTomorrowEmail = (
     .map((a) => a.email!)
     .filter((email) => email !== null);
 
-  const html = render(<EventTomorrow event={event} />);
-  const text = render(<EventTomorrow event={event} />, {
+  const html = render(<EventTomorrowEmail event={event} />);
+  const text = render(<EventTomorrowEmail event={event} />, {
     plainText: true,
   });
 
@@ -217,13 +217,13 @@ const getAttendance1WeekEmail = (
     .filter((email) => email !== null);
 
   const html = render(
-    <AttendanceReminder1Week
+    <AttendanceReminder1WeekEmail
       event={event}
       attendanceStatus={attendanceStatus}
     />,
   );
   const text = render(
-    <AttendanceReminder1Week
+    <AttendanceReminder1WeekEmail
       event={event}
       attendanceStatus={attendanceStatus}
     />,
@@ -250,13 +250,13 @@ const getAttendance3DaysEmail = (
     .filter((email) => email !== null);
 
   const html = render(
-    <AttendanceReminder3Days
+    <AttendanceReminder3DaysEmail
       event={event}
       attendanceStatus={attendanceStatus}
     />,
   );
   const text = render(
-    <AttendanceReminder3Days
+    <AttendanceReminder3DaysEmail
       event={event}
       attendanceStatus={attendanceStatus}
     />,

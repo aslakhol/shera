@@ -36,6 +36,7 @@ type EventEmail = {
   aboveText?: string;
   belowText?: string;
   bodyText?: string;
+  body?: React.ReactNode;
 };
 
 export const EventEmail = ({
@@ -44,6 +45,7 @@ export const EventEmail = ({
   aboveText,
   belowText,
   bodyText,
+  body,
 }: EventEmail) => {
   const eventUrl = `${baseUrl}events/${fullEventId(event)}`;
 
@@ -69,6 +71,7 @@ export const EventEmail = ({
               View event
             </Button>
             {bodyText && <Text className="pb-2 text-sm">{bodyText}</Text>}
+            {body && body}
             <Hr className="mx-0 mb-5 mt-0 w-full border border-solid border-[#e6ebf1]" />
             <Text className="text-sm text-[#8898aa]">
               Host your next event with{" "}

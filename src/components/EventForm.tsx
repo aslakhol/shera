@@ -18,6 +18,7 @@ import { Calendar } from "./ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { useZodForm } from "../utils/zod";
 import { TimePicker } from "./ui/timepicker/time-picker";
+import { Checkbox } from "./ui/checkbox";
 
 type Props = {
   event?: Event;
@@ -35,6 +36,7 @@ export const EventForm = ({ event, onSubmit, mutationIsLoading }: Props) => {
         event?.dateTime ?? roundToNearestMinutes(new Date(), { nearestTo: 30 }),
       place: event?.place ?? "",
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      notify: !!event ? true : false,
     },
   });
 
@@ -137,6 +139,27 @@ export const EventForm = ({ event, onSubmit, mutationIsLoading }: Props) => {
             </FormItem>
           )}
         />
+
+        {!!event && (
+          <FormField
+            control={form.control}
+            name="notify"
+            render={({ field }) => (
+              <FormItem className="flex flex-row space-x-3 space-y-0 rounded-md">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-4">
+                  <FormLabel>Notify attendees of updates</FormLabel>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <Button type="submit" disabled={mutationIsLoading}>
           Submit

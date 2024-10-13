@@ -31,6 +31,7 @@ export const eventSchema = z.object({
   dateTime: z.date(),
   timeZone: z.string(),
   place: z.string().optional(),
+  notify: z.boolean(),
 });
 
 export type ProfileSchemaType = z.infer<typeof profileSchema>;

@@ -3,11 +3,11 @@ import { EventEmail } from "./components/EventEmail";
 import { type Attendee, type Event, type User } from "@prisma/client";
 import { previewEvent } from "./previews";
 
-type EventTomorrowProps = {
+type EventTomorrowEmailProps = {
   event: Event & { host: User; attendees: Attendee[] };
 };
 
-export const EventTomorrow = ({ event }: EventTomorrowProps) => {
+export const EventTomorrowEmail = ({ event }: EventTomorrowEmailProps) => {
   return (
     <EventEmail
       event={event}
@@ -17,8 +17,8 @@ export const EventTomorrow = ({ event }: EventTomorrowProps) => {
   );
 };
 
-export default EventTomorrow;
+export default EventTomorrowEmail;
 
-EventTomorrow.PreviewProps = {
+EventTomorrowEmail.PreviewProps = {
   event: previewEvent,
-} satisfies EventTomorrowProps;
+} satisfies EventTomorrowEmailProps;

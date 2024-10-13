@@ -1,17 +1,18 @@
 import { render } from "@react-email/render";
 import { env } from "../src/env";
 import { type Attendee, type User, type Event } from "@prisma/client";
-import Invite from "./Invite";
+import InviteEmail from "./InviteEmail";
 import ConfirmationEmail from "./ConfirmationEmail";
-import NewPost from "./NewPost";
+import NewPostEmail from "./NewPostEmail";
+import UpdatedEventEmail from "./UpdatedEventEmail";
 
 export const getInviteEmail = (
   event: Event & { host: User; attendees: Attendee[] },
   emails: string[],
   inviterName?: string,
 ) => {
-  const html = render(<Invite event={event} inviterName={inviterName} />);
-  const text = render(<Invite event={event} inviterName={inviterName} />, {
+  const html = render(<InviteEmail event={event} inviterName={inviterName} />);
+  const text = render(<InviteEmail event={event} inviterName={inviterName} />, {
     plainText: true,
   });
 
@@ -59,8 +60,8 @@ export const getNewPostEmail = (
   emails: string[],
   poster: User,
 ) => {
-  const html = render(<NewPost event={event} poster={poster} />);
-  const text = render(<NewPost event={event} poster={poster} />, {
+  const html = render(<NewPostEmail event={event} poster={poster} />);
+  const text = render(<NewPostEmail event={event} poster={poster} />, {
     plainText: true,
   });
 
@@ -73,4 +74,25 @@ export const getNewPostEmail = (
   };
 
   return newPostEmail;
+};
+
+export const getUpdatedEventEmail = (
+  event: Event & { host: User; attendees: Attendee[] },
+  changes: string[],
+  emails: string[],
+) => {
+  const html = render(<UpdatedEventEmail event={event} changes={changes} />);
+  const text = render(<UpdatedEventEmail event={event} changes={changes} />, {
+    plainText: true,
+  });
+
+  const updatedEventEmail = {
+    to: emails,
+    from: env.EMAIL_FROM,
+    subject: `${event.title} has been updated!`,
+    text,
+    html,
+  };
+
+  return updatedEventEmail;
 };
