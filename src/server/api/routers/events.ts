@@ -51,9 +51,9 @@ export const eventsRouter = createTRPCRouter({
       };
     }),
   updateEvent: publicProcedure
-    .input(eventSchema.extend({ publicId: z.string() }))
+    .input(eventSchema.extend({ publicId: z.string(), notify: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      const { publicId, ...event } = input;
+      const { publicId, notify, ...event } = input;
 
       const oldEvent = await ctx.db.event.findFirstOrThrow({
         where: { publicId },
@@ -94,7 +94,7 @@ export const eventsRouter = createTRPCRouter({
         timeChanged,
       ].filter((change): change is string => !!change);
 
-      if (changes.length > 0) {
+      if (notify && changes.length > 0) {
         const attendeeEmails = eventInDb.attendees
           .map((attendee) => attendee.email)
           .filter((email) => email !== null)
