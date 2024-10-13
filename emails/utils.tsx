@@ -4,6 +4,7 @@ import { type Attendee, type User, type Event } from "@prisma/client";
 import Invite from "./Invite";
 import ConfirmationEmail from "./ConfirmationEmail";
 import NewPost from "./NewPost";
+import UpdatedEvent from "./UpdatedEvent";
 
 export const getInviteEmail = (
   event: Event & { host: User; attendees: Attendee[] },
@@ -73,4 +74,25 @@ export const getNewPostEmail = (
   };
 
   return newPostEmail;
+};
+
+export const getUpdatedEventEmail = (
+  event: Event & { host: User; attendees: Attendee[] },
+  changes: string[],
+  emails: string[],
+) => {
+  const html = render(<UpdatedEvent event={event} changes={changes} />);
+  const text = render(<UpdatedEvent event={event} changes={changes} />, {
+    plainText: true,
+  });
+
+  const updatedEventEmail = {
+    to: emails,
+    from: env.EMAIL_FROM,
+    subject: `${event.title} has been updated!`,
+    text,
+    html,
+  };
+
+  return updatedEventEmail;
 };

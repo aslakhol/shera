@@ -6,7 +6,11 @@ import { type Prisma } from "@prisma/client";
 import sgEmail from "@sendgrid/mail";
 import { fullEventId } from "../../../utils/event";
 import { env } from "../../../env";
-import { getConfirmationEmail, getInviteEmail } from "../../../../emails/utils";
+import {
+  getConfirmationEmail,
+  getInviteEmail,
+  getUpdatedEventEmail,
+} from "../../../../emails/utils";
 import { type UserNetwork } from "../../../utils/types";
 import { formatInTimeZone } from "date-fns-tz";
 
@@ -58,6 +62,7 @@ export const eventsRouter = createTRPCRouter({
       const eventInDb = await ctx.db.event.update({
         where: { publicId },
         data: { ...event },
+        include: { attendees: true, host: true },
       });
 
       const titleChanged =
@@ -88,6 +93,23 @@ export const eventsRouter = createTRPCRouter({
         dateChanged,
         timeChanged,
       ].filter((change): change is string => !!change);
+
+      if (true) {
+        const attendeeEmails = eventInDb.attendees
+          .map((attendee) => attendee.email)
+          .filter((email) => email !== null)
+          .filter((email) => email !== eventInDb.host.email);
+
+        if (attendeeEmails.length > 0) {
+          const updatedEventEmail = getUpdatedEventEmail(
+            eventInDb,
+            changes,
+            attendeeEmails,
+          );
+
+          await sgEmail.send(updatedEventEmail);
+        }
+      }
 
       const path = fullEventId(eventInDb);
       await ctx.res?.revalidate(`/events/${path}`);
