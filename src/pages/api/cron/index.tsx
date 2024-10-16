@@ -235,7 +235,7 @@ const getAttendance1WeekEmail = (
   return {
     to: attendeeEmails,
     from: env.EMAIL_FROM,
-    subject: `Are you going to ${event.title} in 3 days?`,
+    subject: `Are you going to ${event.title} in 1 week?`,
     text,
     html,
   };
