@@ -24,7 +24,13 @@ export const eventsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { userId, ...event } = input;
+      const { userId, notify, ...event } = input;
+
+      if (notify) {
+        throw new Error(
+          "Notify is not allowed to be true when creating an event",
+        );
+      }
 
       const host = await ctx.db.user.findFirst({
         where: { id: userId },
