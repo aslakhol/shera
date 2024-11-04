@@ -80,7 +80,7 @@ const SigninPage: NextPage<SigninPageProps> = (props) => {
       <div className={cn("grid gap-6")}>
         <EmailInput
           onSuccess={(email) => {
-            setEmail(email);
+            setEmail(normalize(email));
             setShowVerificationStep(true);
           }}
           loading={isLoading}
@@ -147,3 +147,13 @@ SigninPage.getInitialProps = async (context) => {
 };
 
 export default SigninPage;
+
+const normalize = (email: string): string => {
+  // eslint-disable-next-line prefer-const
+  let [local, domain] = email.toLowerCase().trim().split("@");
+  if (!domain) {
+    throw new Error("Invalid email");
+  }
+  domain = domain.split(",")[0];
+  return `${local}@${domain}`;
+};
