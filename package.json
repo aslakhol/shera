@@ -6,9 +6,9 @@
   "scripts": {
     "build": "next build",
     "vercel-build": "prisma generate && prisma migrate deploy && next build",
-    "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "db:reset": "npx --yes -p dotenv-cli dotenv -c development -- prisma migrate reset",
+    "db:make-migrations": "prisma migrate dev --name",
     "dev": "next dev",
     "dev:email": "email dev -p 3001",
     "postinstall": "prisma generate",
