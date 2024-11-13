@@ -3,9 +3,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { postSchema } from "../../../utils/formValidation";
 import { fullEventId } from "../../../utils/event";
 import { getNewPostEmail } from "../../../../emails/utils";
-import sgEmail from "@sendgrid/mail";
-import { env } from "../../../env";
-sgEmail.setApiKey(env.SENDGRID_API_KEY);
+import { emailClient } from "../../../server/email";
 
 export const postsRouter = createTRPCRouter({
   post: publicProcedure
@@ -54,7 +52,7 @@ export const postsRouter = createTRPCRouter({
             postInDb.author,
           );
 
-          await sgEmail.send(newPostEmail);
+          await emailClient.send(newPostEmail);
         }
       }
 
