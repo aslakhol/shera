@@ -49,15 +49,15 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(db),
   providers:
-    env.NODE_ENV === "production"
-      ? [
+    env.GOOGLE_CLIENT_SECRET === "local" || env.GOOGLE_CLIENT_ID === "local"
+      ? [EmailOtpProvider]
+      : [
           GoogleProvider({
             clientId: env.GOOGLE_CLIENT_ID,
             clientSecret: env.GOOGLE_CLIENT_SECRET,
           }),
           EmailOtpProvider,
-        ]
-      : [EmailOtpProvider],
+        ],
   pages: {
     signIn: "/auth/signin",
   },

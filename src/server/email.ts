@@ -5,7 +5,7 @@ sgEmail.setApiKey(env.SENDGRID_API_KEY);
 
 const emailClient = {
   send: async (...args: Parameters<typeof sgEmail.send>) => {
-    if (env.NODE_ENV === "development") {
+    if (env.SENDGRID_API_KEY === "local") {
       console.log(`----------- <ConsoleEmail> -----------`);
       console.log(JSON.stringify(args[0], undefined, 2));
       console.log(`----------- </ConsoleEmail> -----------`);
@@ -14,7 +14,7 @@ const emailClient = {
     return sgEmail.send(...args);
   },
   sendMultiple: async (...args: Parameters<typeof sgEmail.sendMultiple>) => {
-    if (env.NODE_ENV === "development") {
+    if (env.SENDGRID_API_KEY === "local") {
       console.log(`----------- <ConsoleEmail> -----------`);
       console.log(JSON.stringify(args[0], undefined, 2));
       console.log(`----------- </ConsoleEmail> -----------`);
