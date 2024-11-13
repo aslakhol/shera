@@ -5,24 +5,22 @@ network.
 
 ## Getting it running
 
-The only annoying thing to set up is database access, there are two options.
+### Database
 
-Our database is currently hosted in supabase. If you want to connect to the live "prod" db talk to Aslak to get the env file with a connection string.
+To get the database running you need docker and make.
+Then run `make db:fix` to create the db and apply the migrations.
+To make migrations use `npm run db:make-migrations`.
 
-Alternative two (the prefered alternative) is using a local sqlite instance. In prisma/schema.prisma there are instructions for swapping to the local db.
+### Envs
+
+Make a copy of `.env.example` and name it `.env`.
+Several of the envs are set to `local`.
+The app will work with these set to `local`, but certain features, such as google login and email sending, will be disabled.
+Locally emails will be sent to the console instead.
+
+### Running the app
 
 When db is set up it's just `npm run dev`
 
-PS: The sqlite db might not be updated at all times, if this is the case run a migration after starting to use it (see below).
-
-## Migrations
-
-When making changes to the prisma schema we need to make migrations.
-
-For local db we can just use `npx prisma db push`
-
-When hitting the live database we use `npx prisma migrate dev --name name-of-migration`
-
-## Neat stuff
-
-`npx prisma studio` gives you a neat studio to see the data in the db.
+That should be it, send me an email if you can't get it running.
+Most likely something has changed, and I've forgot to update the README.

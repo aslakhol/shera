@@ -1,6 +1,6 @@
 import EmailProvider from "next-auth/providers/email";
 import { env } from "../env";
-import { type TransportOptions, createTransport } from "nodemailer";
+import { emailClient } from "./email";
 
 const generateOtpCode = async () => {
   return Math.floor(1000 + Math.random() * 9000).toString();
@@ -18,13 +18,12 @@ export const EmailOtpProvider = EmailProvider({
     identifier: email,
     url,
     token,
-    provider: { server, from },
+    provider: { from },
   }) => {
     const baseUrl = new URL(url).origin;
     const host = baseUrl.replace(/^https?:\/\//, "");
 
-    const transport = createTransport(server as TransportOptions);
-    await transport.sendMail({
+    await emailClient.send({
       to: email,
       from: from,
       subject: `Authentication code: ${token}`,

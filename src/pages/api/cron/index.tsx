@@ -7,15 +7,13 @@ import {
   startOfTomorrow,
 } from "date-fns";
 import { db } from "../../../server/db";
-import sgEmail from "@sendgrid/mail";
+import { emailClient } from "../../../server/email";
 import { env } from "../../../env";
 import { type Attendee, type Event, type User } from "@prisma/client";
 import { render } from "@react-email/render";
 import EventTomorrowEmail from "../../../../emails/EventTomorrowEmail";
 import AttendanceReminder1WeekEmail from "../../../../emails/AttendanceReminder1WeekEmail";
 import AttendanceReminder3DaysEmail from "../../../../emails/AttendanceReminder3DaysEmail";
-
-sgEmail.setApiKey(env.SENDGRID_API_KEY);
 
 type ResponseData = {
   message: string;
@@ -85,7 +83,7 @@ export default async function handler(
         ...maybe1WeekEmailsPerEvent,
         ...invited3DaysEmailsPerEvent,
         ...maybe3DaysEmailsPerEvent,
-      ].map((eventEmail) => sgEmail.sendMultiple(eventEmail)),
+      ].map((eventEmail) => emailClient.sendMultiple(eventEmail)),
     );
 
     const summaryMessage = {
@@ -100,7 +98,7 @@ export default async function handler(
     <p>Total reminders sent: ${reminderCount}</p>`,
     };
 
-    await sgEmail.send(summaryMessage);
+    await emailClient.send(summaryMessage);
 
     return res.status(200).json({
       message: "Event reminders sent",

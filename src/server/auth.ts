@@ -48,20 +48,16 @@ export const authOptions: NextAuthOptions = {
     }),
   },
   adapter: PrismaAdapter(db),
-  providers: [
-    GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-    }),
-    // EmailProvider({
-    //   server: {
-    //     service: "SendGrid",
-    //     auth: { user: "apikey", pass: env.SENDGRID_API_KEY },
-    //   },
-    //   from: env.EMAIL_FROM,
-    // }),
-    EmailOtpProvider,
-  ],
+  providers:
+    env.GOOGLE_CLIENT_SECRET === "local" || env.GOOGLE_CLIENT_ID === "local"
+      ? [EmailOtpProvider]
+      : [
+          GoogleProvider({
+            clientId: env.GOOGLE_CLIENT_ID,
+            clientSecret: env.GOOGLE_CLIENT_SECRET,
+          }),
+          EmailOtpProvider,
+        ],
   pages: {
     signIn: "/auth/signin",
   },

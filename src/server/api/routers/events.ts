@@ -3,9 +3,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { compareDesc, isSameDay, isSameHour, isSameMinute } from "date-fns";
 import { eventSchema } from "../../../utils/formValidation";
 import { type Prisma } from "@prisma/client";
-import sgEmail from "@sendgrid/mail";
 import { fullEventId } from "../../../utils/event";
-import { env } from "../../../env";
 import {
   getConfirmationEmail,
   getInviteEmail,
@@ -13,8 +11,7 @@ import {
 } from "../../../../emails/utils";
 import { type UserNetwork } from "../../../utils/types";
 import { formatInTimeZone } from "date-fns-tz";
-
-sgEmail.setApiKey(env.SENDGRID_API_KEY);
+import { emailClient } from "../../../server/email";
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
@@ -133,7 +130,7 @@ export const eventsRouter = createTRPCRouter({
             attendeeEmails,
           );
 
-          await sgEmail.send(updatedEventEmail);
+          await emailClient.send(updatedEventEmail);
         }
       }
 
@@ -233,7 +230,7 @@ export const eventsRouter = createTRPCRouter({
         (status === "GOING" || status === "MAYBE");
       if (user.email && shouldGetConfirmationEmail) {
         const inviteEmail = getConfirmationEmail(event, user.email, status);
-        await sgEmail.send(inviteEmail);
+        await emailClient.send(inviteEmail);
       }
 
       const attendeeFromBeforeUser = await ctx.db.attendee.findFirst({
@@ -453,7 +450,7 @@ export const eventsRouter = createTRPCRouter({
         notAlreadyAttending,
         inviterName,
       );
-      await sgEmail.sendMultiple(inviteEmail);
+      await emailClient.sendMultiple(inviteEmail);
 
       return {
         fromExistingUsers,
@@ -531,7 +528,7 @@ export const eventsRouter = createTRPCRouter({
         friendEmails,
         inviterName,
       );
-      await sgEmail.sendMultiple(inviteEmail);
+      await emailClient.sendMultiple(inviteEmail);
 
       return {
         invites: friends.length,
