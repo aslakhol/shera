@@ -361,9 +361,11 @@ export const eventsRouter = createTRPCRouter({
       if (!event) {
         throw new Error("Event not found");
       }
-
       const attendees = await ctx.db.attendee.findMany({
         where: { eventId: event.eventId },
+        orderBy: {
+          updatedAt: "asc",
+        },
       });
 
       return attendees;
