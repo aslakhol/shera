@@ -44,6 +44,9 @@ model Attendee {
     userId     String?
     user       User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
     @@unique([eventId, userId])
 }
 
