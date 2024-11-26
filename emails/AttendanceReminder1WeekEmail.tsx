@@ -55,6 +55,8 @@ AttendanceReminder1WeekEmail.PreviewProps = {
         eventId: 42,
         status: "MAYBE",
         userId: "userId",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         attendeeId: "attendeeId",
@@ -63,6 +65,8 @@ AttendanceReminder1WeekEmail.PreviewProps = {
         eventId: 42,
         status: "GOING",
         userId: "userId",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ],
   },

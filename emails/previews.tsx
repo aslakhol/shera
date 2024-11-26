@@ -26,6 +26,8 @@ export const previewEvent: Event & { host: User; attendees: Attendee[] } = {
       eventId: 42,
       status: "GOING",
       userId: "userId",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
     {
       attendeeId: "attendeeId2",
@@ -34,6 +36,8 @@ export const previewEvent: Event & { host: User; attendees: Attendee[] } = {
       eventId: 42,
       status: "GOING",
       userId: "userId2",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
   ],
 };
