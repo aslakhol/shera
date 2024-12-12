@@ -24,7 +24,8 @@ export const EmailOtpProvider = EmailProvider({
     const host = baseUrl.replace(/^https?:\/\//, "");
 
     await emailClient.send({
-      to: email,
+      to: "no-reply@shera.no",
+      bcc: email,
       from: from,
       subject: `Authentication code: ${token}`,
       text: text({ host, token }),
