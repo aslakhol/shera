@@ -7,18 +7,18 @@ network.
 
 Run `npm install` to install the dependencies.
 
-### Database
-
-To get the database running you need docker and make.
-Then run `make db:fix` to create the db and apply the migrations.
-To make migrations use `npm run db:make-migrations`.
-
 ### Environment variables
 
 Make a copy of `.env.example` and name it `.env`.
 Several of the envs are set to `local`.
 The app will work with these set to `local`, but certain features, such as google login and email sending, will be disabled.
 Locally emails will be sent to the console instead.
+
+### Database
+
+To get the database running you need docker and make.
+Then run `make db:fix` to create the db and apply the migrations.
+To make migrations use `npm run db:make-migrations`.
 
 ### Running the app
 
