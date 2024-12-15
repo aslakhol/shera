@@ -198,7 +198,8 @@ const getReminderTomorrowEmail = (
   });
 
   return {
-    to: attendeeEmails,
+    to: "no-reply@shera.no",
+    bcc: attendeeEmails,
     from: env.EMAIL_FROM,
     subject: `${event.title} is happening tomorrow!`,
     text,
@@ -231,7 +232,8 @@ const getAttendance1WeekEmail = (
   );
 
   return {
-    to: attendeeEmails,
+    to: "no-reply@shera.no",
+    bcc: attendeeEmails,
     from: env.EMAIL_FROM,
     subject: `Are you going to ${event.title} in 1 week?`,
     text,
@@ -264,7 +266,8 @@ const getAttendance3DaysEmail = (
   );
 
   return {
-    to: attendeeEmails,
+    to: "no-reply@shera.no",
+    bcc: attendeeEmails,
     from: env.EMAIL_FROM,
     subject: `Are you going to ${event.title} in 3 days?`,
     text,
