@@ -34,7 +34,7 @@ const GoogleCalendar = (props: GoogleCalendarProps) => {
   const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${description}&location=${location}&dates=${time}&ctz=${timezone}`;
 
   return (
-    <Button asChild variant={"outline"} style={{ gap: 8 }}>
+    <Button asChild variant={"outline"} className="gap-2">
       <a className="link" target="_blank" href={url} rel="noopener noreferrer">
         <Calendar />
         Google Calendar

@@ -57,7 +57,7 @@ END:VCALENDAR
   }, [icsContent]);
 
   return (
-    <Button asChild variant={"outline"} style={{ gap: 8 }}>
+    <Button asChild variant={"outline"} className="gap-2">
       <a className="link" href={icsCalUrl} download="shera-event.ics">
         <Calendar />
         <span>iCal</span>
