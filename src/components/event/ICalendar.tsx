@@ -18,6 +18,10 @@ const ICalendar = (props: ICalendarProps) => {
   const sheraLink = `https://shera.no/events/${fullEventId(event)}`;
 
   const location = event.place ?? "";
+  const description = `${event.description}\n\n${sheraLink}`.replace(
+    /\n/g,
+    "\\n",
+  );
 
   const createdAt = event.createdAt.toISOString().replace(/-|:|\.\d+/g, "");
   const startTime = event.dateTime.toISOString().replace(/-|:|\.\d+/g, "");
@@ -37,7 +41,7 @@ DTSTAMP:${createdAt}
 DTSTART:${startTime}
 DTEND:${endTime}
 SUMMARY:${event.title}
-DESCRIPTION:${event.description.replace(/\n/g, "\\n")}
+DESCRIPTION:${description}
 URL:${sheraLink}
 LOCATION:${location}
 END:VEVENT
@@ -56,9 +60,11 @@ END:VCALENDAR
     };
   }, [icsContent]);
 
+  const filename = `shera-${fullEventId(event)}.ics`;
+
   return (
-    <Button asChild variant={"outline"} style={{ gap: 8 }}>
-      <a className="link" href={icsCalUrl} download="shera-event.ics">
+    <Button asChild variant={"outline"} className="gap-2">
+      <a className="link" href={icsCalUrl} download={filename}>
         <Calendar />
         <span>iCal</span>
       </a>
