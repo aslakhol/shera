@@ -18,7 +18,7 @@ const GoogleCalendar = (props: GoogleCalendarProps) => {
   const sheraLink = `https://shera.no/events/${fullEventId(event)}`;
 
   const description = encodeURIComponent(
-    `${sheraLink}\n\n${event.description}`,
+    `${event.description}\n\n${sheraLink}`,
   );
 
   const location = encodeURIComponent(event.place ?? "");
