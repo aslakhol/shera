@@ -18,6 +18,10 @@ const ICalendar = (props: ICalendarProps) => {
   const sheraLink = `https://shera.no/events/${fullEventId(event)}`;
 
   const location = event.place ?? "";
+  const description = `${event.description}\n\n${sheraLink}`.replace(
+    /\n/g,
+    "\\n",
+  );
 
   const createdAt = event.createdAt.toISOString().replace(/-|:|\.\d+/g, "");
   const startTime = event.dateTime.toISOString().replace(/-|:|\.\d+/g, "");
@@ -37,7 +41,7 @@ DTSTAMP:${createdAt}
 DTSTART:${startTime}
 DTEND:${endTime}
 SUMMARY:${event.title}
-DESCRIPTION:${event.description.replace(/\n/g, "\\n")}
+DESCRIPTION:${description}
 URL:${sheraLink}
 LOCATION:${location}
 END:VEVENT
