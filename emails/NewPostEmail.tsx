@@ -6,10 +6,15 @@ import { previewEvent, previewUser } from "./previews";
 type NewPostEmailProps = {
   event: Event & { host: User; attendees: Attendee[] };
   poster: User;
+  message: string;
 };
 
-export const NewPostEmail = ({ event, poster }: NewPostEmailProps) => {
-  const body = `${poster.name ?? "Someone"} posted in ${event.title}.`;
+export const NewPostEmail = ({ event, poster, message }: NewPostEmailProps) => {
+  const body = `
+  ${poster.name ?? "Someone"} posted in ${event.title}:
+
+  ${message}
+  `;
 
   return (
     <EventEmail
@@ -26,4 +31,5 @@ export default NewPostEmail;
 NewPostEmail.PreviewProps = {
   event: previewEvent,
   poster: previewUser,
+  message: "This is a test message",
 } satisfies NewPostEmailProps;

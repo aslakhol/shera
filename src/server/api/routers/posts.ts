@@ -47,6 +47,7 @@ export const postsRouter = createTRPCRouter({
 
         if (emails.length > 0) {
           const newPostEmail = getNewPostEmail(
+            postInDb.message,
             postInDb.event,
             emails,
             postInDb.author,

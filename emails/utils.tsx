@@ -57,14 +57,20 @@ export const getConfirmationEmail = (
 };
 
 export const getNewPostEmail = (
+  message: string,
   event: Event & { host: User; attendees: Attendee[] },
   emails: string[],
   poster: User,
 ) => {
-  const html = render(<NewPostEmail event={event} poster={poster} />);
-  const text = render(<NewPostEmail event={event} poster={poster} />, {
-    plainText: true,
-  });
+  const html = render(
+    <NewPostEmail event={event} poster={poster} message={message} />,
+  );
+  const text = render(
+    <NewPostEmail event={event} poster={poster} message={message} />,
+    {
+      plainText: true,
+    },
+  );
 
   const newPostEmail = {
     to: "no-reply@shera.no",
