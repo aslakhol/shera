@@ -31,5 +31,6 @@ export default NewPostEmail;
 NewPostEmail.PreviewProps = {
   event: previewEvent,
   poster: previewUser,
-  message: "This is a test message",
+  message:
+    "Jeg vet jeg skrev at vi skulle knekke den første pilsen klokka 4, men det er visst alt knukket, whoops. Så da er dørene åpne, kom når det passer dere! Pizza er bestilt til 17 og som nevnt så er det førstemann til mølla ^^",
 } satisfies NewPostEmailProps;
