@@ -24,6 +24,8 @@ To make migrations use `npm run db:make-migrations`.
 
 When db is set up it's just `npm run dev`
 
+To run the emails locally, run `npx dev:email`
+
 That should be it, send me an email if you can't get it running.
 Most likely something has changed, and I've forgot to update the README.
 
