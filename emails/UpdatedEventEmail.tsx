@@ -17,7 +17,7 @@ export const UpdatedEventEmail = ({
     <EventEmail
       event={event}
       previewText={`New post in ${event.title}`}
-      aboveText={`New post in`}
+      belowText={`Has been updated`}
       body={<UpdatedBody changes={changes} />}
     />
   );
