@@ -18,13 +18,13 @@ Locally emails will be sent to the console instead.
 
 To get the database running you need docker and make.
 Then run `make db:fix` to create the db and apply the migrations.
-To make migrations use `npm run db:make-migrations`.
+To make migrations use `npm run db:migrate`.
 
 ### Running the app
 
 When db is set up it's just `npm run dev`
 
-To run the emails locally, run `npx dev:email`
+To run the emails locally, run `npm run dev:email`
 
 That should be it, send me an email if you can't get it running.
 Most likely something has changed, and I've forgot to update the README.
