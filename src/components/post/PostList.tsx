@@ -67,7 +67,7 @@ export const Post = (props: PostProps) => {
         {canDeletePost && <ConfirmDelete post={post} />}
       </div>
 
-      <p className="py-2">{post.message}</p>
+      <p className="break-all py-2">{post.message}</p>
     </div>
   );
 };
