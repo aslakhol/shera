@@ -44,6 +44,8 @@
     "date-fns": "^3.3.0",
     "date-fns-tz": "^3.2.0",
     "input-otp": "^1.2.4",
+    "linkify-react": "^4.2.0",
+    "linkifyjs": "^4.2.0",
     "lucide-react": "^0.309.0",
     "nanoid": "^5.0.6",
     "next": "^14.0.4",

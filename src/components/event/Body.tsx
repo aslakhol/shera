@@ -1,3 +1,5 @@
+import Linkify from "linkify-react";
+
 type Props = { description: string };
 
 export const Body = ({ description }: Props) => {
@@ -6,7 +8,7 @@ export const Body = ({ description }: Props) => {
   return (
     <div className="flex flex-col gap-1">
       {paragraphs.map((paragraph, index) => (
-        <p className="break-all" key={`event-body-paragraph-${index}`}>{paragraph}</p>
+        <Linkify as="p" className="break-all py-2" key={`event-body-paragraph-${index}`}>{paragraph}</Linkify>
       ))}
     </div>
   );
