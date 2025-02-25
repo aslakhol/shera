@@ -31,12 +31,18 @@ const MyApp = ({
   const getLayout = Component.getLayout ?? getDefaultLayout;
 
   useEffect(() => {
+    if (env.NEXT_PUBLIC_POSTHOG_KEY === "local") {
+      return;
+    }
+
     posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
       api_host: env.NEXT_PUBLIC_POSTHOG_HOST,
       person_profiles: "identified_only",
       // Enable debug mode in development
       loaded: (posthog) => {
-        if (process.env.NODE_ENV === "development") posthog.debug();
+        if (process.env.NODE_ENV === "development") {
+          posthog.debug();
+        }
       },
     });
 
@@ -48,6 +54,15 @@ const MyApp = ({
       Router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, []);
+
+  if (env.NEXT_PUBLIC_POSTHOG_KEY === "local") {
+    return (
+      <SessionProvider session={session}>
+        <Analytics />
+        {getLayout(<Component {...pageProps} />)}
+      </SessionProvider>
+    );
+  }
 
   return (
     <PostHogProvider client={posthog}>
