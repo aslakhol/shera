@@ -124,3 +124,7 @@
     @apply bg-gradient bg-cover bg-clip-text text-transparent;
   }
 }
+  
+p a {
+  color: blue;
+}
