@@ -68,7 +68,7 @@ export const Post = (props: PostProps) => {
         {canDeletePost && <ConfirmDelete post={post} />}
       </div>
 
-      <Linkify as="p" className="whitespace-pre-wrap break-all py-2">{post.message}</Linkify>
+      <Linkify as="p" className="whitespace-pre-wrap break-words py-2">{post.message}</Linkify>
     </div>
   );
 };
