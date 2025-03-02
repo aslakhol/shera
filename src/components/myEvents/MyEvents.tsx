@@ -1,4 +1,3 @@
-import { type Attendee, type Event, type User } from "@prisma/client";
 import Link from "next/link";
 import { api } from "../../utils/api";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -7,8 +6,13 @@ import { Crown, MapPin, Plus, UsersRound } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
 import { Button } from "../ui/button";
 import { Loading } from "../Loading";
-import { fullEventId } from "../../utils/event";
+import {
+  categorizeEvents,
+  fullEventId,
+  sortCategorizedEvents,
+} from "../../utils/event";
 import { useSession } from "next-auth/react";
+import { type EventRowProps } from "~/utils/types";
 
 export const MyEvents = () => {
   const session = useSession();
@@ -18,6 +22,10 @@ export const MyEvents = () => {
     },
     {
       enabled: !!session.data?.user.id,
+      select: (events) => {
+        const categorizedEvents = categorizeEvents(events);
+        return sortCategorizedEvents(categorizedEvents);
+      },
     },
   );
 
@@ -44,8 +52,13 @@ export const MyEvents = () => {
         </div>
       )}
 
-      {events?.map((event) => (
-        <EventRow event={event} key={`event-${event.publicId}`} />
+      <h2>Upcoming</h2>
+      {events?.upcoming.map((event) => (
+        <EventRow event={event.event} key={`event-${event.event.publicId}`} />
+      ))}
+      <h2>Finished</h2>
+      {events?.finished.map((event) => (
+        <EventRow event={event.event} key={`event-${event.event.publicId}`} />
       ))}
 
       {isSuccess && (
@@ -56,8 +69,6 @@ export const MyEvents = () => {
     </div>
   );
 };
-
-type EventRowProps = { event: Event & { host: User; attendees: Attendee[] } };
 
 const EventRow = ({ event }: EventRowProps) => {
   return (

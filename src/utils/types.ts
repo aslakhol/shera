@@ -1,3 +1,5 @@
+import { type Attendee, type Event, type User } from "@prisma/client";
+
 export type UserNetwork = Array<Friend>;
 
 export type Friend = {
@@ -7,4 +9,8 @@ export type Friend = {
     publicId: string;
     title: string;
   }>;
+};
+
+export type EventRowProps = {
+  event: Event & { host: User; attendees: Attendee[] };
 };
