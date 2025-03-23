@@ -3,7 +3,7 @@ import Link from "next/link";
 type WrapLinksProps = { text: string };
 
 export const WrapLinks = ({ text }: WrapLinksProps) => {
-  const parts = text.split(/\s+/g);
+  const parts = text.split(/(\s+)/g);
 
   return (
     <span>
@@ -11,7 +11,7 @@ export const WrapLinks = ({ text }: WrapLinksProps) => {
         if (part.startsWith("http")) {
           const url = safeParseUrl(part);
           if (!url) {
-            return <span key={`wrap-link-${index}`}> {part} </span>;
+            return <span key={`wrap-link-${index}`}>{part}</span>;
           }
 
           return (
@@ -27,7 +27,7 @@ export const WrapLinks = ({ text }: WrapLinksProps) => {
           );
         }
 
-        return <span key={`wrap-link-${index}`}> {part} </span>;
+        return <span key={`wrap-link-${index}`}>{part}</span>;
       })}
     </span>
   );
