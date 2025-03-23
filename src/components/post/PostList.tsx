@@ -14,6 +14,7 @@ import { Crown, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import { Loading } from "../Loading";
 import { useState } from "react";
+import { WrapLinks } from "../WrapLinks";
 
 type PostListProps = { publicId: string };
 
@@ -67,7 +68,9 @@ export const Post = (props: PostProps) => {
         {canDeletePost && <ConfirmDelete post={post} />}
       </div>
 
-      <p className="whitespace-pre-wrap break-all py-2">{post.message}</p>
+      <p className="whitespace-pre-wrap break-all py-2">
+        <WrapLinks text={post.message} />
+      </p>
     </div>
   );
 };
