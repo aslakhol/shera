@@ -52,11 +52,11 @@ export const MyEvents = () => {
         </div>
       )}
 
-      <h2>Upcoming</h2>
+      {events?.upcoming && events.upcoming.length > 0 && <h2>Upcoming</h2>}
       {events?.upcoming.map((event) => (
         <EventRow event={event.event} key={`event-${event.event.publicId}`} />
       ))}
-      <h2>Finished</h2>
+      {events?.finished && events.finished.length > 0 && <h2>Finished</h2>}
       {events?.finished.map((event) => (
         <EventRow event={event.event} key={`event-${event.event.publicId}`} />
       ))}
