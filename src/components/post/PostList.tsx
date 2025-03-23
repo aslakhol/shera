@@ -68,7 +68,7 @@ export const Post = (props: PostProps) => {
         {canDeletePost && <ConfirmDelete post={post} />}
       </div>
 
-      <p className="whitespace-pre-wrap break-all py-2">
+      <p className="whitespace-pre-wrap break-words py-2">
         <WrapLinks text={post.message} />
       </p>
     </div>

@@ -8,7 +8,7 @@ export const Body = ({ description }: Props) => {
   return (
     <div className="flex flex-col gap-1">
       {paragraphs.map((paragraph, index) => (
-        <p className="break-all" key={`event-body-paragraph-${index}`}>
+        <p className="break-words" key={`event-body-paragraph-${index}`}>
           <WrapLinks text={paragraph} />
         </p>
       ))}
