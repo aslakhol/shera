@@ -30,7 +30,7 @@ export const MyEvents = () => {
   );
 
   return (
-    <div className="flex flex-col gap-8 p-4">
+    <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
         <h1 className="py-2 text-4xl font-extrabold text-primary">Events</h1>
         <Button asChild variant="outline">
@@ -52,14 +52,32 @@ export const MyEvents = () => {
         </div>
       )}
 
-      <h2>Upcoming</h2>
-      {events?.upcoming.map((event) => (
-        <EventRow event={event.event} key={`event-${event.event.publicId}`} />
-      ))}
-      <h2>Finished</h2>
-      {events?.finished.map((event) => (
-        <EventRow event={event.event} key={`event-${event.event.publicId}`} />
-      ))}
+      {events?.upcoming && events.upcoming.length > 0 && (
+        <div>
+          <h2 className="pb-2 text-primary">Upcoming</h2>
+          <div className="flex flex-col gap-8">
+            {events.upcoming.map((event) => (
+              <EventRow
+                event={event.event}
+                key={`event-${event.event.publicId}`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      {events?.finished && events.finished.length > 0 && (
+        <div>
+          <h2 className="pb-2 text-primary">Finished</h2>
+          <div className="flex flex-col gap-8">
+            {events.finished.map((event) => (
+              <EventRow
+                event={event.event}
+                key={`event-${event.event.publicId}`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {isSuccess && (
         <Button asChild variant="outline">
