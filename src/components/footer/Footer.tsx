@@ -13,7 +13,7 @@ const Footer = () => {
           <Link
             className="hover:underline"
             target="_blank"
-            href="mailto:aslak@shera.no?subject=Contact from Shera.no"
+            href="mailto:aslak@shera.no?subject=Contact from Shera"
           >
             Contact
           </Link>
