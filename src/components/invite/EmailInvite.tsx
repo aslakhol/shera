@@ -1,7 +1,7 @@
 import { type User, type Event } from "@prisma/client";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { cn } from "../../utils/cn";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
@@ -13,7 +13,7 @@ type Props = {
     host: User;
   };
   emails: string[];
-  setEmails: (emails: string[]) => void;
+  setEmails: Dispatch<SetStateAction<string[]>>;
 };
 
 // aaaaa@gmail.com, aaaaa@outlook.com, aaaaa@yahoo.com, aaaaa@hotmail.com, aaaaa@live.com, aaaaa@icloud.com, aaaaa@me.com,  aaaaa@aol.com,  aaaaa@msn.com, bbbbb@gmail.com, bbbbb@outlook.com, bbbbb@yahoo.com, bbbbb@hotmail.com, bbbbb@live.com, bbbbb@icloud.com, bbbbb@me.com,  bbbbb@aol.com,  bbbbb@msn.com, ccccc@gmail.com, ccccc@outlook.com, ccccc@yahoo.com, ccccc@hotmail.com, ccccc@live.com, ccccc@icloud.com, ccccc@me.com,  ccccc@aol.com,  ccccc@msn.com
