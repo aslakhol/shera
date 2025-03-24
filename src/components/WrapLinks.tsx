@@ -8,26 +8,26 @@ export const WrapLinks = ({ text }: WrapLinksProps) => {
   return (
     <span>
       {parts.map((part, index) => {
-        if (part.startsWith("http")) {
-          const url = validUrl(part);
-          if (!url) {
-            return <span key={`wrap-link-${index}`}>{part}</span>;
-          }
-
-          return (
-            <Link
-              className="hover:underline"
-              key={`wrap-link-${index}`}
-              rel="noopener noreferrer"
-              target="_blank"
-              href={url.href}
-            >
-              {part}
-            </Link>
-          );
+        if (!part.startsWith("http")) {
+          return <span key={`wrap-link-${index}`}>{part}</span>;
         }
 
-        return <span key={`wrap-link-${index}`}>{part}</span>;
+        const url = validUrl(part);
+        if (!url) {
+          return <span key={`wrap-link-${index}`}>{part}</span>;
+        }
+
+        return (
+          <Link
+            className="hover:underline"
+            key={`wrap-link-${index}`}
+            rel="noopener noreferrer"
+            target="_blank"
+            href={url.href}
+          >
+            {part}
+          </Link>
+        );
       })}
     </span>
   );
