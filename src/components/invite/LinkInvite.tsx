@@ -17,11 +17,10 @@ export const LinkInvite = ({ event }: LinkInviteProps) => {
         Anyone with the link can attend the event. Copy the link below and send
         it to your friends.
       </p>
-      {!!navigator.share ? (
-        <WebShare event={event} />
-      ) : (
-        <NoWebShare event={event} />
-      )}
+      <div className="flex gap-2">
+        <CopyLink event={event} />
+        {!!navigator.share && <WebShare event={event} />}
+      </div>
     </div>
   );
 };
@@ -32,7 +31,7 @@ type NoWebShareProps = {
   };
 };
 
-const NoWebShare = (props: NoWebShareProps) => {
+const CopyLink = (props: NoWebShareProps) => {
   const { event } = props;
 
   let timeout: NodeJS.Timeout;
@@ -76,8 +75,8 @@ const WebShare = ({ event }: WebShareProps) => {
   };
 
   return (
-    <Button variant="outline" onClick={share}>
-      Copy invite link
+    <Button variant="outline" className="w-full" onClick={share}>
+      Share event
     </Button>
   );
 };
