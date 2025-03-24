@@ -9,7 +9,7 @@ export const WrapLinks = ({ text }: WrapLinksProps) => {
     <span>
       {parts.map((part, index) => {
         if (part.startsWith("http")) {
-          const url = safeParseUrl(part);
+          const url = validUrl(part);
           if (!url) {
             return <span key={`wrap-link-${index}`}>{part}</span>;
           }
@@ -33,7 +33,7 @@ export const WrapLinks = ({ text }: WrapLinksProps) => {
   );
 };
 
-const safeParseUrl = (url: string) => {
+const validUrl = (url: string) => {
   if (!url.startsWith("http")) {
     return null;
   }
