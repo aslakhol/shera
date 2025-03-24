@@ -123,6 +123,7 @@ export const NetworkInvite = ({ event, form }: Props) => {
               variant="outline"
               className="w-full flex-1"
               type="button"
+              disabled={form.watch("friends").length === 0}
               onClick={() => form.reset()}
             >
               Reset
