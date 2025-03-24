@@ -38,6 +38,7 @@ const MyApp = ({
     posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
       api_host: env.NEXT_PUBLIC_POSTHOG_HOST,
       person_profiles: "identified_only",
+      disable_surveys: true,
       // Enable debug mode in development
       loaded: (posthog) => {
         if (process.env.NODE_ENV === "development") {

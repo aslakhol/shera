@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NetworkInviteFormSchema } from "./utils";
 import { type z } from "zod";
+
 type InviteProps = {
   event: Event & {
     host: User;
