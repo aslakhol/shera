@@ -11,6 +11,7 @@ import { LinkInvite } from "./LinkInvite";
 import { EmailInvite } from "./EmailInvite";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { NetworkInvite } from "./NetworkInvite";
+import { useState } from "react";
 
 type InviteProps = {
   event: Event & {
@@ -20,6 +21,7 @@ type InviteProps = {
 
 const Invite = (props: InviteProps) => {
   const { event } = props;
+  const [emails, setEmails] = useState<string[]>([]);
 
   return (
     <>
@@ -57,7 +59,11 @@ const Invite = (props: InviteProps) => {
               <LinkInvite event={event} />
             </TabsContent>
             <TabsContent asChild value="email" className="h-full">
-              <EmailInvite event={event} />
+              <EmailInvite
+                event={event}
+                emails={emails}
+                setEmails={setEmails}
+              />
             </TabsContent>
           </Tabs>
         </DialogContent>
