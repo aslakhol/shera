@@ -11,7 +11,11 @@ import { LinkInvite } from "./LinkInvite";
 import { EmailInvite } from "./EmailInvite";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { NetworkInvite } from "./NetworkInvite";
-
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { NetworkInviteFormSchema } from "./utils";
+import { type z } from "zod";
 type InviteProps = {
   event: Event & {
     host: User;
@@ -20,6 +24,14 @@ type InviteProps = {
 
 const Invite = (props: InviteProps) => {
   const { event } = props;
+  const [emails, setEmails] = useState<string[]>([]);
+
+  const networkInviteForm = useForm<z.infer<typeof NetworkInviteFormSchema>>({
+    resolver: zodResolver(NetworkInviteFormSchema),
+    defaultValues: {
+      friends: [],
+    },
+  });
 
   return (
     <>
@@ -51,13 +63,17 @@ const Invite = (props: InviteProps) => {
               value="network"
               className="flex-1 overflow-auto "
             >
-              <NetworkInvite event={event} />
+              <NetworkInvite event={event} form={networkInviteForm} />
             </TabsContent>
             <TabsContent asChild value="link" className="h-full">
               <LinkInvite event={event} />
             </TabsContent>
             <TabsContent asChild value="email" className="h-full">
-              <EmailInvite event={event} />
+              <EmailInvite
+                event={event}
+                emails={emails}
+                setEmails={setEmails}
+              />
             </TabsContent>
           </Tabs>
         </DialogContent>

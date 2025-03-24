@@ -1,7 +1,7 @@
 import { type User, type Event } from "@prisma/client";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { cn } from "../../utils/cn";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
@@ -12,17 +12,18 @@ type Props = {
   event: Event & {
     host: User;
   };
+  emails: string[];
+  setEmails: Dispatch<SetStateAction<string[]>>;
 };
 
 // aaaaa@gmail.com, aaaaa@outlook.com, aaaaa@yahoo.com, aaaaa@hotmail.com, aaaaa@live.com, aaaaa@icloud.com, aaaaa@me.com,  aaaaa@aol.com,  aaaaa@msn.com, bbbbb@gmail.com, bbbbb@outlook.com, bbbbb@yahoo.com, bbbbb@hotmail.com, bbbbb@live.com, bbbbb@icloud.com, bbbbb@me.com,  bbbbb@aol.com,  bbbbb@msn.com, ccccc@gmail.com, ccccc@outlook.com, ccccc@yahoo.com, ccccc@hotmail.com, ccccc@live.com, ccccc@icloud.com, ccccc@me.com,  ccccc@aol.com,  ccccc@msn.com
 
-export const EmailInvite = ({ event }: Props) => {
+export const EmailInvite = ({ event, emails, setEmails }: Props) => {
   const attendeesQuery = api.events.attendees.useQuery({
     publicId: event.publicId,
   });
   const invited = attendeesQuery.data?.filter((a) => a.status === "INVITED");
   const [emailInput, setEmailInput] = useState("");
-  const [emails, setEmails] = useState<string[]>([]);
   const utils = api.useUtils();
   const emailInviteMutation = api.events.emailInvite.useMutation({
     onSuccess: (response) => {
