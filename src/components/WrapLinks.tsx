@@ -39,7 +39,7 @@ const safeParseUrl = (url: string) => {
   }
 
   try {
-    return new URL(encodeURI(url));
+    return new URL(url);
   } catch (error) {
     return null;
   }
