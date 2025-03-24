@@ -107,17 +107,27 @@ export const NetworkInvite = ({ event, form }: Props) => {
               )}
             />
           </div>
-          <Button
-            variant="outline"
-            className="w-full"
-            type="submit"
-            disabled={
-              form.watch("friends").length === 0 ||
-              networkInviteMutation.isLoading
-            }
-          >
-            Send invites
-          </Button>
+          <div className="flex flex-row gap-2">
+            <Button
+              variant="outline"
+              className="w-full"
+              type="submit"
+              disabled={
+                form.watch("friends").length === 0 ||
+                networkInviteMutation.isLoading
+              }
+            >
+              Send invites
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full flex-1"
+              type="button"
+              onClick={() => form.reset()}
+            >
+              Reset
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
