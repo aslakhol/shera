@@ -6,10 +6,9 @@ import { cn } from "../../utils/cn";
 import { api } from "../../utils/api";
 import { useSession } from "next-auth/react";
 import { type Friend } from "../../utils/types";
-import { z } from "zod";
+import { type z } from "zod";
 import { toast } from "sonner";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { type UseFormReturn, useForm } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -19,16 +18,14 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Checkbox } from "../ui/checkbox";
+import { type NetworkInviteFormSchema } from "./utils";
 
-const FormSchema = z.object({
-  friends: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
-});
+type Props = {
+  event: Event & { host: User };
+  form: UseFormReturn<z.infer<typeof NetworkInviteFormSchema>>;
+};
 
-type Props = { event: Event & { host: User } };
-
-export const NetworkInvite = ({ event }: Props) => {
+export const NetworkInvite = ({ event, form }: Props) => {
   const [search, setSearch] = useState("");
   const utils = api.useUtils();
   const session = useSession();
@@ -44,12 +41,6 @@ export const NetworkInvite = ({ event }: Props) => {
     },
   });
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      friends: [],
-    },
-  });
   const attendeesQuery = api.events.attendees.useQuery({
     publicId: event.publicId,
   });
@@ -60,7 +51,7 @@ export const NetworkInvite = ({ event }: Props) => {
     { enabled: !!session.data?.user.id },
   );
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = (data: z.infer<typeof NetworkInviteFormSchema>) => {
     networkInviteMutation.mutate({
       publicId: event.publicId,
       friendsUserIds: data.friends,
@@ -135,7 +126,7 @@ export const NetworkInvite = ({ event }: Props) => {
 
 type NetworkFriendProps = {
   friend: Friend;
-  form: UseFormReturn<z.infer<typeof FormSchema>>;
+  form: UseFormReturn<z.infer<typeof NetworkInviteFormSchema>>;
   attending: boolean;
 };
 
