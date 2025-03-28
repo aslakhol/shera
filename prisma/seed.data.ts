@@ -18,34 +18,41 @@ export interface EventSeed {
   attendeeIds: string[];
 }
 
+// User IDs as constants
+const bellaId = "clh1x8k3g0000mp08pxipqw9k";
+const charlieId = "clh1x8k3g0001mp08s1mdpjk2";
+const garyId = "clh1x8k3g0002mp08q2n9m5l3";
+const pennyId = "clh1x8k3g0003mp08r3o0n6m4";
+const mollyId = "clh1x8k3g0004mp08t4p1o7n5";
+
 // Create some sample users
 export const users: SeedUser[] = [
   {
-    id: "user-bella",
+    id: bellaId,
     name: "Bella Brie",
     email: "bella@example.com",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Bella",
   },
   {
-    id: "user-charlie",
+    id: charlieId,
     name: "Charlie Cheddar",
     email: "charlie@example.com",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Charlie",
   },
   {
-    id: "user-gary",
+    id: garyId,
     name: "Gary Gouda",
     email: "gary@example.com",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Gary",
   },
   {
-    id: "user-penny",
+    id: pennyId,
     name: "Penny Parmesan",
     email: "penny@example.com",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Penny",
   },
   {
-    id: "user-molly",
+    id: mollyId,
     name: "Molly Mozzarella",
     email: "molly@example.com",
     image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Molly",
@@ -63,8 +70,8 @@ export const events: EventSeed[] = [
     dateTime: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
     timeZone: "Europe/Oslo",
     place: "Charlie's Cheese Palace",
-    hostId: "user-charlie",
-    attendeeIds: ["user-bella", "user-gary", "user-penny"],
+    hostId: charlieId,
+    attendeeIds: [charlieId, bellaId, garyId, pennyId],
   },
   {
     publicId: nanoId(),
@@ -74,8 +81,8 @@ export const events: EventSeed[] = [
     dateTime: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000),
     timeZone: "Europe/Oslo",
     place: "Bella's Bistro",
-    hostId: "user-bella",
-    attendeeIds: ["user-molly", "user-penny", "user-charlie"],
+    hostId: bellaId,
+    attendeeIds: [bellaId, mollyId, pennyId, charlieId],
   },
   {
     publicId: nanoId(),
@@ -85,8 +92,8 @@ export const events: EventSeed[] = [
     dateTime: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000),
     timeZone: "Europe/Oslo",
     place: "Gary's Gourmet Gallery",
-    hostId: "user-gary",
-    attendeeIds: ["user-bella", "user-charlie", "user-molly"],
+    hostId: garyId,
+    attendeeIds: [garyId, bellaId, charlieId, mollyId],
   },
   {
     publicId: nanoId(),
@@ -96,7 +103,7 @@ export const events: EventSeed[] = [
     dateTime: new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000),
     timeZone: "Europe/Oslo",
     place: "Penny's Pantry",
-    hostId: "user-penny",
-    attendeeIds: ["user-gary", "user-molly", "user-charlie"],
+    hostId: pennyId,
+    attendeeIds: [pennyId, garyId, mollyId, charlieId],
   },
 ];
