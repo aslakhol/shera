@@ -7,13 +7,14 @@ import { fullEventId } from "../../utils/event";
 import { useEffect, useState } from "react";
 
 type ICalendarProps = {
+  label?: string;
   event: Event & {
     host: User;
   };
 };
 
 const ICalendar = (props: ICalendarProps) => {
-  const { event } = props;
+  const { event, label } = props;
 
   const sheraLink = `https://shera.no/events/${fullEventId(event)}`;
 
@@ -63,10 +64,9 @@ END:VCALENDAR
   const filename = `shera-${fullEventId(event)}.ics`;
 
   return (
-    <Button asChild variant={"outline"} className="gap-2">
-      <a className="link" href={icsCalUrl} download={filename}>
-        <Calendar />
-        <span>iCal</span>
+    <Button asChild variant="ghost" className="justify-start">
+      <a className="w-full" href={icsCalUrl} download={filename}>
+        {label ?? "iCal File"}
       </a>
     </Button>
   );

@@ -1,10 +1,9 @@
 import { format } from "date-fns";
 import { api } from "../../utils/api";
 import { Body } from "./Body";
-import GoogleCalendar from "./GoogleCalendar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Crown, MapPin, Pencil } from "lucide-react";
+import { Crown, MapPin } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
 import { Loading } from "../Loading";
 
@@ -12,7 +11,8 @@ import dynamic from "next/dynamic";
 import { Attendance } from "./Attendance";
 import NewPost from "../post/NewPost";
 import PostList from "../post/PostList";
-import ICalendar from "./ICalendar";
+import { AddToCalendar } from "./AddToCalendar";
+import { Button } from "../ui/button";
 
 const Invite = dynamic(() => import("../invite/Invite"), {
   ssr: false,
@@ -55,23 +55,21 @@ export const Event = ({ publicId }: Props) => {
           <Crown size={16} />
           <p>{event.host.name ?? event.host.email}</p>
         </div>
-        {isHost && (
-          <div className="flex items-center gap-2">
-            <Pencil size={16} />
-            <Link href={`/events/${publicId}/edit`}>
-              <p className="underline">Edit event</p>
-            </Link>
-          </div>
-        )}
       </div>
       <Attendance event={event} />
 
       <Body description={event.description} />
       <div className="flex flex-wrap justify-start gap-2">
         <Invite event={event} />
-        <GoogleCalendar event={event} />
-        <ICalendar event={event} />
+        <AddToCalendar event={event} />
         <NewPost publicId={publicId} isHost={isHost} />
+        {isHost && (
+          <Button asChild variant={"outline"} className="gap-2">
+            <Link href={`/events/${publicId}/edit`}>
+              <p>Edit event</p>
+            </Link>
+          </Button>
+        )}
       </div>
 
       <PostList publicId={publicId} />
