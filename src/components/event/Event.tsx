@@ -1,7 +1,6 @@
 import { format } from "date-fns";
 import { api } from "../../utils/api";
 import { Body } from "./Body";
-import GoogleCalendar from "./GoogleCalendar";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Crown, MapPin, Pencil } from "lucide-react";
@@ -12,7 +11,6 @@ import dynamic from "next/dynamic";
 import { Attendance } from "./Attendance";
 import NewPost from "../post/NewPost";
 import PostList from "../post/PostList";
-import ICalendar from "./ICalendar";
 import { AddToCalendar } from "./AddToCalendar";
 
 const Invite = dynamic(() => import("../invite/Invite"), {
