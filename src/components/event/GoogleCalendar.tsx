@@ -2,7 +2,6 @@ import type { Event } from "@prisma/client";
 import { add } from "date-fns";
 import type { User } from "next-auth";
 import { Button } from "../ui/button";
-import { Calendar } from "lucide-react";
 import { fullEventId } from "../../utils/event";
 
 type GoogleCalendarProps = {
