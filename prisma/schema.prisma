@@ -14,13 +14,12 @@ model Event {
     description String
     title       String
     place       String?
-    hostId      String
+    hosts       User[]     @relation("EventHosts")
     dateTime    DateTime
     timeZone    String     @default("Europe/Oslo")
     createdAt   DateTime   @default(now())
     updatedAt   DateTime   @default(now()) @updatedAt
     attendees   Attendee[]
-    host        User       @relation(fields: [hostId], references: [id])
     posts       Post[]
 }
 
@@ -92,7 +91,7 @@ model User {
     emailVerified DateTime?
     image         String?
     accounts      Account[]
-    events        Event[]
+    events        Event[]    @relation("EventHosts")
     posts         Post[]
     sessions      Session[]
     Attendee      Attendee[]
