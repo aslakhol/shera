@@ -10,11 +10,16 @@
     "db:reset": "npx --yes -p dotenv-cli dotenv -c development -- prisma migrate reset",
     "db:studio:prod": "npx --yes -p dotenv-cli dotenv -c prod -- prisma studio -p 5555",
     "db:migrate": "prisma migrate dev",
+    "db:fix": "docker compose -f database-docker.yml down --volumes && docker compose -f database-docker.yml up --build -d && echo Waiting for databases to boot... && sleep 4 && echo Populating seed data... && npm run db:reset --force && echo Local databases wiped and ready. Restart npm run dev if running...",
     "dev": "next dev",
     "dev:email": "email dev -p 3001",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "db:seed": "npx prisma db seed"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -80,6 +85,7 @@
     "prettier-plugin-tailwindcss": "^0.5.7",
     "react-email": "^3.0.1",
     "tailwindcss": "^3.3.5",
+    "tsx": "^4.19.3",
     "typescript": "^5.6.3"
   },
   "ct3aMetadata": {
