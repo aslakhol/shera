@@ -17,7 +17,7 @@ Locally emails will be sent to the console instead.
 ### Database
 
 To get the database running you need docker and make.
-Then run `make db:fix` to create the db and apply the migrations.
+Then run `make db:fix` to create the db, apply the migrations and seed data.
 To make migrations use `npm run db:migrate`.
 
 ### Running the app
@@ -28,6 +28,18 @@ To run the emails locally, run `npm run dev:email`
 
 That should be it, send me an email if you can't get it running.
 Most likely something has changed, and I've forgot to update the README.
+
+## Test Users
+
+When running the application locally with seeded data, you can log in as any of these test users to see pre-populated events:
+
+| Name             | Email               |
+| ---------------- | ------------------- |
+| Bella Brie       | bella@example.com   |
+| Charlie Cheddar  | charlie@example.com |
+| Gary Gouda       | gary@example.com    |
+| Penny Parmesan   | penny@example.com   |
+| Molly Mozzarella | molly@example.com   |
 
 ## Contributing
 
