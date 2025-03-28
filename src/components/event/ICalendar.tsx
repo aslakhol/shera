@@ -63,10 +63,9 @@ END:VCALENDAR
   const filename = `shera-${fullEventId(event)}.ics`;
 
   return (
-    <Button asChild variant={"outline"} className="gap-2">
-      <a className="link" href={icsCalUrl} download={filename}>
-        <Calendar />
-        <span>iCal</span>
+    <Button asChild variant="ghost" className="justify-start">
+      <a className="w-full" href={icsCalUrl} download={filename}>
+        iCal File
       </a>
     </Button>
   );

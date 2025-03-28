@@ -13,6 +13,7 @@ import { Attendance } from "./Attendance";
 import NewPost from "../post/NewPost";
 import PostList from "../post/PostList";
 import ICalendar from "./ICalendar";
+import { AddToCalendar } from "./AddToCalendar";
 
 const Invite = dynamic(() => import("../invite/Invite"), {
   ssr: false,
@@ -69,8 +70,7 @@ export const Event = ({ publicId }: Props) => {
       <Body description={event.description} />
       <div className="flex flex-wrap justify-start gap-2">
         <Invite event={event} />
-        <GoogleCalendar event={event} />
-        <ICalendar event={event} />
+        <AddToCalendar event={event} />
         <NewPost publicId={publicId} isHost={isHost} />
       </div>
 
