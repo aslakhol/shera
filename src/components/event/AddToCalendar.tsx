@@ -23,6 +23,8 @@ export const AddToCalendar = ({ event }: Props) => {
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col gap-2 p-1">
         <GoogleCalendar event={event} />
+        <ICalendar event={event} label="Apple" />
+        <ICalendar event={event} label="Outlook" />
         <ICalendar event={event} />
       </PopoverContent>
     </Popover>
