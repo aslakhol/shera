@@ -3,7 +3,7 @@ import { api } from "../../utils/api";
 import { Body } from "./Body";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Crown, MapPin, Pencil } from "lucide-react";
+import { Crown, MapPin } from "lucide-react";
 import { WorkingClock } from "../WorkingClock";
 import { Loading } from "../Loading";
 
