@@ -21,7 +21,7 @@ export const postsRouter = createTRPCRouter({
         },
         include: {
           event: {
-            include: { attendees: true, host: true },
+            include: { attendees: true, hosts: true },
           },
           author: true,
         },
@@ -31,7 +31,10 @@ export const postsRouter = createTRPCRouter({
       await ctx.res?.revalidate(`/events/${path}`);
 
       if (notify) {
-        const posterIsHost = postInDb.author.id === postInDb.event.hostId;
+        const posterIsHost = postInDb.event.hosts.some(
+          (host) => host.id === postInDb.author.id,
+        );
+
         const attendeeEmails = postInDb.event.attendees
           .filter(
             (attendee) =>
@@ -41,9 +44,12 @@ export const postsRouter = createTRPCRouter({
           .filter((email) => email !== null)
           .filter((email) => email !== postInDb.author.email);
 
-        const emails = posterIsHost
-          ? attendeeEmails
-          : [postInDb.event.host.email].filter((e) => e !== null);
+        const hostEmails = postInDb.event.hosts
+          .map((host) => host.email)
+          .filter((email) => email !== null)
+          .filter((email) => email !== postInDb.author.email);
+
+        const emails = posterIsHost ? attendeeEmails : hostEmails;
 
         if (emails.length > 0) {
           const newPostEmail = getNewPostEmail(
