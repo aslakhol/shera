@@ -19,6 +19,7 @@ import { fullEventId } from "../../src/utils/event";
 import { formatInTimeZone } from "date-fns-tz";
 import { type AttendingStatus } from "@prisma/client";
 import { EmailClock } from "./EmailClock";
+import { formatHostNamesFull } from "../utils";
 
 const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
 
@@ -112,22 +113,6 @@ type InfoBoxProps = {
 const InfoBox = ({ event }: InfoBoxProps) => {
   const going = event.attendees.filter((a) => a.status === "GOING").length;
 
-  const formatHostNames = (hosts: Array<{ name: string | null }>) => {
-    const namesWithValues = hosts
-      .filter((h) => h.name !== null)
-      .map((h) => h.name!);
-
-    if (namesWithValues.length === 0) {
-      return "The host";
-    }
-
-    if (namesWithValues.length <= 3) {
-      return namesWithValues.join(", ").replace(/, ([^,]*)$/, " and $1");
-    }
-
-    return `${namesWithValues[0]} and ${namesWithValues.length - 1} others`;
-  };
-
   return (
     <Container className="my-4 rounded-lg border bg-[#e4e3f5] px-4 py-2 text-[#6a696f] shadow-sm">
       <Row width={"fit-content"} align="left">
@@ -166,7 +151,7 @@ const InfoBox = ({ event }: InfoBoxProps) => {
             <Img src={`${baseUrl}/email/crown.png`} width={16} height={16} />
           </Column>
           <Column>
-            <Text className="m-0">{formatHostNames(event.hosts)}</Text>
+            <Text className="m-0">{formatHostNamesFull(event.hosts)}</Text>
           </Column>
         </Row>
       )}
