@@ -37,7 +37,11 @@ export const EditEvent = ({ publicId }: Props) => {
     return <Loading />;
   }
 
-  if (session.data?.user.id !== eventQuery.data.host.id) {
+  const isHost = eventQuery.data.hosts.some(
+    (host) => host.id === session.data?.user.id,
+  );
+
+  if (!isHost) {
     return <>No access to edit event</>;
   }
 
