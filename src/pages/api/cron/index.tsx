@@ -128,7 +128,7 @@ const getReminderTomorrowEvents = async () => {
           OR: [{ status: "GOING" }, { status: "MAYBE" }],
         },
       },
-      host: true,
+      hosts: true,
     },
   });
   return events;
@@ -144,7 +144,7 @@ const getAttendance1WeekEvents = async () => {
     },
     include: {
       attendees: { where: { email: { not: null }, status: "MAYBE" } },
-      host: true,
+      hosts: true,
     },
   });
   const invitedEvents = await db.event.findMany({
@@ -153,7 +153,7 @@ const getAttendance1WeekEvents = async () => {
     },
     include: {
       attendees: { where: { email: { not: null }, status: "INVITED" } },
-      host: true,
+      hosts: true,
     },
   });
 
@@ -170,7 +170,7 @@ const getAttendance3DaysEvents = async () => {
     },
     include: {
       attendees: { where: { email: { not: null }, status: "MAYBE" } },
-      host: true,
+      hosts: true,
     },
   });
   const invitedEvents = await db.event.findMany({
@@ -179,7 +179,7 @@ const getAttendance3DaysEvents = async () => {
     },
     include: {
       attendees: { where: { email: { not: null }, status: "INVITED" } },
-      host: true,
+      hosts: true,
     },
   });
 
