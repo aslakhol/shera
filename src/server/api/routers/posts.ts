@@ -82,7 +82,7 @@ export const postsRouter = createTRPCRouter({
         where: {
           eventId: event.eventId,
         },
-        include: { author: true, event: true },
+        include: { author: true, event: { include: { hosts: true } } },
       });
 
       return posts.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
