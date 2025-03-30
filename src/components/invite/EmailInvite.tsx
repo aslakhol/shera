@@ -1,4 +1,3 @@
-import { type User, type Event } from "@prisma/client";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useState, type Dispatch, type SetStateAction } from "react";
@@ -7,11 +6,10 @@ import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { api } from "../../utils/api";
 import { toast } from "sonner";
+import { type EventWithHosts } from "../../utils/types";
 
 type Props = {
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
   emails: string[];
   setEmails: Dispatch<SetStateAction<string[]>>;
 };

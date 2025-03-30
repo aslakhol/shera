@@ -1,15 +1,12 @@
 import { Calendar } from "lucide-react";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import type { Event } from "@prisma/client";
-import type { User } from "next-auth";
 import GoogleCalendar from "./GoogleCalendar";
 import ICalendar from "./ICalendar";
+import { type EventWithHosts } from "../../utils/types";
 
 type Props = {
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
 };
 
 export const AddToCalendar = ({ event }: Props) => {

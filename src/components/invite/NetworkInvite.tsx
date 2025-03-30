@@ -1,11 +1,10 @@
 import { Button } from "../ui/button";
-import { type User, type Event } from "@prisma/client";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { cn } from "../../utils/cn";
 import { api } from "../../utils/api";
 import { useSession } from "next-auth/react";
-import { type Friend } from "../../utils/types";
+import { type EventWithHosts, type Friend } from "../../utils/types";
 import { type z } from "zod";
 import { toast } from "sonner";
 import { type UseFormReturn } from "react-hook-form";
@@ -21,7 +20,7 @@ import { Checkbox } from "../ui/checkbox";
 import { type NetworkInviteFormSchema } from "./utils";
 
 type Props = {
-  event: Event & { host: User };
+  event: EventWithHosts;
   form: UseFormReturn<z.infer<typeof NetworkInviteFormSchema>>;
 };
 

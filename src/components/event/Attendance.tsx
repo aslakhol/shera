@@ -2,12 +2,7 @@ import { type Session } from "next-auth";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 
-import {
-  type User,
-  type Event,
-  type Attendee,
-  type AttendingStatus,
-} from "@prisma/client";
+import { type Attendee, type AttendingStatus } from "@prisma/client";
 import { api } from "../../utils/api";
 import {
   Dialog,
@@ -23,11 +18,10 @@ import { cn } from "../../utils/cn";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { type EventWithHosts } from "../../utils/types";
 
 type Props = {
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
 };
 
 export const Attendance = ({ event }: Props) => {
@@ -44,9 +38,7 @@ export const Attendance = ({ event }: Props) => {
 };
 
 type AttendButtonProps = {
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
 };
 
 const AttendButton = ({ event }: AttendButtonProps) => {
@@ -85,7 +77,7 @@ const AttendButton = ({ event }: AttendButtonProps) => {
 
 type AttendProps = {
   session: Session;
-  event: Event & { host: User };
+  event: EventWithHosts;
   currentAttendee?: Attendee;
 };
 
@@ -178,7 +170,7 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
   );
 };
 
-type AttendantsProps = { event: Event & { host: User } };
+type AttendantsProps = { event: EventWithHosts };
 
 const Attendants = ({ event }: AttendantsProps) => {
   const { data: attendees, isSuccess } = api.events.attendees.useQuery({

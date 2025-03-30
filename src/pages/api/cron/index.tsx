@@ -9,11 +9,12 @@ import {
 import { db } from "../../../server/db";
 import { emailClient } from "../../../server/email";
 import { env } from "../../../env";
-import { type Attendee, type Event, type User } from "@prisma/client";
+import { type Attendee } from "@prisma/client";
 import { render } from "@react-email/render";
 import EventTomorrowEmail from "../../../../emails/EventTomorrowEmail";
 import AttendanceReminder1WeekEmail from "../../../../emails/AttendanceReminder1WeekEmail";
 import AttendanceReminder3DaysEmail from "../../../../emails/AttendanceReminder3DaysEmail";
+import { type EventWithHosts } from "../../../utils/types";
 
 type ResponseData = {
   message: string;
@@ -186,7 +187,7 @@ const getAttendance3DaysEvents = async () => {
 };
 
 const getReminderTomorrowEmail = (
-  event: Event & { host: User } & { attendees: Attendee[] },
+  event: EventWithHosts & { attendees: Attendee[] },
 ) => {
   const attendeeEmails = event.attendees
     .map((a) => a.email!)
@@ -208,7 +209,7 @@ const getReminderTomorrowEmail = (
 };
 
 const getAttendance1WeekEmail = (
-  event: Event & { host: User } & { attendees: Attendee[] },
+  event: EventWithHosts & { attendees: Attendee[] },
   attendanceStatus: "INVITED" | "MAYBE",
 ) => {
   const attendeeEmails = event.attendees
@@ -242,7 +243,7 @@ const getAttendance1WeekEmail = (
 };
 
 const getAttendance3DaysEmail = (
-  event: Event & { host: User } & { attendees: Attendee[] },
+  event: EventWithHosts & { attendees: Attendee[] },
   attendanceStatus: "INVITED" | "MAYBE",
 ) => {
   const attendeeEmails = event.attendees

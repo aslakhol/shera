@@ -1,13 +1,11 @@
-import { type User, type Event } from "@prisma/client";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { fullEventId } from "../../utils/event";
+import { type EventWithHosts } from "../../utils/types";
 
 type LinkInviteProps = {
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
 };
 
 export const LinkInvite = ({ event }: LinkInviteProps) => {
@@ -26,9 +24,7 @@ export const LinkInvite = ({ event }: LinkInviteProps) => {
 };
 
 type NoWebShareProps = {
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
 };
 
 const CopyLink = (props: NoWebShareProps) => {
@@ -52,9 +48,7 @@ const CopyLink = (props: NoWebShareProps) => {
 };
 
 type WebShareProps = {
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
 };
 
 const WebShare = ({ event }: WebShareProps) => {
