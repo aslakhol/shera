@@ -4,7 +4,7 @@ import { type Attendee, type Event, type User } from "@prisma/client";
 import { previewEvent } from "./previews";
 
 type EventTomorrowEmailProps = {
-  event: Event & { host: User; attendees: Attendee[] };
+  event: Event & { hosts: User[]; attendees: Attendee[] };
 };
 
 export const EventTomorrowEmail = ({ event }: EventTomorrowEmailProps) => {

@@ -2,9 +2,10 @@ import * as React from "react";
 import { type Attendee, type User, type Event } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
 import { previewEvent } from "./previews";
+import { formatHostNamesShort } from "./utils";
 
 type ConfirmationEmailProps = {
-  event: Event & { host: User; attendees: Attendee[] };
+  event: Event & { hosts: User[]; attendees: Attendee[] };
   attendanceStatus: "GOING" | "MAYBE";
 };
 
@@ -14,7 +15,7 @@ export const ConfirmationEmail = ({
 }: ConfirmationEmailProps) => {
   const body =
     attendanceStatus === "MAYBE"
-      ? `Make sure to let ${event.host.name ? event.host.name : "the host"} know if you are going soon!`
+      ? `Make sure to let ${formatHostNamesShort(event.hosts)} know if you are going soon!`
       : undefined;
 
   return (
