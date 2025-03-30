@@ -22,7 +22,7 @@ export const infoBoxFormatHostNames = (
     .map((h) => h.name!);
 
   if (namesWithValues.length === 0) {
-    return "The host";
+    return null;
   }
 
   if (namesWithValues.length <= 3) {

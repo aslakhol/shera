@@ -112,6 +112,7 @@ type InfoBoxProps = {
 
 const InfoBox = ({ event }: InfoBoxProps) => {
   const going = event.attendees.filter((a) => a.status === "GOING").length;
+  const hostNames = infoBoxFormatHostNames(event.hosts);
 
   return (
     <Container className="my-4 rounded-lg border bg-[#e4e3f5] px-4 py-2 text-[#6a696f] shadow-sm">
@@ -145,13 +146,13 @@ const InfoBox = ({ event }: InfoBoxProps) => {
       <Row>
         <Column></Column>
       </Row>
-      {event.hosts.length > 0 && (
+      {hostNames && (
         <Row width={"fit-content"} align="left">
           <Column className="pr-2">
             <Img src={`${baseUrl}/email/crown.png`} width={16} height={16} />
           </Column>
           <Column>
-            <Text className="m-0">{infoBoxFormatHostNames(event.hosts)}</Text>
+            <Text className="m-0">{hostNames}</Text>
           </Column>
         </Row>
       )}

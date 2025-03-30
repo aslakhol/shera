@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type Attendee, type User, type Event } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
-import { previewEvent } from "./previews";
+import { previewEvent, previewUser } from "./previews";
 import { formatHostNamesShort } from "./utils";
 
 type ConfirmationEmailProps = {
@@ -32,5 +32,5 @@ export default ConfirmationEmail;
 
 ConfirmationEmail.PreviewProps = {
   attendanceStatus: "MAYBE",
-  event: previewEvent,
+  event: { ...previewEvent, hosts: [{ ...previewUser, name: null }] },
 } satisfies ConfirmationEmailProps;
