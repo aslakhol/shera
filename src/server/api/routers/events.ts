@@ -8,7 +8,7 @@ import {
   getConfirmationEmail,
   getInviteEmail,
   getUpdatedEventEmail,
-} from "../../../../emails/utils";
+} from "../../../../emails/getEmails";
 import { type UserNetwork } from "../../../utils/types";
 import { formatInTimeZone } from "date-fns-tz";
 import { emailClient } from "../../../server/email";

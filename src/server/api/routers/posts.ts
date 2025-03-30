@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { postSchema } from "../../../utils/formValidation";
 import { fullEventId } from "../../../utils/event";
-import { getNewPostEmail } from "../../../../emails/utils";
+import { getNewPostEmail } from "../../../../emails/getEmails";
 import { emailClient } from "../../../server/email";
 
 export const postsRouter = createTRPCRouter({
