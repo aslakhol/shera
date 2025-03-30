@@ -2,6 +2,7 @@ import * as React from "react";
 import { type Attendee, type User, type Event } from "@prisma/client";
 import { EventEmail } from "./components/EventEmail";
 import { formatHostNamesShort } from "./utils";
+import { previewEvent, previewUser } from "./previews";
 
 type AttendanceReminder3DaysEmailProps = {
   event: Event & { hosts: User[]; attendees: Attendee[] };
@@ -30,47 +31,6 @@ export const AttendanceReminder3DaysEmail = ({
 export default AttendanceReminder3DaysEmail;
 
 AttendanceReminder3DaysEmail.PreviewProps = {
-  event: {
-    eventId: 42,
-    publicId: "publicId",
-    description: "Vi spiser noe pils og drikker en pizza",
-    title: "4 Pils og en Pizza",
-    place: "Jens Bjelkes gate 72",
-    dateTime: new Date(),
-    timeZone: "Europe/Oslo",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    hosts: [
-      {
-        id: "hostId",
-        name: "Aslak Hollund",
-        email: "aslak@shera.no",
-        emailVerified: new Date(),
-        image: null,
-      },
-    ],
-    attendees: [
-      {
-        attendeeId: "attendeeId",
-        name: "Aslak Hollund",
-        email: "aslak@shera.no",
-        eventId: 42,
-        status: "MAYBE",
-        userId: "userId",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        attendeeId: "attendeeId",
-        name: "Aslak Hollund",
-        email: "aslak@shera.no",
-        eventId: 42,
-        status: "GOING",
-        userId: "userId",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ],
-  },
+  event: { ...previewEvent, hosts: [previewUser] },
   attendanceStatus: "MAYBE",
 } satisfies AttendanceReminder3DaysEmailProps;
