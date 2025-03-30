@@ -106,22 +106,6 @@ export const getUpdatedEventEmail = (
   return updatedEventEmail;
 };
 
-export const formatHostNamesFull = (hosts: Array<{ name: string | null }>) => {
-  const namesWithValues = hosts
-    .filter((h) => h.name !== null)
-    .map((h) => h.name!);
-
-  if (namesWithValues.length === 0) {
-    return "The host";
-  }
-
-  if (namesWithValues.length <= 3) {
-    return namesWithValues.join(", ").replace(/, ([^,]*)$/, " and $1");
-  }
-
-  return `${namesWithValues[0]} and ${namesWithValues.length - 1} others`;
-};
-
 export const formatHostNamesShort = (hosts: Array<{ name: string | null }>) => {
   const namesWithValues = hosts
     .filter((h) => h.name !== null)
