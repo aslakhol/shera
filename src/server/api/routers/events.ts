@@ -37,7 +37,7 @@ export const eventsRouter = createTRPCRouter({
         data: {
           ...event,
           publicId: ctx.nanoId(),
-          host: { connect: { id: userId } },
+          hosts: { connect: [{ id: userId }] },
           attendees: {
             create: {
               name: host?.name ?? host?.email ?? "Unknown",
@@ -65,7 +65,7 @@ export const eventsRouter = createTRPCRouter({
       const eventInDb = await ctx.db.event.update({
         where: { publicId },
         data: { ...event },
-        include: { attendees: true, host: true },
+        include: { attendees: true, hosts: true },
       });
 
       const titleChanged =
@@ -113,6 +113,7 @@ export const eventsRouter = createTRPCRouter({
         timeChanged,
       ].filter((change): change is string => !!change);
 
+      // TODO: Update this so that instead of not notifying the host, we only skip notifying the person who made the change.
       if (notify && changes.length > 0) {
         const attendeeEmails = eventInDb.attendees
           .filter(
@@ -120,8 +121,8 @@ export const eventsRouter = createTRPCRouter({
               attendee.status === "GOING" || attendee.status === "MAYBE",
           )
           .map((attendee) => attendee.email)
-          .filter((email) => email !== null)
-          .filter((email) => email !== eventInDb.host.email);
+          .filter((email) => email !== null);
+        // .filter((email) => email !== eventInDb.host.email);
 
         if (attendeeEmails.length > 0) {
           const updatedEventEmail = getUpdatedEventEmail(
@@ -143,7 +144,7 @@ export const eventsRouter = createTRPCRouter({
     }),
   events: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.event.findMany({
-      include: { host: true, attendees: true },
+      include: { hosts: true, attendees: true },
     });
   }),
   event: publicProcedure
@@ -153,7 +154,7 @@ export const eventsRouter = createTRPCRouter({
         where: {
           publicId: input.publicId,
         },
-        include: { host: true },
+        include: { hosts: true },
       });
 
       if (!event) {
@@ -169,7 +170,7 @@ export const eventsRouter = createTRPCRouter({
         attendees: { some: { userId: input.userId } },
       };
       const hosts: Prisma.EventWhereInput = {
-        host: { id: input.userId },
+        hosts: { some: { id: input.userId } },
       };
 
       const eventsInDb = await ctx.db.event.findMany({
@@ -177,7 +178,7 @@ export const eventsRouter = createTRPCRouter({
           OR: [hosts, attends],
         },
         include: {
-          host: true,
+          hosts: true,
           attendees: true,
         },
       });
@@ -198,7 +199,7 @@ export const eventsRouter = createTRPCRouter({
 
       const event = await ctx.db.event.findFirst({
         where: { publicId },
-        include: { host: true, attendees: true },
+        include: { hosts: true, attendees: true },
       });
       if (!event) {
         throw new Error("Event not found");
@@ -288,7 +289,7 @@ export const eventsRouter = createTRPCRouter({
         attendees: { some: { userId: input.userId } },
       };
       const hosts: Prisma.EventWhereInput = {
-        host: { id: input.userId },
+        hosts: { some: { id: input.userId } },
       };
       const myEvents = await ctx.db.event.findMany({
         where: {
@@ -440,7 +441,7 @@ export const eventsRouter = createTRPCRouter({
 
       const inviteEvent = await ctx.db.event.findFirst({
         where: { publicId: event.publicId },
-        include: { host: true, attendees: true },
+        include: { hosts: true, attendees: true },
       });
 
       if (!inviteEvent) {
@@ -518,7 +519,7 @@ export const eventsRouter = createTRPCRouter({
 
       const inviteEvent = await ctx.db.event.findFirst({
         where: { publicId: event.publicId },
-        include: { host: true, attendees: true },
+        include: { hosts: true, attendees: true },
       });
 
       if (!inviteEvent) {
