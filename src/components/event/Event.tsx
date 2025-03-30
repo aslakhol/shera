@@ -13,6 +13,7 @@ import NewPost from "../post/NewPost";
 import PostList from "../post/PostList";
 import { AddToCalendar } from "./AddToCalendar";
 import { Button } from "../ui/button";
+import { infoBoxFormatHostNames } from "../../../emails/utils";
 
 const Invite = dynamic(() => import("../invite/Invite"), {
   ssr: false,
@@ -32,7 +33,7 @@ export const Event = ({ publicId }: Props) => {
     return <div>Event {publicId} not found</div>;
   }
 
-  const isHost = session?.user?.id === event.hostId;
+  const isHost = event.hosts.some((host) => host.id === session?.user?.id);
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -53,7 +54,7 @@ export const Event = ({ publicId }: Props) => {
         )}
         <div className="flex items-center gap-2">
           <Crown size={16} />
-          <p>{event.host.name ?? event.host.email}</p>
+          <p>{infoBoxFormatHostNames(event.hosts)}</p>
         </div>
       </div>
       <Attendance event={event} />
