@@ -121,31 +121,6 @@ export const EventHosts = ({ event }: Props) => {
           </div>
         ))}
 
-        {!canRemoveHosts &&
-          hosts.length === 1 &&
-          (hosts[0] ? (
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center space-x-4">
-                <Avatar>
-                  <AvatarImage src={hosts[0].image ?? undefined} />
-                  <AvatarFallback>
-                    {getInitials(hosts[0].name ?? hosts[0].email ?? "?")}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm font-medium leading-none">
-                    {hosts[0].name ?? "Unnamed Host"}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {hosts[0].email}
-                  </p>
-                </div>
-              </div>
-              <Button variant="outline" size="sm" disabled={true}>
-                Remove
-              </Button>
-            </div>
-          ) : null)}
         {!canRemoveHosts && (
           <p className="pt-2 text-sm text-muted-foreground">
             Cannot remove the only host. Invite another host first.
