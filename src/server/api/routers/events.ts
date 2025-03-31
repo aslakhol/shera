@@ -538,4 +538,56 @@ export const eventsRouter = createTRPCRouter({
         alreadyAttending: friendsUserIds.length - notAlreadyAttending.length,
       };
     }),
+  removeHost: publicProcedure
+    .input(
+      z.object({
+        publicId: z.string(),
+        userIdToRemove: z.string(),
+        // We might add currentUserId here later for authorization checks
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { publicId, userIdToRemove } = input;
+
+      const event = await ctx.db.event.findFirst({
+        where: { publicId },
+        include: { hosts: true },
+      });
+
+      if (!event) {
+        throw new Error("Event not found");
+      }
+
+      // Optional: Add check to ensure the user performing the action is a host
+      // const currentUserIsHost = event.hosts.some(host => host.id === ctx.session?.user?.id);
+      // if (!currentUserIsHost) {
+      //   throw new Error("Only hosts can remove other hosts");
+      // }
+
+      const hostExists = event.hosts.some((host) => host.id === userIdToRemove);
+      if (!hostExists) {
+        throw new Error("User is not a host of this event");
+      }
+
+      if (event.hosts.length <= 1) {
+        throw new Error("Cannot remove the last host from an event");
+      }
+
+      const updatedEvent = await ctx.db.event.update({
+        where: { eventId: event.eventId },
+        data: {
+          hosts: {
+            disconnect: [{ id: userIdToRemove }],
+          },
+        },
+        include: { hosts: true }, // Include hosts in the response if needed by the client
+      });
+
+      const path = fullEventId(event);
+      await ctx.res?.revalidate(`/events/${path}`);
+
+      return {
+        event: updatedEvent, // Return the updated event data
+      };
+    }),
 });
