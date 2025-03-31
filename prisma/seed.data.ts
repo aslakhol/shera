@@ -14,7 +14,7 @@ export interface EventSeed {
   dateTime: Date;
   timeZone: string;
   place: string;
-  hostId: string;
+  hostIds: string[];
   attendeeIds: string[];
 }
 
@@ -70,7 +70,7 @@ export const events: EventSeed[] = [
     dateTime: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
     timeZone: "Europe/Oslo",
     place: "Charlie's Cheese Palace",
-    hostId: charlieId,
+    hostIds: [charlieId],
     attendeeIds: [charlieId, bellaId, garyId, pennyId],
   },
   {
@@ -81,7 +81,7 @@ export const events: EventSeed[] = [
     dateTime: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000),
     timeZone: "Europe/Oslo",
     place: "Bella's Bistro",
-    hostId: bellaId,
+    hostIds: [bellaId, charlieId],
     attendeeIds: [bellaId, mollyId, pennyId, charlieId],
   },
   {
@@ -92,7 +92,7 @@ export const events: EventSeed[] = [
     dateTime: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000),
     timeZone: "Europe/Oslo",
     place: "Gary's Gourmet Gallery",
-    hostId: garyId,
+    hostIds: [garyId],
     attendeeIds: [garyId, bellaId, charlieId, mollyId],
   },
   {
@@ -103,7 +103,7 @@ export const events: EventSeed[] = [
     dateTime: new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000),
     timeZone: "Europe/Oslo",
     place: "Penny's Pantry",
-    hostId: pennyId,
+    hostIds: [pennyId],
     attendeeIds: [pennyId, garyId, mollyId, charlieId],
   },
 ];

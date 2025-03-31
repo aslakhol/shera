@@ -36,7 +36,11 @@ async function main() {
           dateTime: event.dateTime,
           timeZone: "Europe/Oslo",
           place: event.place,
-          hostId: event.hostId,
+          hosts: {
+            connect: event.hostIds.map((userId) => ({
+              id: userId,
+            })),
+          },
           attendees: {
             create: event.attendeeIds.map((userId) => ({
               name: users.find((u) => u.id === userId)?.name ?? "Unknown",
