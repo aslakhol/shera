@@ -4,14 +4,6 @@ import { api } from "../../utils/api";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -24,6 +16,8 @@ import {
 } from "../ui/alert-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { type EventWithHosts } from "../../utils/types";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { getInitials } from "../../utils/user";
 
 type Props = {
   event: EventWithHosts;
@@ -60,7 +54,7 @@ export const EventHosts = ({ event }: Props) => {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-row items-center justify-between pb-4">
         <CardTitle>Hosts</CardTitle>
         <Button
           onClick={() => toast.info("Invite host functionality coming soon!")}
@@ -69,67 +63,91 @@ export const EventHosts = ({ event }: Props) => {
           Invite
         </Button>
       </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {hosts.map((host) => (
-              <TableRow key={host.id}>
-                <TableCell>{host.name ?? host.email ?? "N/A"}</TableCell>
-                <TableCell className="text-right">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        disabled={!canRemoveHosts}
-                        onClick={() => setHostToRemove(host)}
-                      >
-                        Remove
-                      </Button>
-                    </AlertDialogTrigger>
-                    {hostToRemove?.id === host.id && (
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will remove{" "}
-                            <strong>
-                              {hostToRemove.name ?? hostToRemove.email}
-                            </strong>
-                            {` as a host from "${event.title}". This action cannot be undone.`}
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel
-                            onClick={() => setHostToRemove(null)}
-                          >
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={handleRemoveHost}
-                            disabled={removeHostMutation.isLoading}
-                          >
-                            {removeHostMutation.isLoading
-                              ? "Removing..."
-                              : "Confirm"}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    )}
-                  </AlertDialog>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <CardContent className="space-y-4">
+        {hosts.map((host) => (
+          <div
+            key={host.id}
+            className="flex items-center justify-between space-x-4"
+          >
+            <div className="flex items-center space-x-4">
+              <Avatar>
+                <AvatarImage src={host.image ?? undefined} />
+                <AvatarFallback>
+                  {getInitials(host.name ?? host.email ?? "?")}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-sm font-medium leading-none">
+                  {host.name ?? "Unnamed Host"}
+                </p>
+                <p className="text-sm text-muted-foreground">{host.email}</p>
+              </div>
+            </div>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={!canRemoveHosts}
+                  onClick={() => setHostToRemove(host)}
+                >
+                  Remove
+                </Button>
+              </AlertDialogTrigger>
+              {hostToRemove?.id === host.id && (
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will remove{" "}
+                      <strong>{hostToRemove.name ?? hostToRemove.email}</strong>
+                      {` as a host from "${event.title}". This action cannot be undone.`}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setHostToRemove(null)}>
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleRemoveHost}
+                      disabled={removeHostMutation.isLoading}
+                    >
+                      {removeHostMutation.isLoading ? "Removing..." : "Confirm"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              )}
+            </AlertDialog>
+          </div>
+        ))}
+
+        {!canRemoveHosts &&
+          hosts.length === 1 &&
+          (hosts[0] ? (
+            <div className="flex items-center justify-between space-x-4">
+              <div className="flex items-center space-x-4">
+                <Avatar>
+                  <AvatarImage src={hosts[0].image ?? undefined} />
+                  <AvatarFallback>
+                    {getInitials(hosts[0].name ?? hosts[0].email ?? "?")}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-sm font-medium leading-none">
+                    {hosts[0].name ?? "Unnamed Host"}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {hosts[0].email}
+                  </p>
+                </div>
+              </div>
+              <Button variant="outline" size="sm" disabled={true}>
+                Remove
+              </Button>
+            </div>
+          ) : null)}
         {!canRemoveHosts && (
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="pt-2 text-sm text-muted-foreground">
             Cannot remove the only host. Invite another host first.
           </p>
         )}
