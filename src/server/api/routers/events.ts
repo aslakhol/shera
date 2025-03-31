@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { compareDesc, isSameDay, isSameHour, isSameMinute } from "date-fns";
 import { eventSchema } from "../../../utils/formValidation";
 import { type Prisma } from "@prisma/client";
@@ -538,16 +538,16 @@ export const eventsRouter = createTRPCRouter({
         alreadyAttending: friendsUserIds.length - notAlreadyAttending.length,
       };
     }),
-  removeHost: publicProcedure
+  removeHost: protectedProcedure
     .input(
       z.object({
         publicId: z.string(),
         userIdToRemove: z.string(),
-        // We might add currentUserId here later for authorization checks
       }),
     )
     .mutation(async ({ input, ctx }) => {
       const { publicId, userIdToRemove } = input;
+      const currentUserId = ctx.session.user.id;
 
       const event = await ctx.db.event.findFirst({
         where: { publicId },
@@ -558,11 +558,12 @@ export const eventsRouter = createTRPCRouter({
         throw new Error("Event not found");
       }
 
-      // Optional: Add check to ensure the user performing the action is a host
-      // const currentUserIsHost = event.hosts.some(host => host.id === ctx.session?.user?.id);
-      // if (!currentUserIsHost) {
-      //   throw new Error("Only hosts can remove other hosts");
-      // }
+      const currentUserIsHost = event.hosts.some(
+        (host) => host.id === currentUserId,
+      );
+      if (!currentUserIsHost) {
+        throw new Error("Only hosts can remove other hosts");
+      }
 
       const hostExists = event.hosts.some((host) => host.id === userIdToRemove);
       if (!hostExists) {
@@ -580,14 +581,14 @@ export const eventsRouter = createTRPCRouter({
             disconnect: [{ id: userIdToRemove }],
           },
         },
-        include: { hosts: true }, // Include hosts in the response if needed by the client
+        include: { hosts: true },
       });
 
       const path = fullEventId(event);
       await ctx.res?.revalidate(`/events/${path}`);
 
       return {
-        event: updatedEvent, // Return the updated event data
+        event: updatedEvent,
       };
     }),
 });
