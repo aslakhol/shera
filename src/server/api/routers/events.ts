@@ -2,12 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { compareDesc, isSameDay, isSameHour, isSameMinute } from "date-fns";
 import { eventSchema } from "../../../utils/formValidation";
-import {
-  type Prisma,
-  type Event,
-  type User,
-  type Attendee,
-} from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import { fullEventId } from "../../../utils/event";
 import {
   getConfirmationEmail,
@@ -18,11 +13,6 @@ import {
 import { type UserNetwork } from "../../../utils/types";
 import { formatInTimeZone } from "date-fns-tz";
 import { emailClient } from "../../../server/email";
-
-type EventWithHostsAndAttendees = Event & {
-  hosts: User[];
-  attendees: Attendee[];
-};
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
@@ -767,90 +757,64 @@ export const eventsRouter = createTRPCRouter({
         failed: failedUserIds,
       };
     }),
-  acceptHostInvite: publicProcedure
+  acceptHostInvite: protectedProcedure
     .input(z.object({ token: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const { token } = input;
 
-      const invitation = await ctx.db.hostInvitation.findUnique({
+      const invitation = await ctx.db.hostInvitation.findUniqueOrThrow({
         where: { token },
-        include: { event: { include: { hosts: true } }, inviter: true },
+        include: { event: { include: { hosts: true } } },
       });
 
-      if (!invitation) {
-        throw new Error("Invalid or expired invitation token.");
-      }
-
-      const { event } = invitation;
-      if (!event) {
+      if (
+        invitation.event.hosts.some((h) => h.id === invitation.invitedUserId)
+      ) {
+        console.log(
+          `User ${invitation.invitedUserId} is already a host for event ${invitation.event.publicId}. Deleting invite.`,
+        );
         await ctx.db.hostInvitation.delete({ where: { id: invitation.id } });
-        throw new Error("Invitation is linked to a non-existent event.");
-      }
-
-      let userIdToConnect: string | null = null;
-
-      if (invitation.invitedUserId) {
-        if (event.hosts.some((h) => h.id === invitation.invitedUserId)) {
-          console.log("Invited user is already a host. Deleting invite.");
-          await ctx.db.hostInvitation.delete({ where: { id: invitation.id } });
-          return { success: true, message: "Already a host", event };
-        }
-        userIdToConnect = invitation.invitedUserId;
-      } else {
-        const currentUser = ctx.session?.user;
-        if (
-          currentUser?.email?.toLowerCase() ===
-          invitation.invitedUserEmail.toLowerCase()
-        ) {
-          if (event.hosts.some((h) => h.id === currentUser.id)) {
-            console.log("Current user is already a host. Deleting invite.");
-            await ctx.db.hostInvitation.delete({
-              where: { id: invitation.id },
-            });
-            return { success: true, message: "Already a host", event };
-          }
-          userIdToConnect = currentUser.id;
-        } else {
-          throw new Error(
-            `Please log in or sign up with ${invitation.invitedUserEmail} to accept this invitation.`,
-          );
-        }
-      }
-
-      if (!userIdToConnect) {
-        throw new Error("Could not determine user to accept invitation.");
-      }
-
-      try {
-        await ctx.db.$transaction(async (tx) => {
-          await tx.event.update({
-            where: { eventId: event.eventId },
-            data: {
-              hosts: {
-                connect: { id: userIdToConnect },
-              },
-            },
-          });
-
-          await tx.hostInvitation.delete({ where: { id: invitation.id } });
-        });
-
-        const path = fullEventId(event);
-        await ctx.res?.revalidate(`/events/${path}`);
-
-        const updatedEvent = await ctx.db.event.findUnique({
-          where: { eventId: event.eventId },
-          include: { hosts: true },
-        });
-
         return {
           success: true,
-          message: "Invitation accepted!",
-          event: updatedEvent ?? event,
+          message: "Already a host",
+          event: invitation.event,
         };
-      } catch (error) {
-        console.error("Failed to accept host invitation:", error);
-        throw new Error("Failed to accept invitation. Please try again.");
       }
+
+      const currentUser = ctx.session.user;
+      const isCorrectUserId = invitation.invitedUserId !== currentUser.id;
+      const isCorrectEmail =
+        currentUser.email?.toLowerCase() ===
+        invitation.invitedUserEmail.toLowerCase();
+
+      if (!isCorrectUserId && !isCorrectEmail) {
+        throw new Error(`You are not authorized to accept this invitation.`);
+      }
+
+      await ctx.db.$transaction(async (tx) => {
+        await tx.event.update({
+          where: { eventId: invitation.event.eventId },
+          data: {
+            hosts: {
+              connect: { id: currentUser.id },
+            },
+          },
+        });
+        await tx.hostInvitation.delete({ where: { id: invitation.id } });
+      });
+
+      const path = fullEventId(invitation.event);
+      void ctx.res?.revalidate(`/events/${path}`);
+
+      const updatedEvent = await ctx.db.event.findUniqueOrThrow({
+        where: { eventId: invitation.event.eventId },
+        include: { hosts: true },
+      });
+
+      return {
+        success: true,
+        message: "Invitation accepted!",
+        event: updatedEvent,
+      };
     }),
 });
