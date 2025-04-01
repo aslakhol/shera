@@ -4,7 +4,7 @@ import { EventEmail } from "./components/EventEmail";
 import { previewEvent } from "./previews";
 
 type InviteEmailProps = {
-  event: Event & { host: User; attendees: Attendee[] };
+  event: Event & { hosts: User[]; attendees: Attendee[] };
   inviterName?: string;
 };
 

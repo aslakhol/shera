@@ -29,7 +29,7 @@ export const slugifyEvent = (event: { title: string }) => {
 };
 
 export const categorizeEvents = (
-  events: (Event & { host: User; attendees: Attendee[] })[],
+  events: (Event & { hosts: User[]; attendees: Attendee[] })[],
 ) =>
   events.reduce<{
     finished: EventRowProps[];

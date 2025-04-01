@@ -7,7 +7,7 @@ import { ArrowDown, ArrowUp, ExternalLink } from "lucide-react";
 import { Button } from "../../ui/button";
 
 export const columns: ColumnDef<
-  Event & { host: User; attendees: Attendee[] }
+  Event & { hosts: User[]; attendees: Attendee[] }
 >[] = [
   {
     accessorKey: "eventId",
@@ -91,7 +91,7 @@ export const columns: ColumnDef<
     accessorFn: (row) => row,
     cell: (info) => {
       const event = info.getValue<
-        Event & { host: User; attendees: Attendee[] }
+        Event & { hosts: User[]; attendees: Attendee[] }
       >();
       return (
         <Link href={`/events/${fullEventId(event)}`}>
@@ -104,7 +104,7 @@ export const columns: ColumnDef<
 
 type SortHeaderProps = {
   headerTitle: string;
-  column: Column<Event & { host: User; attendees: Attendee[] }>;
+  column: Column<Event & { hosts: User[]; attendees: Attendee[] }>;
 };
 
 const SortHeader = ({ headerTitle, column }: SortHeaderProps) => {

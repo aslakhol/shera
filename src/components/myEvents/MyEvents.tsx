@@ -13,6 +13,7 @@ import {
 } from "../../utils/event";
 import { useSession } from "next-auth/react";
 import { type EventRowProps } from "~/utils/types";
+import { infoBoxFormatHostNames } from "../../../emails/utils";
 
 export const MyEvents = () => {
   const session = useSession();
@@ -89,6 +90,8 @@ export const MyEvents = () => {
 };
 
 const EventRow = ({ event }: EventRowProps) => {
+  const hostNames = infoBoxFormatHostNames(event.hosts);
+
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-32 pb-2">
@@ -125,13 +128,13 @@ const EventRow = ({ event }: EventRowProps) => {
                   </p>
                 </div>
               )}
-              {event.hostId && (
+              {hostNames && (
                 <div className="flex items-center gap-2">
                   <Crown size={16} />
 
                   <div>
                     <p className="w-72 overflow-hidden text-ellipsis text-nowrap">
-                      {event.host.name ?? event.host.email}
+                      {hostNames}
                     </p>
                   </div>
                 </div>

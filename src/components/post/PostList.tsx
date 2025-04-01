@@ -15,6 +15,7 @@ import { Button } from "../ui/button";
 import { Loading } from "../Loading";
 import { useState } from "react";
 import { WrapLinks } from "../WrapLinks";
+import { type EventWithHosts } from "../../utils/types";
 
 type PostListProps = { publicId: string };
 
@@ -37,23 +38,24 @@ const PostList = ({ publicId }: PostListProps) => {
 export default PostList;
 
 type PostProps = {
-  post: PostType & { author: User; event: Event };
+  post: PostType & { author: User; event: EventWithHosts };
 };
 
 export const Post = (props: PostProps) => {
   const { post } = props;
   const { data: session } = useSession();
 
-  const canDeletePost =
-    session?.user.id === post.authorId ||
-    session?.user.id === post.event.hostId;
+  const userIsHost = post.event.hosts.some((h) => h.id === session?.user.id);
+  const canDeletePost = session?.user.id === post.authorId || userIsHost;
+
+  const authorIsHost = post.event.hosts.some((h) => h.id === post.authorId);
 
   return (
     <div key={post.postId} className="w-full rounded border p-4">
       <div className="flex flex-row justify-between">
         <div className="flex flex-col">
           <span className="flex flex-row items-center gap-1 font-bold">
-            {post.event.hostId === post.authorId && <Crown size={16} />}
+            {authorIsHost && <Crown size={16} />}
             {post.author.name ?? post.author.email ?? "Anonymous"}
           </span>
           <span className="text-sm italic">

@@ -5,7 +5,7 @@ import { previewEvent, previewUser } from "./previews";
 import { Text } from "@react-email/components";
 
 type NewPostEmailProps = {
-  event: Event & { host: User; attendees: Attendee[] };
+  event: Event & { hosts: User[]; attendees: Attendee[] };
   poster: User;
   message: string;
 };

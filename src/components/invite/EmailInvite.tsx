@@ -1,4 +1,3 @@
-import { type User, type Event } from "@prisma/client";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useState, type Dispatch, type SetStateAction } from "react";
@@ -7,11 +6,11 @@ import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { api } from "../../utils/api";
 import { toast } from "sonner";
+import { type EventWithHosts } from "../../utils/types";
+import { useSession } from "next-auth/react";
 
 type Props = {
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
   emails: string[];
   setEmails: Dispatch<SetStateAction<string[]>>;
 };
@@ -19,6 +18,7 @@ type Props = {
 // aaaaa@gmail.com, aaaaa@outlook.com, aaaaa@yahoo.com, aaaaa@hotmail.com, aaaaa@live.com, aaaaa@icloud.com, aaaaa@me.com,  aaaaa@aol.com,  aaaaa@msn.com, bbbbb@gmail.com, bbbbb@outlook.com, bbbbb@yahoo.com, bbbbb@hotmail.com, bbbbb@live.com, bbbbb@icloud.com, bbbbb@me.com,  bbbbb@aol.com,  bbbbb@msn.com, ccccc@gmail.com, ccccc@outlook.com, ccccc@yahoo.com, ccccc@hotmail.com, ccccc@live.com, ccccc@icloud.com, ccccc@me.com,  ccccc@aol.com,  ccccc@msn.com
 
 export const EmailInvite = ({ event, emails, setEmails }: Props) => {
+  const { data: session } = useSession();
   const attendeesQuery = api.events.attendees.useQuery({
     publicId: event.publicId,
   });
@@ -58,7 +58,7 @@ export const EmailInvite = ({ event, emails, setEmails }: Props) => {
   };
 
   const handleSend = () => {
-    if (emails.length === 0) {
+    if (emails.length === 0 || !session) {
       return;
     }
 
@@ -69,7 +69,7 @@ export const EmailInvite = ({ event, emails, setEmails }: Props) => {
     emailInviteMutation.mutate({
       publicId: event.publicId,
       emails: emailsToSend,
-      inviterName: event.host.name ?? undefined,
+      inviterName: session.user.name ?? undefined,
     });
 
     setEmails([]);

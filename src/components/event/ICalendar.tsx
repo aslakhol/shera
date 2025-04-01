@@ -1,15 +1,12 @@
-import type { Event } from "@prisma/client";
 import { add } from "date-fns";
-import type { User } from "next-auth";
 import { Button } from "../ui/button";
 import { fullEventId } from "../../utils/event";
 import { useEffect, useState } from "react";
+import { type EventWithHosts } from "../../utils/types";
 
 type ICalendarProps = {
   label?: string;
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
 };
 
 const ICalendar = (props: ICalendarProps) => {

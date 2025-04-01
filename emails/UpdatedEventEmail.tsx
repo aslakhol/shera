@@ -5,7 +5,7 @@ import { previewEvent } from "./previews";
 import { Text } from "@react-email/components";
 
 type UpdatedEventEmailProps = {
-  event: Event & { host: User; attendees: Attendee[] };
+  event: Event & { hosts: User[]; attendees: Attendee[] };
   changes: string[];
 };
 

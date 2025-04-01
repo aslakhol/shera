@@ -1,13 +1,10 @@
-import { type Event } from "@prisma/client";
-import { type User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import { fullEventId } from "../../utils/event";
+import { type EventWithHosts } from "../../utils/types";
 
 type WebShareProps = {
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
 };
 
 const WebShare = ({ event }: WebShareProps) => {

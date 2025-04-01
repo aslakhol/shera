@@ -12,5 +12,7 @@ export type Friend = {
 };
 
 export type EventRowProps = {
-  event: Event & { host: User; attendees: Attendee[] };
+  event: Event & { hosts: User[]; attendees: Attendee[] };
 };
+
+export type EventWithHosts = Event & { hosts: User[] };

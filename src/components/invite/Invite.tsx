@@ -1,4 +1,3 @@
-import { type Event, type User } from "@prisma/client";
 import {
   Dialog,
   DialogContent,
@@ -16,11 +15,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NetworkInviteFormSchema } from "./utils";
 import { type z } from "zod";
+import { type EventWithHosts } from "../../utils/types";
 
 type InviteProps = {
-  event: Event & {
-    host: User;
-  };
+  event: EventWithHosts;
 };
 
 const Invite = (props: InviteProps) => {

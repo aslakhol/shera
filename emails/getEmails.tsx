@@ -6,8 +6,13 @@ import ConfirmationEmail from "./ConfirmationEmail";
 import NewPostEmail from "./NewPostEmail";
 import UpdatedEventEmail from "./UpdatedEventEmail";
 
+type EventWithHostsAndAttendees = Event & {
+  hosts: User[];
+  attendees: Attendee[];
+};
+
 export const getInviteEmail = (
-  event: Event & { host: User; attendees: Attendee[] },
+  event: EventWithHostsAndAttendees,
   emails: string[],
   inviterName?: string,
 ) => {
@@ -31,7 +36,7 @@ export const getInviteEmail = (
 };
 
 export const getConfirmationEmail = (
-  event: Event & { host: User; attendees: Attendee[] },
+  event: EventWithHostsAndAttendees,
   email: string,
   status: "GOING" | "MAYBE",
 ) => {
@@ -58,7 +63,7 @@ export const getConfirmationEmail = (
 
 export const getNewPostEmail = (
   message: string,
-  event: Event & { host: User; attendees: Attendee[] },
+  event: EventWithHostsAndAttendees,
   emails: string[],
   poster: User,
 ) => {
@@ -85,7 +90,7 @@ export const getNewPostEmail = (
 };
 
 export const getUpdatedEventEmail = (
-  event: Event & { host: User; attendees: Attendee[] },
+  event: EventWithHostsAndAttendees,
   changes: string[],
   emails: string[],
 ) => {
