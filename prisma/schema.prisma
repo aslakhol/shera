@@ -9,18 +9,19 @@ datasource db {
 }
 
 model Event {
-    eventId     Int        @id @default(autoincrement())
-    publicId    String     @unique
-    description String
-    title       String
-    place       String?
-    hosts       User[]     @relation("EventHosts")
-    dateTime    DateTime
-    timeZone    String     @default("Europe/Oslo")
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @default(now()) @updatedAt
-    attendees   Attendee[]
-    posts       Post[]
+    eventId         Int              @id @default(autoincrement())
+    publicId        String           @unique
+    description     String
+    title           String
+    place           String?
+    hosts           User[]           @relation("EventHosts")
+    dateTime        DateTime
+    timeZone        String           @default("Europe/Oslo")
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @default(now()) @updatedAt
+    attendees       Attendee[]
+    posts           Post[]
+    hostInvitations HostInvitation[]
 }
 
 model Post {
@@ -85,16 +86,18 @@ model Session {
 }
 
 model User {
-    id            String     @id @default(cuid())
-    name          String?
-    email         String?    @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    events        Event[]    @relation("EventHosts")
-    posts         Post[]
-    sessions      Session[]
-    Attendee      Attendee[]
+    id                      String           @id @default(cuid())
+    name                    String?
+    email                   String?          @unique
+    emailVerified           DateTime?
+    image                   String?
+    accounts                Account[]
+    events                  Event[]          @relation("EventHosts")
+    posts                   Post[]
+    sessions                Session[]
+    Attendee                Attendee[]
+    hostInvitationsSent     HostInvitation[] @relation("InviterHostInvites")
+    hostInvitationsReceived HostInvitation[] @relation("InvitedUserHostInvites")
 }
 
 model VerificationToken {
@@ -103,4 +106,22 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+// Model for tracking pending co-host invitations
+model HostInvitation {
+    id               String   @id @default(cuid())
+    token            String   @unique
+    event            Event    @relation(fields: [eventId], references: [eventId])
+    eventId          Int
+    invitedUser      User?    @relation("InvitedUserHostInvites", fields: [invitedUserId], references: [id])
+    invitedUserId    String?
+    invitedUserEmail String
+    inviter          User     @relation("InviterHostInvites", fields: [inviterId], references: [id])
+    inviterId        String
+    createdAt        DateTime @default(now())
+
+    @@index([eventId])
+    @@index([invitedUserId])
+    @@index([inviterId])
 }
