@@ -601,76 +601,58 @@ export const eventsRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { publicId, emails } = input;
-      const inviterId = ctx.session.user.id;
       const inviter = ctx.session.user;
 
-      const event = await ctx.db.event.findFirst({
+      const event = await ctx.db.event.findFirstOrThrow({
         where: { publicId },
         include: { hosts: true, attendees: true },
       });
 
-      if (!event) {
-        throw new Error("Event not found");
-      }
-
-      if (!event.hosts.some((host) => host.id === inviterId)) {
+      if (!event.hosts.some((host) => host.id === inviter.id)) {
         throw new Error("Only hosts can invite other hosts");
       }
 
+      const normalizedInputEmails = emails.map((e) => e.toLowerCase());
       const existingUsers = await ctx.db.user.findMany({
-        where: { email: { in: emails } },
+        where: { email: { in: normalizedInputEmails } },
       });
 
-      let createdCount = 0;
-      const sentEmails: string[] = [];
-      const failedEmails: { email: string; reason: string }[] = [];
+      const toInvite = normalizedInputEmails.filter(
+        (email) => !existingUsers.some((u) => u.email?.toLowerCase() === email),
+      );
 
-      for (const email of emails) {
-        const normalizedEmail = email.toLowerCase();
-        const existingUser = existingUsers.find(
-          (u) => u.email?.toLowerCase() === normalizedEmail,
-        );
-
-        if (existingUser && event.hosts.some((h) => h.id === existingUser.id)) {
-          console.log(`User ${email} is already a host.`);
-          failedEmails.push({ email, reason: "Already a host" });
-          continue;
-        }
-
-        try {
-          const newInvitation = await ctx.db.hostInvitation.create({
-            data: {
-              eventId: event.eventId,
-              invitedUserEmail: normalizedEmail,
-              inviterId: inviterId,
-              invitedUserId: existingUser?.id,
-            },
-          });
-
-          const emailToSend = getHostInviteEmail(
-            event,
-            [normalizedEmail],
-            newInvitation.token,
-            inviter.name ?? undefined,
-          );
-
-          await emailClient.send(emailToSend);
-          sentEmails.push(normalizedEmail);
-          createdCount++;
-        } catch (error) {
-          console.error(
-            `Failed to create/send host invitation for ${email}:`,
-            error,
-          );
-          failedEmails.push({ email, reason: "Failed to process invitation" });
-        }
+      if (toInvite.length === 0) {
+        console.log("All provided emails belong to existing hosts.");
+        return { createdInvites: 0 };
       }
 
-      return {
-        success: createdCount > 0,
-        sentCount: createdCount,
-        failed: failedEmails,
-      };
+      let createdCount = 0;
+      for (const email of toInvite) {
+        const existingUser = existingUsers.find(
+          (u) => u.email?.toLowerCase() === email,
+        );
+
+        const newInvitation = await ctx.db.hostInvitation.create({
+          data: {
+            eventId: event.eventId,
+            invitedUserEmail: email,
+            inviterId: inviter.id,
+            invitedUserId: existingUser?.id,
+          },
+        });
+
+        const emailToSend = getHostInviteEmail(
+          event,
+          [email],
+          newInvitation.token,
+          inviter.name ?? inviter.email ?? undefined,
+        );
+
+        await emailClient.send(emailToSend);
+        createdCount++;
+      }
+
+      return { createdInvites: createdCount };
     }),
   networkInviteHost: protectedProcedure
     .input(
@@ -681,81 +663,56 @@ export const eventsRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { publicId, inviteeIds } = input;
-      const inviterId = ctx.session.user.id;
       const inviter = ctx.session.user;
 
-      const event = await ctx.db.event.findFirst({
+      const event = await ctx.db.event.findFirstOrThrow({
         where: { publicId },
         include: { hosts: true, attendees: true },
       });
 
-      if (!event) {
-        throw new Error("Event not found");
-      }
-
-      if (!event.hosts.some((host) => host.id === inviterId)) {
+      if (!event.hosts.some((host) => host.id === inviter.id)) {
         throw new Error("Only hosts can invite other hosts");
       }
 
-      const usersToInviteDetails = await ctx.db.user.findMany({
-        where: { id: { in: inviteeIds } },
+      const invitees = (await ctx.db.user.findMany({
+        where: { id: { in: inviteeIds }, email: { not: null } },
         select: { id: true, email: true, name: true },
-      });
+      })) as { id: string; email: string; name: string | null }[];
 
-      let createdCount = 0;
-      const sentUserIds: string[] = [];
-      const failedUserIds: { userId: string; reason: string }[] = [];
+      const validInvitees = invitees.filter(
+        (user) => !event.hosts.some((host) => host.id === user.id),
+      );
 
-      for (const user of usersToInviteDetails) {
-        if (!user.email) {
-          console.log(`User ${user.id} has no email, skipping invite.`);
-          failedUserIds.push({ userId: user.id, reason: "Missing email" });
-          continue;
-        }
-
-        if (event.hosts.some((host) => host.id === user.id)) {
-          console.log(`User ${user.id} is already a host.`);
-          failedUserIds.push({ userId: user.id, reason: "Already a host" });
-          continue;
-        }
-
-        try {
-          const newInvitation = await ctx.db.hostInvitation.create({
-            data: {
-              eventId: event.eventId,
-              invitedUserEmail: user.email,
-              invitedUserId: user.id,
-              inviterId: inviterId,
-            },
-          });
-
-          const emailToSend = getHostInviteEmail(
-            event,
-            [user.email],
-            newInvitation.token,
-            inviter.name ?? inviter.email ?? undefined,
-          );
-
-          await emailClient.send(emailToSend);
-          sentUserIds.push(user.id);
-          createdCount++;
-        } catch (error) {
-          console.error(
-            `Failed to create/send host invitation for user ${user.id}:`,
-            error,
-          );
-          failedUserIds.push({
-            userId: user.id,
-            reason: "Failed to process invitation",
-          });
-        }
+      if (validInvitees.length === 0) {
+        console.log(
+          "All selected users are invalid (missing email or already hosts).",
+        );
+        return { createdInvites: 0 };
       }
 
-      return {
-        success: createdCount > 0,
-        sentCount: createdCount,
-        failed: failedUserIds,
-      };
+      let createdCount = 0;
+      for (const user of validInvitees) {
+        const newInvitation = await ctx.db.hostInvitation.create({
+          data: {
+            eventId: event.eventId,
+            invitedUserEmail: user.email,
+            invitedUserId: user.id,
+            inviterId: inviter.id,
+          },
+        });
+
+        const emailToSend = getHostInviteEmail(
+          event,
+          [user.email],
+          newInvitation.token,
+          inviter.name ?? inviter.email ?? undefined,
+        );
+
+        await emailClient.send(emailToSend);
+        createdCount++;
+      }
+
+      return { createdInvites: createdCount };
     }),
   acceptHostInvite: protectedProcedure
     .input(z.object({ token: z.string() }))
