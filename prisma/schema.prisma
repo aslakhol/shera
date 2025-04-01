@@ -111,7 +111,7 @@ model VerificationToken {
 // Model for tracking pending co-host invitations
 model HostInvitation {
     id               String   @id @default(cuid())
-    token            String   @unique
+    token            String   @unique @default(nanoid(6))
     event            Event    @relation(fields: [eventId], references: [eventId])
     eventId          Int
     invitedUser      User?    @relation("InvitedUserHostInvites", fields: [invitedUserId], references: [id])
