@@ -5,6 +5,7 @@ import InviteEmail from "./InviteEmail";
 import ConfirmationEmail from "./ConfirmationEmail";
 import NewPostEmail from "./NewPostEmail";
 import UpdatedEventEmail from "./UpdatedEventEmail";
+import HostInviteEmail from "./HostInviteEmail";
 
 type EventWithHostsAndAttendees = Event & {
   hosts: User[];
@@ -109,4 +110,39 @@ export const getUpdatedEventEmail = (
   };
 
   return updatedEventEmail;
+};
+
+export const getHostInviteEmail = (
+  event: EventWithHostsAndAttendees,
+  emails: string[],
+  acceptInviteToken: string,
+  inviterName?: string,
+) => {
+  const baseUrl = process.env.BASE_URL ? `${process.env.BASE_URL}` : "";
+  const acceptInviteLink = `${baseUrl}/accept-invite/${acceptInviteToken}`;
+  const html = render(
+    <HostInviteEmail
+      event={event}
+      inviterName={inviterName}
+      acceptInviteLink={acceptInviteLink}
+    />,
+  );
+  const text = render(
+    <HostInviteEmail
+      event={event}
+      inviterName={inviterName}
+      acceptInviteLink={acceptInviteLink}
+    />,
+  );
+
+  const hostInviteEmail = {
+    to: "no-reply@shera.no",
+    bcc: emails,
+    from: env.EMAIL_FROM,
+    subject: `${inviterName} has invited you to co-host ${event.title}!`,
+    text,
+    html,
+  };
+
+  return hostInviteEmail;
 };
