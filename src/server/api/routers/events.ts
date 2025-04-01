@@ -2,16 +2,27 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { compareDesc, isSameDay, isSameHour, isSameMinute } from "date-fns";
 import { eventSchema } from "../../../utils/formValidation";
-import { type Prisma } from "@prisma/client";
+import {
+  type Prisma,
+  type Event,
+  type User,
+  type Attendee,
+} from "@prisma/client";
 import { fullEventId } from "../../../utils/event";
 import {
   getConfirmationEmail,
   getInviteEmail,
   getUpdatedEventEmail,
+  getHostInviteEmail,
 } from "../../../../emails/getEmails";
 import { type UserNetwork } from "../../../utils/types";
 import { formatInTimeZone } from "date-fns-tz";
 import { emailClient } from "../../../server/email";
+
+type EventWithHostsAndAttendees = Event & {
+  hosts: User[];
+  attendees: Attendee[];
+};
 
 export const eventsRouter = createTRPCRouter({
   createEvent: publicProcedure
@@ -590,5 +601,256 @@ export const eventsRouter = createTRPCRouter({
       return {
         event: updatedEvent,
       };
+    }),
+  emailInviteHost: protectedProcedure
+    .input(
+      z.object({
+        publicId: z.string(),
+        emails: z.array(z.string().email()),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { publicId, emails } = input;
+      const inviterId = ctx.session.user.id;
+      const inviter = ctx.session.user;
+
+      const event = await ctx.db.event.findFirst({
+        where: { publicId },
+        include: { hosts: true, attendees: true },
+      });
+
+      if (!event) {
+        throw new Error("Event not found");
+      }
+
+      if (!event.hosts.some((host) => host.id === inviterId)) {
+        throw new Error("Only hosts can invite other hosts");
+      }
+
+      const existingUsers = await ctx.db.user.findMany({
+        where: { email: { in: emails } },
+      });
+
+      let createdCount = 0;
+      const sentEmails: string[] = [];
+      const failedEmails: { email: string; reason: string }[] = [];
+
+      for (const email of emails) {
+        const normalizedEmail = email.toLowerCase();
+        const existingUser = existingUsers.find(
+          (u) => u.email?.toLowerCase() === normalizedEmail,
+        );
+
+        if (existingUser && event.hosts.some((h) => h.id === existingUser.id)) {
+          console.log(`User ${email} is already a host.`);
+          failedEmails.push({ email, reason: "Already a host" });
+          continue;
+        }
+
+        try {
+          const newInvitation = await ctx.db.hostInvitation.create({
+            data: {
+              eventId: event.eventId,
+              invitedUserEmail: normalizedEmail,
+              inviterId: inviterId,
+              invitedUserId: existingUser?.id,
+            },
+          });
+
+          const emailToSend = getHostInviteEmail(
+            event,
+            [normalizedEmail],
+            newInvitation.token,
+            inviter.name ?? undefined,
+          );
+
+          await emailClient.send(emailToSend);
+          sentEmails.push(normalizedEmail);
+          createdCount++;
+        } catch (error) {
+          console.error(
+            `Failed to create/send host invitation for ${email}:`,
+            error,
+          );
+          failedEmails.push({ email, reason: "Failed to process invitation" });
+        }
+      }
+
+      return {
+        success: createdCount > 0,
+        sentCount: createdCount,
+        failed: failedEmails,
+      };
+    }),
+  networkInviteHost: protectedProcedure
+    .input(
+      z.object({
+        publicId: z.string(),
+        inviteeIds: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { publicId, inviteeIds } = input;
+      const inviterId = ctx.session.user.id;
+      const inviter = ctx.session.user;
+
+      const event = await ctx.db.event.findFirst({
+        where: { publicId },
+        include: { hosts: true, attendees: true },
+      });
+
+      if (!event) {
+        throw new Error("Event not found");
+      }
+
+      if (!event.hosts.some((host) => host.id === inviterId)) {
+        throw new Error("Only hosts can invite other hosts");
+      }
+
+      const usersToInviteDetails = await ctx.db.user.findMany({
+        where: { id: { in: inviteeIds } },
+        select: { id: true, email: true, name: true },
+      });
+
+      let createdCount = 0;
+      const sentUserIds: string[] = [];
+      const failedUserIds: { userId: string; reason: string }[] = [];
+
+      for (const user of usersToInviteDetails) {
+        if (!user.email) {
+          console.log(`User ${user.id} has no email, skipping invite.`);
+          failedUserIds.push({ userId: user.id, reason: "Missing email" });
+          continue;
+        }
+
+        if (event.hosts.some((host) => host.id === user.id)) {
+          console.log(`User ${user.id} is already a host.`);
+          failedUserIds.push({ userId: user.id, reason: "Already a host" });
+          continue;
+        }
+
+        try {
+          const newInvitation = await ctx.db.hostInvitation.create({
+            data: {
+              eventId: event.eventId,
+              invitedUserEmail: user.email,
+              invitedUserId: user.id,
+              inviterId: inviterId,
+            },
+          });
+
+          const emailToSend = getHostInviteEmail(
+            event,
+            [user.email],
+            newInvitation.token,
+            inviter.name ?? inviter.email ?? undefined,
+          );
+
+          await emailClient.send(emailToSend);
+          sentUserIds.push(user.id);
+          createdCount++;
+        } catch (error) {
+          console.error(
+            `Failed to create/send host invitation for user ${user.id}:`,
+            error,
+          );
+          failedUserIds.push({
+            userId: user.id,
+            reason: "Failed to process invitation",
+          });
+        }
+      }
+
+      return {
+        success: createdCount > 0,
+        sentCount: createdCount,
+        failed: failedUserIds,
+      };
+    }),
+  acceptHostInvite: publicProcedure
+    .input(z.object({ token: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const { token } = input;
+
+      const invitation = await ctx.db.hostInvitation.findUnique({
+        where: { token },
+        include: { event: { include: { hosts: true } }, inviter: true },
+      });
+
+      if (!invitation) {
+        throw new Error("Invalid or expired invitation token.");
+      }
+
+      const { event } = invitation;
+      if (!event) {
+        await ctx.db.hostInvitation.delete({ where: { id: invitation.id } });
+        throw new Error("Invitation is linked to a non-existent event.");
+      }
+
+      let userIdToConnect: string | null = null;
+
+      if (invitation.invitedUserId) {
+        if (event.hosts.some((h) => h.id === invitation.invitedUserId)) {
+          console.log("Invited user is already a host. Deleting invite.");
+          await ctx.db.hostInvitation.delete({ where: { id: invitation.id } });
+          return { success: true, message: "Already a host", event };
+        }
+        userIdToConnect = invitation.invitedUserId;
+      } else {
+        const currentUser = ctx.session?.user;
+        if (
+          currentUser?.email?.toLowerCase() ===
+          invitation.invitedUserEmail.toLowerCase()
+        ) {
+          if (event.hosts.some((h) => h.id === currentUser.id)) {
+            console.log("Current user is already a host. Deleting invite.");
+            await ctx.db.hostInvitation.delete({
+              where: { id: invitation.id },
+            });
+            return { success: true, message: "Already a host", event };
+          }
+          userIdToConnect = currentUser.id;
+        } else {
+          throw new Error(
+            `Please log in or sign up with ${invitation.invitedUserEmail} to accept this invitation.`,
+          );
+        }
+      }
+
+      if (!userIdToConnect) {
+        throw new Error("Could not determine user to accept invitation.");
+      }
+
+      try {
+        await ctx.db.$transaction(async (tx) => {
+          await tx.event.update({
+            where: { eventId: event.eventId },
+            data: {
+              hosts: {
+                connect: { id: userIdToConnect },
+              },
+            },
+          });
+
+          await tx.hostInvitation.delete({ where: { id: invitation.id } });
+        });
+
+        const path = fullEventId(event);
+        await ctx.res?.revalidate(`/events/${path}`);
+
+        const updatedEvent = await ctx.db.event.findUnique({
+          where: { eventId: event.eventId },
+          include: { hosts: true },
+        });
+
+        return {
+          success: true,
+          message: "Invitation accepted!",
+          event: updatedEvent ?? event,
+        };
+      } catch (error) {
+        console.error("Failed to accept host invitation:", error);
+        throw new Error("Failed to accept invitation. Please try again.");
+      }
     }),
 });
