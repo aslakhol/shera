@@ -18,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { type EventWithHosts } from "../../utils/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { getInitials } from "../../utils/user";
+import { InviteHostDialog } from "./InviteHostDialog";
 
 type Props = {
   event: EventWithHosts;
@@ -56,12 +57,7 @@ export const EventHosts = ({ event }: Props) => {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <CardTitle>Hosts</CardTitle>
-        <Button
-          onClick={() => toast.info("Invite host functionality coming soon!")}
-          size="sm"
-        >
-          Invite
-        </Button>
+        <InviteHostDialog event={event} />
       </CardHeader>
       <CardContent className="space-y-4">
         {hosts.map((host) => (
