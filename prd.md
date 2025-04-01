@@ -55,13 +55,42 @@ model Event {
 ### Invitation Flow
 
 1. From Edit Event page, existing hosts can:
-   - Invite co-hosts through network, email, or shareable link
-   - Only registered users can be co-hosts
+   - Invite co-hosts through network or email.
+   - Invitees can be registered or non-registered users.
 2. Invitee receives email with:
    - Event details
-   - Accept invitation link
-   - Link to event
+   - A link to the event
+   - A link to accept the invitation (with a unique token)
 3. Upon acceptance, user is added to event's hosts array
+
+### Token Generation
+
+- A unique token is generated for each invitation (e.g., using `ctx.nanoId()`).
+- This token is included in the acceptance link.
+- The token is not stored in the database. Instead, the token is derived from the invitation data (e.g., event ID, invited user ID, timestamp) in a deterministic way. This allows us to verify the token's validity without storing it.
+
+### Email Template
+
+- Create a new email template (`emails/HostInviteEmail.tsx`) similar to `InviteEmail.tsx`.
+- Include text like "You've been invited to co-host [Event Title]".
+- Include a link to the event and an "Accept Invitation" button/link with the token.
+
+### Frontend Components
+
+- Create a new `InviteHostDialog.tsx` component similar to `Invite.tsx` but for co-host invites.
+- Include tabs for "Network" and "Email" invites.
+- Remove the "Link" tab as it's not applicable for co-host invites.
+- The "Network" tab will use a component similar to `NetworkInvite` but call the `networkInviteHost` mutation.
+- The "Email" tab will use a component similar to `EmailInvite` but call the `emailInviteHost` mutation.
+
+### Acceptance Page
+
+- Create a new page (`pages/events/[eventId]/accept-host.tsx`) that:
+  - Extracts the `token` from the URL query.
+  - Displays "You've been invited to co-host [Event Title]".
+  - Shows event details.
+  - Has an "Accept" button that calls the `acceptHostInvite` mutation with the token.
+  - Shows success (redirecting to the event page) or error messages.
 
 ### ✅ Migration Plan
 
@@ -114,5 +143,31 @@ model Event {
    - Test email notifications
 
 2. Begin Phase 2:
+
    - Start designing the hosts management UI in the Edit Event page
    - Plan the co-host invitation flow
+
+3. **Database Changes:**
+
+   - Add a `HostInvitation` model to `schema.prisma` to track pending invitations.
+   - Run `npx prisma migrate dev --name add_host_invitation`.
+
+4. **Backend Mutations:**
+
+   - Implement `emailInviteHost` and `networkInviteHost` mutations in `src/server/api/routers/events.ts`.
+   - Implement `acceptHostInvite` mutation.
+
+5. **Email Template:**
+
+   - Create `emails/HostInviteEmail.tsx`.
+
+6. **Frontend Components:**
+
+   - Create `InviteHostDialog.tsx` and its sub-components.
+
+7. **Acceptance Page:**
+
+   - Create `pages/events/[eventId]/accept-host.tsx`.
+
+8. **Testing:**
+   - Test the entire flow, including inviting both registered and non-registered users.
