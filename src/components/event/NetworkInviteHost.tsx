@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useForm, type UseFormReturn } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { type UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { api } from "../../utils/api";
 import { type EventWithHosts, type Friend } from "../../utils/types";
@@ -19,27 +17,17 @@ import {
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "../../utils/cn";
 import { Loading } from "../Loading";
-
-const networkInviteHostSchema = z.object({
-  selectedUserIds: z.array(z.string()),
-});
-type NetworkInviteHostFormValues = z.infer<typeof networkInviteHostSchema>;
+import { type NetworkInviteHostFormValues } from "./InviteHostDialog";
 
 type NetworkInviteHostProps = {
   event: EventWithHosts;
+  form: UseFormReturn<NetworkInviteHostFormValues>;
 };
 
-export const NetworkInviteHost = ({ event }: NetworkInviteHostProps) => {
+export const NetworkInviteHost = ({ event, form }: NetworkInviteHostProps) => {
   const [search, setSearch] = useState("");
   const session = useSession();
   const utils = api.useUtils();
-
-  const form = useForm<NetworkInviteHostFormValues>({
-    resolver: zodResolver(networkInviteHostSchema),
-    defaultValues: {
-      selectedUserIds: [],
-    },
-  });
 
   const networkInviteHostMutation = api.events.networkInviteHost.useMutation({
     onSuccess: (response) => {
