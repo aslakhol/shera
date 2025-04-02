@@ -1,5 +1,5 @@
 import {
-  Dialog, // Renamed import
+  Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -16,15 +16,12 @@ type InviteHostDialogProps = {
 };
 
 export const InviteHostDialog = ({ event }: InviteHostDialogProps) => {
-  // Add state/forms if needed for child components, similar to Invite.tsx
-  // For now, just structure the dialog and tabs
-
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button size="sm">Invite</Button>
-      </DialogTrigger>
-      <DialogContent className="flex h-[50vh] flex-col sm:max-w-[425px]">
+      <Button size="sm" asChild>
+        <DialogTrigger>Invite</DialogTrigger>
+      </Button>
+      <DialogContent className="flex h-[50vh] flex-col">
         <DialogHeader>
           <DialogTitle className="text-primary">Invite Co-Host</DialogTitle>
         </DialogHeader>
@@ -32,12 +29,13 @@ export const InviteHostDialog = ({ event }: InviteHostDialogProps) => {
           defaultValue="network"
           className="flex flex-1 flex-col overflow-auto"
         >
-          <TabsList className="mb-2 grid w-full grid-cols-2">
-            {" "}
-            {/* Changed from flex */}
-            <TabsTrigger value="network">Network</TabsTrigger>
-            <TabsTrigger value="email">Email</TabsTrigger>
-            {/* Link tab removed as planned */}
+          <TabsList className="mb-2 w-full">
+            <TabsTrigger value="network" className="flex-grow">
+              Network
+            </TabsTrigger>
+            <TabsTrigger value="email" className="flex-grow">
+              Email
+            </TabsTrigger>
           </TabsList>
           <TabsContent asChild value="network" className="flex-1 overflow-auto">
             <NetworkInviteHost event={event} />
