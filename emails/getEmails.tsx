@@ -133,6 +133,9 @@ export const getHostInviteEmail = (
       inviterName={inviterName}
       acceptInviteLink={acceptInviteLink}
     />,
+    {
+      plainText: true,
+    },
   );
 
   const hostInviteEmail = {
