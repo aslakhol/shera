@@ -167,7 +167,7 @@ const NetworkFriend = ({ friend, form, attending }: NetworkFriendProps) => {
                   {friend.name}
                 </p>
                 <p className="line-clamp-1 text-sm font-normal">
-                  {!attending ? events : "Already invited"}
+                  {!attending ? `Met at: ${events}` : "Already invited"}
                 </p>
               </div>
               <FormControl>
