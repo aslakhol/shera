@@ -13,6 +13,7 @@ import { EmailInviteHost } from "./EmailInviteHost";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useState } from "react";
 
 const networkInviteHostSchema = z.object({
   selectedUserIds: z.array(z.string()),
@@ -26,6 +27,8 @@ type InviteHostDialogProps = {
 };
 
 export const InviteHostDialog = ({ event }: InviteHostDialogProps) => {
+  const [emails, setEmails] = useState<string[]>([]);
+
   const networkInviteHostForm = useForm<NetworkInviteHostFormValues>({
     resolver: zodResolver(networkInviteHostSchema),
     defaultValues: {
@@ -58,7 +61,11 @@ export const InviteHostDialog = ({ event }: InviteHostDialogProps) => {
             <NetworkInviteHost event={event} form={networkInviteHostForm} />
           </TabsContent>
           <TabsContent asChild value="email" className="flex-1 overflow-auto">
-            <EmailInviteHost event={event} />
+            <EmailInviteHost
+              event={event}
+              emails={emails}
+              setEmails={setEmails}
+            />
           </TabsContent>
         </Tabs>
       </DialogContent>
