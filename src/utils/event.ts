@@ -1,5 +1,5 @@
-import { type EventRowProps } from "./types";
-import { type Attendee, type Event, type User } from "@prisma/client";
+import type { GroupedReactions, PostReactions, EventRowProps } from "./types";
+import type { Attendee, Event, User } from "@prisma/client";
 
 export const fullEventId = (event: { publicId: string; title: string }) => {
   return `${slugifyEvent(event)}-${event.publicId}`;
@@ -66,3 +66,12 @@ export const sortCategorizedEvents = (categorizedEvents: {
       new Date(b.event.dateTime).getTime(),
   ),
 });
+
+export const groupReactions = (reactions: PostReactions) => {
+  return reactions.reduce((acc, reaction) => {
+    return {
+      ...acc,
+      [reaction.emoji]: [...(acc[reaction.emoji] ?? []), reaction],
+    };
+  }, {} as GroupedReactions);
+};
