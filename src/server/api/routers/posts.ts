@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { postSchema } from "../../../utils/formValidation";
-import { fullEventId } from "../../../utils/event";
+import { fullEventId, groupReactions } from "../../../utils/event";
 import { getNewPostEmail } from "../../../../emails/getEmails";
 import { emailClient } from "../../../server/email";
 
@@ -82,10 +82,90 @@ export const postsRouter = createTRPCRouter({
         where: {
           eventId: event.eventId,
         },
-        include: { author: true, event: { include: { hosts: true } } },
+        include: { 
+          author: true, 
+          event: { include: { hosts: true } },
+          reactions: {
+            include: {
+              user: true,
+            },
+          },
+        },
       });
 
       return posts.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+    }),
+
+  addReaction: publicProcedure
+    .input(z.object({ 
+      postId: z.number(), 
+      emoji: z.string(), 
+      userId: z.string().cuid() 
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const { postId, emoji, userId } = input;
+
+      const existingReaction = await ctx.db.postReaction.findUnique({
+        where: {
+          userId_postId_emoji: {
+            userId,
+            postId,
+            emoji,
+          },
+        },
+      });
+
+      if (existingReaction) {
+        await ctx.db.postReaction.delete({
+          where: {
+            reactionId: existingReaction.reactionId,
+          },
+        });
+        return { action: 'removed', reaction: null };
+      } else {
+        const reaction = await ctx.db.postReaction.create({
+          data: {
+            emoji,
+            userId,
+            postId,
+          },
+          include: {
+            user: true,
+          },
+        });
+        return { action: 'added', reaction };
+      }
+    }),
+
+  removeReaction: publicProcedure
+    .input(z.object({ reactionId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const reaction = await ctx.db.postReaction.delete({
+        where: {
+          reactionId: input.reactionId,
+        },
+      });
+      return reaction;
+    }),
+
+  getReactions: publicProcedure
+    .input(z.object({ postId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const reactions = await ctx.db.postReaction.findMany({
+        where: {
+          postId: input.postId,
+        },
+        include: {
+          user: true,
+        },
+        orderBy: {
+          createdAt: 'asc',
+        },
+      });
+
+      const groupedReactions = groupReactions(reactions);
+
+      return groupedReactions;
     }),
 
   deletePost: publicProcedure

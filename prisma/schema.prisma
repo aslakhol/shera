@@ -31,6 +31,20 @@ model Post {
     message   String
     author    User     @relation(fields: [authorId], references: [id])
     event     Event    @relation(fields: [eventId], references: [eventId])
+    reactions PostReaction[]
+}
+
+model PostReaction {
+    reactionId String   @id @default(cuid())
+    emoji      String
+    userId     String
+    postId     Int
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @default(now()) @updatedAt
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    post       Post     @relation(fields: [postId], references: [postId], onDelete: Cascade)
+
+    @@unique([userId, postId, emoji])
 }
 
 model Attendee {
@@ -95,6 +109,7 @@ model User {
     posts         Post[]
     sessions      Session[]
     Attendee      Attendee[]
+    reactions     PostReaction[]
 }
 
 model VerificationToken {

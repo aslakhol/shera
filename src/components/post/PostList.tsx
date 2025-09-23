@@ -1,4 +1,3 @@
-import { type Event, type Post as PostType, type User } from "@prisma/client";
 import { api } from "../../utils/api";
 import { useSession } from "next-auth/react";
 import {
@@ -15,7 +14,9 @@ import { Button } from "../ui/button";
 import { Loading } from "../Loading";
 import { useState } from "react";
 import { WrapLinks } from "../WrapLinks";
-import { type EventWithHosts } from "../../utils/types";
+import { type PostWithReactions } from "../../utils/types";
+import { ReactionsBar } from "./ReactionsBar";
+import { groupReactions } from "../../utils/event";
 
 type PostListProps = { publicId: string };
 
@@ -38,7 +39,7 @@ const PostList = ({ publicId }: PostListProps) => {
 export default PostList;
 
 type PostProps = {
-  post: PostType & { author: User; event: EventWithHosts };
+  post: PostWithReactions;
 };
 
 export const Post = (props: PostProps) => {
@@ -49,6 +50,8 @@ export const Post = (props: PostProps) => {
   const canDeletePost = session?.user.id === post.authorId || userIsHost;
 
   const authorIsHost = post.event.hosts.some((h) => h.id === post.authorId);
+
+  const groupedReactions = groupReactions(post.reactions);
 
   return (
     <div key={post.postId} className="w-full rounded border p-4">
@@ -73,11 +76,13 @@ export const Post = (props: PostProps) => {
       <p className="whitespace-pre-wrap break-words py-2">
         <WrapLinks text={post.message} />
       </p>
+
+      <ReactionsBar postId={post.postId} reactions={groupedReactions} />
     </div>
   );
 };
 
-type ConfirmDeleteProps = { post: PostType & { author: User; event: Event } };
+type ConfirmDeleteProps = { post: PostWithReactions };
 
 const ConfirmDelete = ({ post }: ConfirmDeleteProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
