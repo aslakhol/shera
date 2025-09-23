@@ -17,9 +17,10 @@ import { infoBoxFormatHostNames } from "../../../emails/utils";
 
 export const MyEvents = () => {
   const session = useSession();
+  const userId = session.data?.user.id ?? "";
   const { data: events, isSuccess } = api.events.myEvents.useQuery(
     {
-      userId: session.data?.user.id ?? "",
+      userId,
     },
     {
       enabled: !!session.data?.user.id,
@@ -59,8 +60,9 @@ export const MyEvents = () => {
           <div className="flex flex-col gap-8">
             {events.upcoming.map((event) => (
               <EventRow
-                event={event.event}
-                key={`event-${event.event.publicId}`}
+                event={event}
+                currentUserId={userId}
+                key={`event-${event.publicId}`}
               />
             ))}
           </div>
@@ -71,9 +73,10 @@ export const MyEvents = () => {
           <h2 className="pb-2 text-primary">Finished</h2>
           <div className="flex flex-col gap-8">
             {events.finished.map((event) => (
-              <EventRow
-                event={event.event}
-                key={`event-${event.event.publicId}`}
+            <EventRow
+                event={event}
+                currentUserId={userId}
+                key={`event-${event.publicId}`}
               />
             ))}
           </div>
@@ -89,9 +92,10 @@ export const MyEvents = () => {
   );
 };
 
-const EventRow = ({ event }: EventRowProps) => {
+const EventRow = ({ event, currentUserId}: EventRowProps) => {
   const hostNames = infoBoxFormatHostNames(event.hosts);
 
+  const isHost = event.hosts.some((host) => host.id === currentUserId);
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-32 pb-2">
@@ -130,10 +134,10 @@ const EventRow = ({ event }: EventRowProps) => {
               )}
               {hostNames && (
                 <div className="flex items-center gap-2">
-                  <Crown size={16} />
+                  <Crown size={16} className={isHost ? "text-primary" : ""} />
 
                   <div>
-                    <p className="w-72 overflow-hidden text-ellipsis text-nowrap">
+                    <p className={"w-72 overflow-hidden text-ellipsis text-nowrap" + (isHost ? " text-primary font-bold" : "")}>
                       {hostNames}
                     </p>
                   </div>

@@ -1,5 +1,4 @@
-import { type EventRowProps } from "./types";
-import { type Attendee, type Event, type User } from "@prisma/client";
+import { type EventWithAttendeesAndHosts } from "./types";
 
 export const fullEventId = (event: { publicId: string; title: string }) => {
   return `${slugifyEvent(event)}-${event.publicId}`;
@@ -28,41 +27,37 @@ export const slugifyEvent = (event: { title: string }) => {
   return slug.substring(0, slugStringMaxLength);
 };
 
-export const categorizeEvents = (
-  events: (Event & { hosts: User[]; attendees: Attendee[] })[],
-) =>
-  events.reduce<{
-    finished: EventRowProps[];
-    upcoming: EventRowProps[];
+export const categorizeEvents = (events: EventWithAttendeesAndHosts[]) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return events.reduce<{
+    finished: EventWithAttendeesAndHosts[];
+    upcoming: EventWithAttendeesAndHosts[];
   }>(
     (acc, event) => {
       const eventDate = new Date(event.dateTime);
-      const today = new Date();
 
       eventDate.setHours(0, 0, 0, 0);
-      today.setHours(0, 0, 0, 0);
 
       if (eventDate < today) {
-        return { ...acc, finished: [...acc.finished, { event }] };
+        return { ...acc, finished: [...acc.finished, event] };
       } else {
-        return { ...acc, upcoming: [...acc.upcoming, { event }] };
+        return { ...acc, upcoming: [...acc.upcoming, event] };
       }
     },
     { finished: [], upcoming: [] },
   );
+};
 
 export const sortCategorizedEvents = (categorizedEvents: {
-  finished: EventRowProps[];
-  upcoming: EventRowProps[];
+  finished: EventWithAttendeesAndHosts[];
+  upcoming: EventWithAttendeesAndHosts[];
 }) => ({
   finished: categorizedEvents.finished.sort(
-    (a, b) =>
-      new Date(b.event.dateTime).getTime() -
-      new Date(a.event.dateTime).getTime(),
+    (a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime(),
   ),
   upcoming: categorizedEvents.upcoming.sort(
-    (a, b) =>
-      new Date(a.event.dateTime).getTime() -
-      new Date(b.event.dateTime).getTime(),
+    (a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime(),
   ),
 });
