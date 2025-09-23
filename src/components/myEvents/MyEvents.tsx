@@ -33,7 +33,7 @@ export const MyEvents = () => {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
-        <h1 className="py-2 text-4xl font-extrabold text-primary">Events</h1>
+        <h1 className="py-2 text-4xl font-extrabold text-primary">Eventsss</h1>
         <Button asChild variant="outline">
           <Link href="/events/new">
             <Plus />
