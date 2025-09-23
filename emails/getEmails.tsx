@@ -22,8 +22,7 @@ export const getInviteEmail = (
   });
 
   const inviteEmail = {
-    to: "no-reply@shera.no",
-    bcc: emails,
+    to: emails,
     from: env.EMAIL_FROM,
     subject: inviterName
       ? `${inviterName} has invited you to ${event.title}!`
@@ -100,8 +99,7 @@ export const getUpdatedEventEmail = (
   });
 
   const updatedEventEmail = {
-    to: "no-reply@shera.no",
-    bcc: emails,
+    to: emails,
     from: env.EMAIL_FROM,
     subject: `${event.title} has been updated!`,
     text,
