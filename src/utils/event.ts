@@ -1,4 +1,8 @@
-import { type EventWithAttendeesAndHosts } from "./types";
+import type {
+  EventWithAttendeesAndHosts,
+  GroupedReactions,
+  PostReactions,
+} from "./types";
 
 export const fullEventId = (event: { publicId: string; title: string }) => {
   return `${slugifyEvent(event)}-${event.publicId}`;
@@ -61,3 +65,12 @@ export const sortCategorizedEvents = (categorizedEvents: {
     (a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime(),
   ),
 });
+
+export const groupReactions = (reactions: PostReactions) => {
+  return reactions.reduce((acc, reaction) => {
+    return {
+      ...acc,
+      [reaction.emoji]: [...(acc[reaction.emoji] ?? []), reaction],
+    };
+  }, {} as GroupedReactions);
+};
