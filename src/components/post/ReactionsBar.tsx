@@ -29,7 +29,7 @@ type ReactionsBarProps = {
   }>>;
 };
 
-const COMMON_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "😡", "🎉", "👹", "👑"];
+const COMMON_EMOJIS = ["👍", "👌", "❤️", "😂", "😮", "😢", "😡", "🎉", "👺", "👑"];
 
 export const ReactionsBar = ({ postId, reactions }: ReactionsBarProps) => {
   const { data: session } = useSession();
