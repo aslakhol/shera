@@ -4,17 +4,16 @@ import { api } from "~/utils/api";
 import { fullEventId } from "~/utils/event";
 import { useSession, signIn } from "next-auth/react";
 import { Button } from "~/components/ui/button";
+import { Loading } from "../../components/Loading";
 
 const AcceptInvitePage = () => {
   const router = useRouter();
   const { token } = router.query as { token?: string };
   const { status } = useSession();
   const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
 
   const acceptMutation = api.events.acceptHostInvite.useMutation({
     onSuccess: (res) => {
-      setMessage(res.message ?? "Invitation accepted");
       if (res.event) {
         const path = fullEventId({
           title: res.event.title,
@@ -23,7 +22,10 @@ const AcceptInvitePage = () => {
         void router.replace(`/events/${path}`);
       }
     },
-    onError: (err) => setError(err.message),
+    onError: (err) => {
+      console.log(err);
+      setError(err.message);
+    },
   });
 
   useEffect(() => {
@@ -31,7 +33,12 @@ const AcceptInvitePage = () => {
     if (status === "unauthenticated") return;
     if (status === "loading") return;
     acceptMutation.mutate({ token });
-  }, [token, status, acceptMutation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, status]);
+
+  if (status === "loading") {
+    return <Loading />;
+  }
 
   if (!token) {
     return <div className="p-4">Invalid or missing token.</div>;
@@ -51,11 +58,7 @@ const AcceptInvitePage = () => {
   return (
     <div className="p-4">
       {error && <div className="text-red-600">{error}</div>}
-      {!error && (
-        <div className="text-sm">
-          {message ?? "Accepting your co-host invitation..."}
-        </div>
-      )}
+      {!error && <Loading />}
     </div>
   );
 };
