@@ -15,8 +15,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
 import { cn } from "../../utils/cn";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type EventWithHosts } from "../../utils/types";
 
@@ -42,7 +41,6 @@ type AttendButtonProps = {
 };
 
 const AttendButton = ({ event }: AttendButtonProps) => {
-  const router = useRouter();
   const session = useSession();
   const attendeesQuery = api.events.attendees.useQuery({
     publicId: event.publicId,
@@ -52,39 +50,30 @@ const AttendButton = ({ event }: AttendButtonProps) => {
     return <Button variant={"outline"} className="w-full"></Button>;
   }
 
-  if (session.status === "authenticated") {
-    const currentAttendee = attendeesQuery.data?.find(
-      (a) => a.userId === session.data.user.id,
-    );
-
-    return (
-      <Attend
-        session={session.data}
-        event={event}
-        currentAttendee={currentAttendee}
-      />
-    );
-  }
+  const currentAttendee = attendeesQuery.data?.find(
+    (a) => a.userId === session.data?.user.id,
+  );
 
   return (
-    <Button asChild variant={"outline"} className="w-full">
-      <Link href={`/auth/signin?callbackUrl=${router.asPath}`}>
-        Sign in to attend
-      </Link>
-    </Button>
+    <Attend
+      session={session.data}
+      event={event}
+      currentAttendee={currentAttendee}
+    />
   );
 };
 
 type AttendProps = {
-  session: Session;
+  session: Session | null;
   event: EventWithHosts;
   currentAttendee?: Attendee;
 };
 
 const Attend = ({ session, event, currentAttendee }: AttendProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const router = useRouter();
   const [name, setName] = useState(
-    currentAttendee?.name ?? session.user.name ?? "",
+    currentAttendee?.name ?? session?.user.name ?? "",
   );
   const updateAttendanceMutation = api.events.updateAttendance.useMutation({
     onSuccess: async () => {
@@ -97,6 +86,17 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
   const attendanceDisabled = updateAttendanceMutation.isLoading || !name;
 
   const updateAttendance = async (status: "GOING" | "NOT_GOING" | "MAYBE") => {
+    if (!session) {
+      const url = new URL(router.asPath, window.location.origin);
+      url.searchParams.set("attendance", status);
+      url.searchParams.set("name", name);
+
+      await signIn(undefined, {
+        callbackUrl: url.pathname + url.search,
+      });
+      return;
+    }
+
     await updateAttendanceMutation.mutateAsync({
       publicId: event.publicId,
       userId: session.user.id,

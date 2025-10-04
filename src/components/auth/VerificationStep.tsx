@@ -25,7 +25,7 @@ export const VerificationStep: React.FC<VerificationStepProps> = ({
   const onReady = useCallback(() => {
     window.location.href = `/api/auth/callback/email?email=${encodeURIComponent(
       email,
-    )}&token=${code}${callbackUrl ? `&callbackUrl=${callbackUrl}` : ""}`;
+    )}&token=${code}${callbackUrl ? `&callbackUrl=${encodeURIComponent(callbackUrl)}` : ""}`;
   }, [callbackUrl, code, email]);
 
   return (
