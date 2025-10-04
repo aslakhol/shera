@@ -739,10 +739,11 @@ export const eventsRouter = createTRPCRouter({
       }
 
       const currentUser = ctx.session.user;
-      const isCorrectUserId = invitation.invitedUserId !== currentUser.id;
+      const isCorrectUserId = invitation.invitedUserId === currentUser.id;
       const isCorrectEmail =
-        currentUser.email?.toLowerCase() ===
-        invitation.invitedUserEmail.toLowerCase();
+        !!currentUser.email &&
+        currentUser.email.toLowerCase() ===
+          invitation.invitedUserEmail.toLowerCase();
 
       if (!isCorrectUserId && !isCorrectEmail) {
         throw new Error(`You are not authorized to accept this invitation.`);

@@ -51,6 +51,5 @@ export default HostInviteEmail;
 HostInviteEmail.PreviewProps = {
   event: previewEvent,
   inviterName: "Aslak",
-  acceptInviteLink:
-    "http://localhost:3000/events/preview/accept-host?token=testtoken123",
+  acceptInviteLink: "http://localhost:3000/accept-invite/testtoken123",
 } satisfies HostInviteEmailProps;
