@@ -8,6 +8,7 @@ import {
   getConfirmationEmail,
   getInviteEmail,
   getUpdatedEventEmail,
+  getHostInviteEmail,
 } from "../../../../emails/getEmails";
 import { type UserNetwork } from "../../../utils/types";
 import { formatInTimeZone } from "date-fns-tz";
@@ -588,6 +589,189 @@ export const eventsRouter = createTRPCRouter({
       await ctx.res?.revalidate(`/events/${path}`);
 
       return {
+        event: updatedEvent,
+      };
+    }),
+  emailInviteHost: protectedProcedure
+    .input(
+      z.object({
+        publicId: z.string(),
+        emails: z.array(z.string().email()),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { publicId, emails } = input;
+      const inviter = ctx.session.user;
+
+      const event = await ctx.db.event.findFirstOrThrow({
+        where: { publicId },
+        include: { hosts: true, attendees: true },
+      });
+
+      if (!event.hosts.some((host) => host.id === inviter.id)) {
+        throw new Error("Only hosts can invite other hosts");
+      }
+
+      const normalizedInputEmails = emails.map((e) => e.toLowerCase());
+      const existingUsers = await ctx.db.user.findMany({
+        where: { email: { in: normalizedInputEmails } },
+      });
+
+      const toInvite = normalizedInputEmails.filter(
+        (email) => !existingUsers.some((u) => u.email?.toLowerCase() === email),
+      );
+
+      if (toInvite.length === 0) {
+        console.log("All provided emails belong to existing hosts.");
+        return { createdInvites: 0 };
+      }
+
+      let createdCount = 0;
+      for (const email of toInvite) {
+        const existingUser = existingUsers.find(
+          (u) => u.email?.toLowerCase() === email,
+        );
+
+        const newInvitation = await ctx.db.hostInvitation.create({
+          data: {
+            eventId: event.eventId,
+            invitedUserEmail: email,
+            inviterId: inviter.id,
+            invitedUserId: existingUser?.id,
+          },
+        });
+
+        const emailToSend = getHostInviteEmail(
+          event,
+          [email],
+          newInvitation.token,
+          inviter.name ?? inviter.email ?? undefined,
+        );
+
+        await emailClient.send(emailToSend);
+        createdCount++;
+      }
+
+      return { createdInvites: createdCount };
+    }),
+  networkInviteHost: protectedProcedure
+    .input(
+      z.object({
+        publicId: z.string(),
+        inviteeIds: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { publicId, inviteeIds } = input;
+      const inviter = ctx.session.user;
+
+      const event = await ctx.db.event.findFirstOrThrow({
+        where: { publicId },
+        include: { hosts: true, attendees: true },
+      });
+
+      if (!event.hosts.some((host) => host.id === inviter.id)) {
+        throw new Error("Only hosts can invite other hosts");
+      }
+
+      const invitees = (await ctx.db.user.findMany({
+        where: { id: { in: inviteeIds }, email: { not: null } },
+        select: { id: true, email: true, name: true },
+      })) as { id: string; email: string; name: string | null }[];
+
+      const validInvitees = invitees.filter(
+        (user) => !event.hosts.some((host) => host.id === user.id),
+      );
+
+      if (validInvitees.length === 0) {
+        console.log(
+          "All selected users are invalid (missing email or already hosts).",
+        );
+        return { createdInvites: 0 };
+      }
+
+      let createdCount = 0;
+      for (const user of validInvitees) {
+        const newInvitation = await ctx.db.hostInvitation.create({
+          data: {
+            eventId: event.eventId,
+            invitedUserEmail: user.email,
+            invitedUserId: user.id,
+            inviterId: inviter.id,
+          },
+        });
+
+        const emailToSend = getHostInviteEmail(
+          event,
+          [user.email],
+          newInvitation.token,
+          inviter.name ?? inviter.email ?? undefined,
+        );
+
+        await emailClient.send(emailToSend);
+        createdCount++;
+      }
+
+      return { createdInvites: createdCount };
+    }),
+  acceptHostInvite: protectedProcedure
+    .input(z.object({ token: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const { token } = input;
+
+      const invitation = await ctx.db.hostInvitation.findUniqueOrThrow({
+        where: { token },
+        include: { event: { include: { hosts: true } } },
+      });
+
+      if (
+        invitation.event.hosts.some((h) => h.id === invitation.invitedUserId)
+      ) {
+        console.log(
+          `User ${invitation.invitedUserId} is already a host for event ${invitation.event.publicId}. Deleting invite.`,
+        );
+        await ctx.db.hostInvitation.delete({ where: { id: invitation.id } });
+        return {
+          success: true,
+          message: "Already a host",
+          event: invitation.event,
+        };
+      }
+
+      const currentUser = ctx.session.user;
+      const isCorrectUserId = invitation.invitedUserId === currentUser.id;
+      const isCorrectEmail =
+        !!currentUser.email &&
+        currentUser.email.toLowerCase() ===
+          invitation.invitedUserEmail.toLowerCase();
+
+      if (!isCorrectUserId && !isCorrectEmail) {
+        throw new Error(`You are not authorized to accept this invitation.`);
+      }
+
+      await ctx.db.$transaction(async (tx) => {
+        await tx.event.update({
+          where: { eventId: invitation.event.eventId },
+          data: {
+            hosts: {
+              connect: { id: currentUser.id },
+            },
+          },
+        });
+        await tx.hostInvitation.delete({ where: { id: invitation.id } });
+      });
+
+      const path = fullEventId(invitation.event);
+      void ctx.res?.revalidate(`/events/${path}`);
+
+      const updatedEvent = await ctx.db.event.findUniqueOrThrow({
+        where: { eventId: invitation.event.eventId },
+        include: { hosts: true },
+      });
+
+      return {
+        success: true,
+        message: "Invitation accepted!",
         event: updatedEvent,
       };
     }),

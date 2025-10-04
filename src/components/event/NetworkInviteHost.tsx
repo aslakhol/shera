@@ -1,13 +1,11 @@
+import React, { useState } from "react";
+import { useSession } from "next-auth/react";
+import { type UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
+import { api } from "../../utils/api";
+import { type EventWithHosts, type Friend } from "../../utils/types";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useState } from "react";
-import { cn } from "../../utils/cn";
-import { api } from "../../utils/api";
-import { useSession } from "next-auth/react";
-import { type EventWithHosts, type Friend } from "../../utils/types";
-import { type z } from "zod";
-import { toast } from "sonner";
-import { type UseFormReturn } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -17,57 +15,66 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Checkbox } from "../ui/checkbox";
-import { type NetworkInviteFormSchema } from "./utils";
+import { cn } from "../../utils/cn";
+import { Loading } from "../Loading";
+import { type NetworkInviteHostFormValues } from "./InviteHostDialog";
 
-type Props = {
+type NetworkInviteHostProps = {
   event: EventWithHosts;
-  form: UseFormReturn<z.infer<typeof NetworkInviteFormSchema>>;
+  form: UseFormReturn<NetworkInviteHostFormValues>;
 };
 
-export const NetworkInvite = ({ event, form }: Props) => {
+export const NetworkInviteHost = ({ event, form }: NetworkInviteHostProps) => {
   const [search, setSearch] = useState("");
-  const utils = api.useUtils();
   const session = useSession();
-  const networkInviteMutation = api.events.networkInvite.useMutation({
+  const utils = api.useUtils();
+
+  const networkInviteHostMutation = api.events.networkInviteHost.useMutation({
     onSuccess: (response) => {
-      toast.success(
-        `${response.invites} invite${response.invites > 1 ? "s" : ""} sent.`,
-      );
-      void utils.events.attendees.invalidate({
-        publicId: event.publicId,
-      });
+      if (response.createdInvites > 0) {
+        toast.success(
+          `${response.createdInvites} co-host invite${response.createdInvites > 1 ? "s" : ""} sent.`,
+        );
+        void utils.events.event.invalidate({ publicId: event.publicId });
+      } else {
+        toast.info("No new invites sent.");
+      }
       form.reset();
     },
+    onError: (error) => {
+      toast.error(`Failed to send invites: ${error.message}`);
+    },
   });
 
-  const attendeesQuery = api.events.attendees.useQuery({
-    publicId: event.publicId,
-  });
   const networkQuery = api.events.network.useQuery(
     {
-      userId: session.data?.user.id ?? "",
+      userId: session.data?.user?.id ?? "",
     },
-    { enabled: !!session.data?.user.id },
+    { enabled: !!session.data?.user?.id },
   );
 
-  const onSubmit = (data: z.infer<typeof NetworkInviteFormSchema>) => {
-    networkInviteMutation.mutate({
+  const onSubmit = (data: NetworkInviteHostFormValues) => {
+    networkInviteHostMutation.mutate({
       publicId: event.publicId,
-      friendsUserIds: data.friends,
-      inviterName: session.data?.user.name ?? undefined,
+      inviteeIds: data.selectedUserIds,
     });
   };
 
+  const hostIds = event.hosts.map((h) => h.id);
   const friends =
     networkQuery.data
       ?.filter(
         (f) =>
-          f.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+          f.name.toLowerCase().includes(search.toLowerCase()) ||
           f.events.some((e) =>
-            e.title.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+            e.title.toLowerCase().includes(search.toLowerCase()),
           ),
       )
       .sort((a, b) => a.name.localeCompare(b.name)) ?? [];
+
+  if (networkQuery.isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-1 flex-col gap-2 overflow-auto p-1">
@@ -86,19 +93,15 @@ export const NetworkInvite = ({ event, form }: Props) => {
           <div className="flex-1 overflow-scroll">
             <FormField
               control={form.control}
-              name="friends"
+              name="selectedUserIds"
               render={() => (
                 <FormItem>
                   {friends.map((friend) => (
-                    <NetworkFriend
+                    <NetworkHostCandidate
                       friend={friend}
                       key={friend.userId}
                       form={form}
-                      attending={
-                        attendeesQuery.data?.some(
-                          (a) => a.userId === friend.userId,
-                        ) ?? false
-                      }
+                      isHost={hostIds.includes(friend.userId)}
                     />
                   ))}
                   <FormMessage />
@@ -112,8 +115,8 @@ export const NetworkInvite = ({ event, form }: Props) => {
               className="w-full"
               type="submit"
               disabled={
-                form.watch("friends").length === 0 ||
-                networkInviteMutation.isLoading
+                form.watch("selectedUserIds").length === 0 ||
+                networkInviteHostMutation.isLoading
               }
             >
               Send invites
@@ -122,7 +125,7 @@ export const NetworkInvite = ({ event, form }: Props) => {
               variant="outline"
               className="w-full flex-1"
               type="button"
-              disabled={form.watch("friends").length === 0}
+              disabled={form.watch("selectedUserIds").length === 0}
               onClick={() => form.reset()}
             >
               Reset
@@ -134,27 +137,32 @@ export const NetworkInvite = ({ event, form }: Props) => {
   );
 };
 
-type NetworkFriendProps = {
+type NetworkHostCandidateProps = {
   friend: Friend;
-  form: UseFormReturn<z.infer<typeof NetworkInviteFormSchema>>;
-  attending: boolean;
+  form: UseFormReturn<NetworkInviteHostFormValues>;
+  isHost: boolean;
 };
 
-const NetworkFriend = ({ friend, form, attending }: NetworkFriendProps) => {
+const NetworkHostCandidate = ({
+  friend,
+  form,
+  isHost,
+}: NetworkHostCandidateProps) => {
   const events = friend.events.map((e) => e.title).join(", ");
 
   return (
     <FormField
       key={friend.userId}
       control={form.control}
-      name="friends"
+      name="selectedUserIds"
       render={({ field }) => {
+        const selectedIds = Array.isArray(field.value) ? field.value : [];
         return (
           <FormItem
             key={friend.userId}
             className={cn(
               "flex flex-row items-start space-x-3 rounded p-1",
-              !attending && "hover:bg-muted",
+              !isHost && "hover:bg-muted",
             )}
           >
             <FormLabel
@@ -162,24 +170,24 @@ const NetworkFriend = ({ friend, form, attending }: NetworkFriendProps) => {
                 "flex w-full cursor-pointer flex-row items-center justify-between rounded py-1",
               )}
             >
-              <div className={cn(attending && "opacity-50")}>
+              <div className={cn(isHost && "opacity-50")}>
                 <p className="text-md line-clamp-1 font-medium">
                   {friend.name}
                 </p>
                 <p className="line-clamp-1 text-sm font-normal">
-                  {!attending ? `Met at: ${events}` : "Already invited"}
+                  {!isHost ? `Met at: ${events}` : "Already a host"}
                 </p>
               </div>
               <FormControl>
                 <Checkbox
-                  disabled={attending}
-                  checked={field.value?.includes(friend.userId)}
+                  disabled={isHost}
+                  checked={selectedIds.includes(friend.userId)}
                   onCheckedChange={(checked) => {
                     return checked
-                      ? field.onChange([...field.value, friend.userId])
+                      ? field.onChange([...selectedIds, friend.userId])
                       : field.onChange(
-                          field.value?.filter(
-                            (value) => value !== friend.userId,
+                          selectedIds.filter(
+                            (value: string) => value !== friend.userId,
                           ),
                         );
                   }}
