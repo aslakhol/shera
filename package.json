@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build",
+    "vercel-build": "prisma generate && if [ \"$VERCEL_ENV\" = \"production\" ]; then prisma migrate deploy; else echo 'Skipping prisma migrate on non-production build'; fi && next build",
     "db:studio": "prisma studio",
     "db:reset": "npx --yes -p dotenv-cli dotenv -c development -- prisma migrate reset",
     "db:studio:prod": "npx --yes -p dotenv-cli dotenv -c prod -- prisma studio -p 5555",
