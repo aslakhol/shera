@@ -11,8 +11,14 @@ export type Friend = {
   }>;
 };
 
+export type EventWithAttendeesAndHosts = Event & {
+  hosts: User[];
+  attendees: Attendee[];
+};
+
 export type EventRowProps = {
-  event: Event & { hosts: User[]; attendees: Attendee[] };
+  event: EventWithAttendeesAndHosts;
+  currentUserId: string;
 };
 
 export type EventWithHosts = Event & { hosts: User[] };
