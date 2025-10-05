@@ -14,6 +14,7 @@ import {
 import { useSession } from "next-auth/react";
 import { type EventRowProps } from "~/utils/types";
 import { infoBoxFormatHostNames } from "../../../emails/utils";
+import {cn} from "~/utils/cn";
 
 export const MyEvents = () => {
   const session = useSession();
@@ -134,10 +135,10 @@ const EventRow = ({ event, currentUserId}: EventRowProps) => {
               )}
               {hostNames && (
                 <div className="flex items-center gap-2">
-                  <Crown size={16} className={isHost ? "text-primary" : ""} />
+                  <Crown size={16} className={cn(isHost && "text-primary")} />
 
                   <div>
-                    <p className={"w-72 overflow-hidden text-ellipsis text-nowrap" + (isHost ? " text-primary font-bold" : "")}>
+                    <p className={cn("w-72 overflow-hidden text-ellipsis text-nowrap", isHost && "text-primary underline")}>
                       {hostNames}
                     </p>
                   </div>
