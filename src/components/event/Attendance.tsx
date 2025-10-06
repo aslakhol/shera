@@ -13,7 +13,7 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "../../utils/cn";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -84,6 +84,51 @@ const Attend = ({ session, event, currentAttendee }: AttendProps) => {
   });
   const utils = api.useUtils();
   const attendanceDisabled = updateAttendanceMutation.isLoading || !name;
+  const hasProcessedParamsRef = useRef(false);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (!session?.user) return;
+    if (hasProcessedParamsRef.current) return;
+
+    const rawAttendance = router.query.attendance;
+    const rawName = router.query.name;
+
+    const status =
+      typeof rawAttendance === "string" &&
+      (rawAttendance === "GOING" ||
+        rawAttendance === "MAYBE" ||
+        rawAttendance === "NOT_GOING")
+        ? (rawAttendance as "GOING" | "MAYBE" | "NOT_GOING")
+        : undefined;
+
+    const nameFromQuery =
+      typeof rawName === "string" && rawName.length > 0 ? rawName : undefined;
+
+    if (!status) return;
+
+    hasProcessedParamsRef.current = true;
+    void updateAttendanceMutation
+      .mutateAsync({
+        publicId: event.publicId,
+        userId: session.user.id,
+        status,
+        name: nameFromQuery ?? undefined,
+      })
+      .finally(() => {
+        if (typeof window !== "undefined") {
+          const currentUrl = new URL(window.location.href);
+          currentUrl.searchParams.delete("attendance");
+          currentUrl.searchParams.delete("name");
+          console.log(currentUrl, "currentUrl");
+          window.history.replaceState(
+            null,
+            "",
+            currentUrl.pathname + currentUrl.search + currentUrl.hash,
+          );
+        }
+      });
+  }, [router, session?.user, event.publicId, updateAttendanceMutation]);
 
   const updateAttendance = async (status: "GOING" | "NOT_GOING" | "MAYBE") => {
     if (!session) {
