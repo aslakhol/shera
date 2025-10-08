@@ -132,7 +132,7 @@ export const eventsRouter = createTRPCRouter({
             attendeeEmails,
           );
 
-          await emailClient.send(updatedEventEmail);
+          await emailClient.sendMultiple(updatedEventEmail);
         }
       }
 
