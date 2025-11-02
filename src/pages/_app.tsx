@@ -1,19 +1,19 @@
-import posthog from "posthog-js";
-import { PostHogProvider } from "posthog-js/react";
 import { Analytics } from "@vercel/analytics/react";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppProps } from "next/app";
+import posthog from "posthog-js";
+import { PostHogProvider } from "posthog-js/react";
 
 import { api } from "~/utils/api";
 
-import "~/styles/globals.css";
-import { useEffect, type ReactElement, type ReactNode } from "react";
 import { type NextPage } from "next";
-import { MainLayout } from "../components/Layout";
 import Head from "next/head";
-import { env } from "../env";
 import { Router } from "next/router";
+import { useEffect, type ReactElement, type ReactNode } from "react";
+import "~/styles/globals.css";
+import { LandingPageLayout } from "../components/Layout";
+import { env } from "../env";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -84,6 +84,6 @@ const getDefaultLayout = (page: ReactElement) => (
       <meta name="description" content="Shera - Where great events take off" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
-    <MainLayout>{page}</MainLayout>
+    <LandingPageLayout>{page}</LandingPageLayout>
   </>
 );
