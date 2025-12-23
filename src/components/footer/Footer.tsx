@@ -4,7 +4,7 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <>
-      <footer className="flex justify-between gap-8 bg-card p-10 text-card-foreground">
+      <footer className="flex justify-between gap-8 bg-card p-6 text-card-foreground">
         <div className="flex gap-4 font-medium">
           <Link className="hover:underline" href={"/privacy-policy"}>
             Privacy Policy
