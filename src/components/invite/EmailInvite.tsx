@@ -94,7 +94,7 @@ export const EmailInvite = ({ event, emails, setEmails }: Props) => {
               </Button>
             </div>
             <p className={cn("text-sm text-muted-foreground")}>
-              Separate multiple emails with comma
+              Separate multiple emails with , or press +
             </p>
           </form>
         </div>
