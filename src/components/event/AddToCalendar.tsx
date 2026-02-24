@@ -15,7 +15,7 @@ export const AddToCalendar = ({ event }: Props) => {
       <PopoverTrigger asChild>
         <Button variant="outline" className="gap-2">
           <Calendar />
-          Add to Calendar
+          Add to my Calendar
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col gap-2 p-1">
