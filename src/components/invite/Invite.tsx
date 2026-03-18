@@ -40,6 +40,14 @@ const Invite = (props: InviteProps) => {
     { enabled: !!session.data?.user.id },
   );
 
+  if (existingNetwork.isLoading) {
+    return (
+      <Button variant="outline" disabled>
+        Invite
+      </Button>
+    );
+  }
+
   return (
     <>
       <Dialog>
@@ -51,7 +59,7 @@ const Invite = (props: InviteProps) => {
             <DialogTitle className="text-primary">Invite</DialogTitle>
           </DialogHeader>
           <Tabs
-            defaultValue={existingNetwork.data?.length == 0 ? "email" : "network"}
+            defaultValue={!existingNetwork.data || existingNetwork.data?.length == 0 ? "email" : "network"}
             className="flex flex-1 flex-col overflow-auto"
           >
             <TabsList className="mb-2 w-full">
