@@ -100,7 +100,7 @@ const EventRow = ({ event, currentUserId}: EventRowProps) => {
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-32 pb-2">
-        <p>{format(event.dateTime, "d. MMM")}</p>
+        <p>{format(event.dateTime, "d. MMM 000")}</p>
         <p className="text-primary/50">{format(event.dateTime, "eeee")}</p>
       </div>
 
