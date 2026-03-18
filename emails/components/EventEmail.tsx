@@ -126,7 +126,7 @@ const InfoBox = ({ event }: InfoBoxProps) => {
         </Column>
         <Column>
           <Text className="m-0">
-            {formatInTimeZone(event.dateTime, event.timeZone, "H:mm")}
+            {formatInTimeZone(event.dateTime, event.timeZone, "H:mm 000")}
           </Text>
         </Column>
       </Row>

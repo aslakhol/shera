@@ -44,7 +44,7 @@ export const Event = ({ publicId }: Props) => {
       <div className="text-lg">
         <div className="flex items-center gap-2">
           <WorkingClock date={event.dateTime} size={16} />
-          <p>{format(event.dateTime, "EEEE, LLLL do, H:mm")}</p>
+          <p>{format(event.dateTime, "EEEE, LLLL do, H:mm OOO")}</p>
         </div>
         {event.place && (
           <div className="flex items-center gap-2">
