@@ -16,6 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { NetworkInviteFormSchema } from "./utils";
 import { type z } from "zod";
 import { type EventWithHosts } from "../../utils/types";
+import { api } from "../../utils/api";
+import { useSession } from "next-auth/react";
 
 type InviteProps = {
   event: EventWithHosts;
@@ -24,6 +26,7 @@ type InviteProps = {
 const Invite = (props: InviteProps) => {
   const { event } = props;
   const [emails, setEmails] = useState<string[]>([]);
+  const session = useSession();
 
   const networkInviteForm = useForm<z.infer<typeof NetworkInviteFormSchema>>({
     resolver: zodResolver(NetworkInviteFormSchema),
@@ -31,6 +34,19 @@ const Invite = (props: InviteProps) => {
       friends: [],
     },
   });
+
+  const existingNetwork = api.events.network.useQuery(
+    { userId: session.data?.user.id ?? "",},
+    { enabled: !!session.data?.user.id },
+  );
+
+  if (existingNetwork.isLoading) {
+    return (
+      <Button variant="outline" disabled>
+        Invite
+      </Button>
+    );
+  }
 
   return (
     <>
@@ -43,7 +59,7 @@ const Invite = (props: InviteProps) => {
             <DialogTitle className="text-primary">Invite</DialogTitle>
           </DialogHeader>
           <Tabs
-            defaultValue="network"
+            defaultValue={!existingNetwork.data || existingNetwork.data?.length == 0 ? "email" : "network"}
             className="flex flex-1 flex-col overflow-auto"
           >
             <TabsList className="mb-2 w-full">
